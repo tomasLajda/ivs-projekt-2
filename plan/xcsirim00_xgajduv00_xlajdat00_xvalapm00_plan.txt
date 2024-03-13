@@ -1,0 +1,83 @@
+IVS - Projekt 2 - Tým "lajda-ci"
+
+Členovia týmu:
+	xcsirim00 - Matúš Csirik - (vedúci)
+	xgajduv00 - Vojtěch Gajdušek 
+	xlajdat00 - Tomáš Lajda
+	xvalapm00 - Martin Valapka
+	
+Následujúce rozhodnutia sme učinili 11.3.2024 na prvej schôdzi.
+
+Komunikačné kanály
+	1. Vlastný discord server
+		Zvolený ako primárny komunikačný kanál vďaka dostupnej histórii konverzácií, prehľadnosti a možnosti videohovorov.
+		Vytvorených je niekoľko chatovacích miestností, určených na rôzne časti projektu.
+		Formálna aj neformálna komunikácia.
+	2. Pravidelné schôdze
+		Tyždenné, hodinové, schôdze (podobné SCRUM metodike) priamo na fakulte.
+	3. Telefónne čísla
+		Zvolené vďaka ich prirodzenej akútnosti.
+		Využívané striktne ako posledná možnosť pri pretrvávajúcej neohlásenej neaktivite.
+
+Využité externé nástroje
+	- Trello
+		Organizácia a správa úloh
+	- Github
+		Zvolený systém pre správu verzií
+		Hosting: https://github.com/
+		Použitý repozitár: https://github.com/tomasLajda/ivs-projekt-2, sprístupnený užívateľovi "ivskontrola"
+	 
+Formát a jazyk kódu
+	- Zvolený programovací jazyk: Python
+		Názvy funkcií: PascalCase
+		Ostatné: camelCase
+	- Zvolená testovacia framework: pytest
+	
+	Jazyk komentárov, kódu a githubu: Anglický (okrem preddefinovaných názvov súborov a ich zneniu podľa zadania)
+
+Rozdelenie úloh
+	- Niektoré úlohy budú vypracované formou párového programovania
+	- Vedúci dohliada na dodržiavanie rozdelenia úloh
+	- Mierne odchylky od plánu sú očakávané
+	
+	xcsirim00
+		- Správa schôdzí
+		- Základná organizácia
+		- Vývoj testov
+		- Vývoj (od)inštalátoru
+		- Tvorba Makefile
+	
+	xgajduv00
+		- Správa komunikačných kanálov
+		- Programovanie matematickej knižnice
+		- Programovanie kalkukačky
+	
+	xlajdat00
+		- Správa Github repozitáru
+		- Dozorca kvality kódu
+		- Správa úloh (za pomocou Trello)
+		- Vývoj testov
+		- Profiling
+		
+	xvalapm00
+		- Vývoj grafického užívateľského rozhrania
+		- Programovanie matematickej knižnice
+		- Programovanie kalkukačky
+	
+
+Termíny
+	do 12.3. - Zvolenie predbežného plánu projektu
+	do 14.3. - Ustanovenie pevných komunikačných kanálov
+	do 14.3. - Nastavenie GitHub repozitáru
+	do 17.3. - Nastavenie trello prostredia
+	do 25.3. - Dokončenie testov pre matematickú knižnicu
+	do 31.3. - Vytvorenie matematickej knižnice
+	do 31.3. - Návrh predbežného dizajnu kalkulačky
+	do  7.4. - Vytvorenie kalkukačky
+	do 10.4. - Vytvorenie Makefile a (od)inštalátoru
+	do 14.4. - Profiling
+	do 14.4. - Spísanie dokumentácie (užívateľskej, programátorksej, profiling)
+	do 14.4. - Vytvorenie mock-upu dalšej verzie
+	do 20.4. - Konečné testovanie, zhodnotenie práce a problémov, porovnanie s plánom
+	do 24.4. - Odovzdanie finalnej verzie projektu
+	
