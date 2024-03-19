@@ -117,6 +117,15 @@ class App(CTk):
                                  corner_radius=0, font=(LARGE, 25), width=75, height=45)
         deleteButton.grid(row=0, column=4, sticky="nsew")
 
+    def create_bracket_buttons(self):
+        row = 0
+        column = 1
+        for bracket in self.brackets:
+            button = CTkButton(self.buttonFrame, text=bracket, fg_color=COLOR_REST,
+                               border_width=0, corner_radius=0, font=(LARGE, 25), width=75, height=45)
+            button.grid(row=row, column=column, sticky="nsew")
+            column += 1
+
 
     def run(self):
         self.geometry(self.center_window(400, 405, self._get_window_scaling()))
@@ -128,6 +137,7 @@ class App(CTk):
         self.create_decimal_button()
         self.create_clean_button()
         self.create_delete_button()
+        self.create_bracket_buttons()
         self.mainloop()
 
 
