@@ -63,17 +63,18 @@ class App(CTk):
         return f"{width}x{height}+{x}+{y}"
 
     def create_display_frame(self):
-        self.displayFrame = CTkFrame(self, width=400, height=150, fg_color=DARK_GRAY, border_width=5, corner_radius=0)
+        self.displayFrame = CTkFrame(self, width=400, height=150, fg_color=DARK_GRAY, border_width=5,
+                                     border_color=GRAY, corner_radius=0)
         self.displayFrame.grid(row=0, column=0, sticky="nsew")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         total_label = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=15,
-                               font=(SMALL, 30))
+                               font=(SMALL, 30), text_color="white")
         total_label.pack(side="top", expand=True, fill="both")
 
         current_label = CTkLabel(self.displayFrame, text=self.currentExpression, anchor="e", padx=15, pady=20,
-                                 font=(LARGE, 50))
+                                 font=(LARGE, 50), text_color="white")
         current_label.pack(side="top", expand=True, fill="both")
 
     def create_button_frame(self):
@@ -162,6 +163,12 @@ class App(CTk):
                                  width=75, height=45)
         moduloButton.grid(row=4, column=0, sticky="nsew", padx=2, pady=2)
 
+    def create_settings_button(self):
+        settingsButton = CTkButton(self, text="⚙️", border_width=0, fg_color=DARK_GRAY,
+                                   corner_radius=10, font=(LARGE, 12), width=10, height=15,
+                                   bg_color=DARK_GRAY, hover_color=COLOR_REST)
+        settingsButton.grid(row=0, column=0, sticky="nw", pady=5)
+
     def run(self):
         self.geometry(self.center_window(400, 405, self._get_window_scaling()))
         self.create_display_frame()
@@ -178,6 +185,7 @@ class App(CTk):
         self.create_factorial_button()
         self.create_abs_button()
         self.create_modulo_button()
+        self.create_settings_button()
         self.mainloop()
 
 
