@@ -136,6 +136,21 @@ class App(CTk):
                                corner_radius=0, font=(LARGE, 25), width=75, height=45)
         rootButton.grid(row=1, column=0, sticky="nsew")
 
+    def create_factorial_button(self):
+        factorialButton = CTkButton(self.buttonFrame, text="x!", border_width=0, fg_color=COLOR_REST,
+                                    corner_radius=0, font=(LARGE, 25), width=75, height=45)
+        factorialButton.grid(row=2, column=0, sticky="nsew")
+
+    def create_abs_button(self):
+        absButton = CTkButton(self.buttonFrame, text="|x|", border_width=0, fg_color=COLOR_REST,
+                              corner_radius=0, font=(LARGE, 25), width=75, height=45)
+        absButton.grid(row=3, column=0, sticky="nsew")
+
+    def create_modulo_button(self):
+        moduloButton = CTkButton(self.buttonFrame, text="mod", border_width=0, fg_color=COLOR_REST,
+                                 corner_radius=0, font=(LARGE, 25), width=75, height=45)
+        moduloButton.grid(row=4, column=0, sticky="nsew")
+
     def run(self):
         self.geometry(self.center_window(400, 405, self._get_window_scaling()))
         self.create_display_frame()
@@ -149,6 +164,9 @@ class App(CTk):
         self.create_bracket_buttons()
         self.create_exponentiation_button()
         self.create_root_button()
+        self.create_factorial_button()
+        self.create_abs_button()
+        self.create_modulo_button()
         self.mainloop()
 
 
