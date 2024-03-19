@@ -4,6 +4,6 @@
 
 @author
 - Matúš Csirik (xcsirim00)
-- Jane Smith (xcsirim00)
+- Tomáš Lajda (xlajdat00)
 @date March 19, 2024
 """
