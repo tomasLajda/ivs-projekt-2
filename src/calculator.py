@@ -107,6 +107,17 @@ class App(CTk):
                                   corner_radius=0, font=(LARGE, 25), width=75, height=45)
         decimalButton.grid(row=4, column=1, sticky="nsew")
 
+    def create_clean_button(self):
+        cleanButton = CTkButton(self.buttonFrame, text="C", border_width=0, fg_color=COLOR_REST,
+                                corner_radius=0, font=(LARGE, 25), width=75, height=45)
+        cleanButton.grid(row=0, column=3, sticky="nsew")
+
+    def create_delete_button(self):
+        deleteButton = CTkButton(self.buttonFrame, text="⌫", border_width=0, fg_color=COLOR_REST,
+                                 corner_radius=0, font=(LARGE, 25), width=75, height=45)
+        deleteButton.grid(row=0, column=4, sticky="nsew")
+
+
     def run(self):
         self.geometry(self.center_window(400, 405, self._get_window_scaling()))
         self.create_display_frame()
@@ -115,6 +126,8 @@ class App(CTk):
         self.create_operator_buttons()
         self.create_equals_button()
         self.create_decimal_button()
+        self.create_clean_button()
+        self.create_delete_button()
         self.mainloop()
 
 
