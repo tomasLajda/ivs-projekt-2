@@ -85,71 +85,82 @@ class App(CTk):
     def create_digit_buttons(self):
         for digit, (row, column) in self.digits.items():
             button = CTkButton(self.buttonFrame, text=str(digit), bg_color=GRAY, fg_color=LIGHT_GRAY,
-                               border_width=0, corner_radius=0, font=(LARGE, 25), width=75, height=45)
-            button.grid(row=row, column=column, sticky="nsew")
+                               border_width=0, corner_radius=10, font=(LARGE, 25),
+                               width=75, height=45)
+            button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
 
     def create_operator_buttons(self):
         row = 1
         column = 4
         for operator, symbol in self.operations.items():
             button = CTkButton(self.buttonFrame, text=symbol, fg_color=ORANGE,
-                               border_width=0, corner_radius=0, font=(LARGE, 25), width=75, height=45)
-            button.grid(row=row, column=column, sticky="nsew")
+                               border_width=0, corner_radius=10, font=(LARGE, 25),
+                               width=75, height=45)
+            button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             row += 1
 
     def create_equals_button(self):
         equalsButton = CTkButton(self.buttonFrame, text="=", border_width=0, fg_color=ORANGE,
-                                 corner_radius=0, font=(LARGE, 25), width=75, height=45)
-        equalsButton.grid(row=4, column=3, sticky="nsew")
+                                 corner_radius=10, font=(LARGE, 25),
+                                 width=75, height=45)
+        equalsButton.grid(row=4, column=3, sticky="nsew", padx=2, pady=2)
 
     def create_decimal_button(self):
         decimalButton = CTkButton(self.buttonFrame, text=".", border_width=0, fg_color=LIGHT_GRAY,
-                                  corner_radius=0, font=(LARGE, 25), width=75, height=45)
-        decimalButton.grid(row=4, column=1, sticky="nsew")
+                                  corner_radius=10, font=(LARGE, 25),
+                                  width=75, height=45)
+        decimalButton.grid(row=4, column=1, sticky="nsew", padx=2, pady=2)
 
     def create_clean_button(self):
         cleanButton = CTkButton(self.buttonFrame, text="C", border_width=0, fg_color=COLOR_REST,
-                                corner_radius=0, font=(LARGE, 25), width=75, height=45)
-        cleanButton.grid(row=0, column=3, sticky="nsew")
+                                corner_radius=10, font=(LARGE, 25), width=75, height=45)
+        cleanButton.grid(row=0, column=3, sticky="nsew", padx=2, pady=2)
 
     def create_delete_button(self):
         deleteButton = CTkButton(self.buttonFrame, text="⌫", border_width=0, fg_color=COLOR_REST,
-                                 corner_radius=0, font=(LARGE, 25), width=75, height=45)
-        deleteButton.grid(row=0, column=4, sticky="nsew")
+                                 corner_radius=10, font=(LARGE, 25),
+                                 width=75, height=45)
+        deleteButton.grid(row=0, column=4, sticky="nsew", padx=2, pady=2)
 
     def create_bracket_buttons(self):
         row = 0
         column = 1
         for bracket in self.brackets:
             button = CTkButton(self.buttonFrame, text=bracket, fg_color=COLOR_REST,
-                               border_width=0, corner_radius=0, font=(LARGE, 25), width=75, height=45)
-            button.grid(row=row, column=column, sticky="nsew")
+                               border_width=0, corner_radius=10, font=(LARGE, 25),
+                               width=75, height=45)
+            button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             column += 1
 
     def create_exponentiation_button(self):
         exponentiationButton = CTkButton(self.buttonFrame, text="x\u207F", border_width=0, fg_color=COLOR_REST,
-                                         corner_radius=0, font=(LARGE, 25), width=75, height=45)
-        exponentiationButton.grid(row=0, column=0, sticky="nsew")
+                                         corner_radius=10, font=(LARGE, 25),
+                                         width=75, height=45)
+        exponentiationButton.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_root_button(self):
         rootButton = CTkButton(self.buttonFrame, text="ⁿ√x", border_width=0, fg_color=COLOR_REST,
-                               corner_radius=0, font=(LARGE, 25), width=75, height=45)
-        rootButton.grid(row=1, column=0, sticky="nsew")
+                               corner_radius=10, font=(LARGE, 25),
+                               width=75, height=45)
+        rootButton.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_factorial_button(self):
         factorialButton = CTkButton(self.buttonFrame, text="x!", border_width=0, fg_color=COLOR_REST,
-                                    corner_radius=0, font=(LARGE, 25), width=75, height=45)
-        factorialButton.grid(row=2, column=0, sticky="nsew")
+                                    corner_radius=10, font=(LARGE, 25),
+                                    width=75, height=45)
+        factorialButton.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_abs_button(self):
         absButton = CTkButton(self.buttonFrame, text="|x|", border_width=0, fg_color=COLOR_REST,
-                              corner_radius=0, font=(LARGE, 25), width=75, height=45)
-        absButton.grid(row=3, column=0, sticky="nsew")
+                              corner_radius=10, font=(LARGE, 25),
+                              width=75, height=45)
+        absButton.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_modulo_button(self):
         moduloButton = CTkButton(self.buttonFrame, text="mod", border_width=0, fg_color=COLOR_REST,
-                                 corner_radius=0, font=(LARGE, 25), width=75, height=45)
-        moduloButton.grid(row=4, column=0, sticky="nsew")
+                                 corner_radius=10, font=(LARGE, 25),
+                                 width=75, height=45)
+        moduloButton.grid(row=4, column=0, sticky="nsew", padx=2, pady=2)
 
     def run(self):
         self.geometry(self.center_window(400, 405, self._get_window_scaling()))
