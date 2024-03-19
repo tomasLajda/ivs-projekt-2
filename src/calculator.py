@@ -126,6 +126,15 @@ class App(CTk):
             button.grid(row=row, column=column, sticky="nsew")
             column += 1
 
+    def create_exponentiation_button(self):
+        exponentiationButton = CTkButton(self.buttonFrame, text="x\u207F", border_width=0, fg_color=COLOR_REST,
+                                         corner_radius=0, font=(LARGE, 25), width=75, height=45)
+        exponentiationButton.grid(row=0, column=0, sticky="nsew")
+
+    def create_root_button(self):
+        rootButton = CTkButton(self.buttonFrame, text="ⁿ√x", border_width=0, fg_color=COLOR_REST,
+                               corner_radius=0, font=(LARGE, 25), width=75, height=45)
+        rootButton.grid(row=1, column=0, sticky="nsew")
 
     def run(self):
         self.geometry(self.center_window(400, 405, self._get_window_scaling()))
@@ -138,6 +147,8 @@ class App(CTk):
         self.create_clean_button()
         self.create_delete_button()
         self.create_bracket_buttons()
+        self.create_exponentiation_button()
+        self.create_root_button()
         self.mainloop()
 
 
