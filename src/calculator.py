@@ -17,12 +17,13 @@ COLOR_REST = "#4F4F4F"
 LABEL_COLOR = "#25265E"
 LARGE = "Arial 25 bold"
 SMALL = "Arial 15"
-
+HOVER_COLOR = "#898989"
+HOVER_OPERATOR = "#FF8409"
 
 class App(CTk):
     def __init__(self):
         super().__init__()
-        self.title("Calculator")
+        self.title("Calcu-lajda")
         self.resizable(False, False)
         icon_path = r'Pictures\Calculator_30001.ico'
         self.iconbitmap(icon_path)
@@ -87,7 +88,7 @@ class App(CTk):
         for digit, (row, column) in self.digits.items():
             button = CTkButton(self.buttonFrame, text=str(digit), bg_color=GRAY, fg_color=LIGHT_GRAY,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45)
+                               width=75, height=45, hover_color=GRAY)
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
 
     def create_operator_buttons(self):
@@ -96,31 +97,31 @@ class App(CTk):
         for operator, symbol in self.operations.items():
             button = CTkButton(self.buttonFrame, text=symbol, fg_color=ORANGE,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45)
+                               width=75, height=45, hover_color=HOVER_OPERATOR)
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             row += 1
 
     def create_equals_button(self):
         equalsButton = CTkButton(self.buttonFrame, text="=", border_width=0, fg_color=ORANGE,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=75, height=45)
+                                 width=75, height=45, hover_color=HOVER_OPERATOR)
         equalsButton.grid(row=4, column=3, sticky="nsew", padx=2, pady=2)
 
     def create_decimal_button(self):
         decimalButton = CTkButton(self.buttonFrame, text=".", border_width=0, fg_color=LIGHT_GRAY,
                                   corner_radius=10, font=(LARGE, 25),
-                                  width=75, height=45)
+                                  width=75, height=45, hover_color=GRAY)
         decimalButton.grid(row=4, column=1, sticky="nsew", padx=2, pady=2)
 
     def create_clean_button(self):
         cleanButton = CTkButton(self.buttonFrame, text="C", border_width=0, fg_color=COLOR_REST,
-                                corner_radius=10, font=(LARGE, 25), width=75, height=45)
+                                corner_radius=10, font=(LARGE, 25), width=75, height=45, hover_color=HOVER_COLOR)
         cleanButton.grid(row=0, column=3, sticky="nsew", padx=2, pady=2)
 
     def create_delete_button(self):
         deleteButton = CTkButton(self.buttonFrame, text="⌫", border_width=0, fg_color=COLOR_REST,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=75, height=45)
+                                 width=75, height=45, hover_color=HOVER_COLOR)
         deleteButton.grid(row=0, column=4, sticky="nsew", padx=2, pady=2)
 
     def create_bracket_buttons(self):
@@ -129,45 +130,45 @@ class App(CTk):
         for bracket in self.brackets:
             button = CTkButton(self.buttonFrame, text=bracket, fg_color=COLOR_REST,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45)
+                               width=75, height=45, hover_color=HOVER_COLOR)
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             column += 1
 
     def create_exponentiation_button(self):
         exponentiationButton = CTkButton(self.buttonFrame, text="x\u207F", border_width=0, fg_color=COLOR_REST,
                                          corner_radius=10, font=(LARGE, 25),
-                                         width=75, height=45)
+                                         width=75, height=45, hover_color=HOVER_COLOR)
         exponentiationButton.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_root_button(self):
         rootButton = CTkButton(self.buttonFrame, text="ⁿ√x", border_width=0, fg_color=COLOR_REST,
                                corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45)
+                               width=75, height=45, hover_color=HOVER_COLOR)
         rootButton.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_factorial_button(self):
         factorialButton = CTkButton(self.buttonFrame, text="x!", border_width=0, fg_color=COLOR_REST,
                                     corner_radius=10, font=(LARGE, 25),
-                                    width=75, height=45)
+                                    width=75, height=45, hover_color=HOVER_COLOR)
         factorialButton.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_abs_button(self):
         absButton = CTkButton(self.buttonFrame, text="|x|", border_width=0, fg_color=COLOR_REST,
                               corner_radius=10, font=(LARGE, 25),
-                              width=75, height=45)
+                              width=75, height=45, hover_color=HOVER_COLOR)
         absButton.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_modulo_button(self):
         moduloButton = CTkButton(self.buttonFrame, text="mod", border_width=0, fg_color=COLOR_REST,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=75, height=45)
+                                 width=75, height=45, hover_color=HOVER_COLOR)
         moduloButton.grid(row=4, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_settings_button(self):
         settingsButton = CTkButton(self, text="⚙️", border_width=0, fg_color=DARK_GRAY,
-                                   corner_radius=10, font=(LARGE, 12), width=10, height=15,
+                                   corner_radius=0, font=(LARGE, 15), width=15, height=15,
                                    bg_color=DARK_GRAY, hover_color=COLOR_REST)
-        settingsButton.grid(row=0, column=0, sticky="nw", pady=5)
+        settingsButton.grid(row=0, column=0, sticky="nw", pady=2)
 
     def run(self):
         self.geometry(self.center_window(400, 405, self._get_window_scaling()))
