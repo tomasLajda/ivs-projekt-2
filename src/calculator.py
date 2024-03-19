@@ -97,12 +97,24 @@ class App(CTk):
             button.grid(row=row, column=column, sticky="nsew")
             row += 1
 
+    def create_equals_button(self):
+        equalsButton = CTkButton(self.buttonFrame, text="=", border_width=0, fg_color=ORANGE,
+                                 corner_radius=0, font=(LARGE, 25), width=75, height=45)
+        equalsButton.grid(row=4, column=3, sticky="nsew")
+
+    def create_decimal_button(self):
+        decimalButton = CTkButton(self.buttonFrame, text=".", border_width=0, fg_color=LIGHT_GRAY,
+                                  corner_radius=0, font=(LARGE, 25), width=75, height=45)
+        decimalButton.grid(row=4, column=1, sticky="nsew")
+
     def run(self):
         self.geometry(self.center_window(400, 405, self._get_window_scaling()))
         self.create_display_frame()
         self.create_button_frame()
         self.create_digit_buttons()
         self.create_operator_buttons()
+        self.create_equals_button()
+        self.create_decimal_button()
         self.mainloop()
 
 
