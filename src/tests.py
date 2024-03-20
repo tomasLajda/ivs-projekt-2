@@ -7,3 +7,12 @@
 - Tomáš Lajda (xlajdat00)
 @date March 19, 2024
 """
+import pytest
+import lajdaMath # temp name
+
+def math():
+    return lajdaMath()
+
+def test_addition(math):
+    assert math.add(1, 2) == 3
+
