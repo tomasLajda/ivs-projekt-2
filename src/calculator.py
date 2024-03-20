@@ -7,7 +7,9 @@
 @date March 19, 2024
 """
 
-from customtkinter import CTk, CTkFrame, CTkButton, CTkLabel, CTkToplevel
+from customtkinter import *
+from PIL import Image
+from sys import platform
 
 LIGHT_GRAY = "#979797"
 DARK_GRAY = "#3D3D3D"
@@ -26,15 +28,22 @@ class ToplevelWindow(CTkToplevel):
         super().__init__(*args, **kwargs)
         self.geometry(f"300x300+{root.winfo_x() + 65}+{root.winfo_y() + 80}")
         self.title("Help")
+        help_path = r'Pictures\questionmark1_83827.ico'
+        self.iconbitmap(help_path)
+
+        if platform.startswith("win"):
+            self.after(200, lambda: self.iconbitmap(help_path))
 
 
 class App(CTk):
     def __init__(self):
         super().__init__()
+        self.buttonFrame = None
+        self.displayFrame = None
         self.toplevel_window = None
         self.title("Calcu-lajda")
         self.resizable(False, False)
-        icon_path = r'Pictures\Calculator_30001.ico'
+        icon_path = r'Pictures\Calculator_30001 (1).ico'
         self.iconbitmap(icon_path)
 
         self.totalExpression = "0"
@@ -174,8 +183,10 @@ class App(CTk):
         moduloButton.grid(row=4, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_settings_button(self):
-        settingsButton = CTkButton(self, text="⚙️", border_width=0, fg_color=DARK_GRAY,
-                                   corner_radius=0, font=(LARGE, 15), width=15, height=15,
+        settingsImagePath = r'Pictures\Vrstva 1.ico'
+        settingsImage = CTkImage(Image.open(settingsImagePath))
+        settingsButton = CTkButton(self, image=settingsImage, text="", border_width=0, fg_color=DARK_GRAY,
+                                   corner_radius=25, font=(LARGE, 15), width=10, height=10,
                                    bg_color=DARK_GRAY, hover_color=COLOR_REST, command=self.open_settings_window)
         settingsButton.grid(row=0, column=0, sticky="nw", pady=2)
 
