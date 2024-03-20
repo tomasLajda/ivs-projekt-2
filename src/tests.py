@@ -128,4 +128,107 @@ def test_subtraction_large_negative(math):
     assert math.sub(-1_000_000, -2_000_000) == -3_000_000
     assert math.sub(-1_000_000_000_000, -2_000_000_000_000) == -3_000_000_000_000
 
+
 # SUBTRACTION TESTS END
+# MULTIPLICATION TESTS START
+
+def test_multiplication(math):
+    assert math.mul(5, 2) == 10;
+
+
+def test_multiplication_zero(math):
+    assert math.mul(0, 1) == 0
+    assert math.mul(1, 0) == 0
+    assert math.mul(0, 0) == 0
+
+
+def test_multiplication_negative(math):
+    assert math.mul(-1, 2) == -2
+    assert math.mul(1, -2) == -2
+    assert math.mul(-1, -2) == 2
+
+
+def test_multiplication_float(math):
+    assert math.mul(1.1 * 10) == 11
+    assert math.mul(1.1 * 1) == 1.1
+    assert math.mul(0.5 * 10) == 5
+
+
+def test_multiplication_small(math):
+    assert math.mul(0.000_000_000_1, 0.000_000_000_2) == 2e-20
+    assert math.mul(0.000_000_000_1, 2) == 0.000_000_000_2
+
+
+def test_multiplication_large(math):
+    assert math.mul(1_000_000_000_000, 2_000_000_000_000) == 2e+24
+    assert math.mul(1_000_000_000_000, 2) == 2_000_000_000_000
+
+
+# MULTIPLICATION TESTS END
+# DIVISION TESTS START
+
+def test_division(math):
+    assert math.div(4, 2) == 2
+
+
+def test_division_zero(math):
+    with pytest.raises(ValueError):
+        math.div(4, 0)
+
+
+def test_division_negative(math):
+    assert math.div(2, -1) == -1
+    assert math.div(-2, 1) == -1
+    assert math.div(-2, -1) == 1
+
+
+def test_division_float(math):
+    assert math.div(1, 2) == 0.5
+    assert math.div(1, 100) == 0.01
+    assert math.div(3, 90) == 0.05
+
+
+def test_division_periodic(math):
+    assert math.div(1, 3) == pytest.approx(0.3333, rel=1e-4)
+    assert math.div(2, 7) == pytest.approx(0.2857, rel=1e-4)
+    assert math.div(1, 6) == pytest.approx(0.1667, rel=1e-4)
+    # 1e-4 is scientific notation for 0.0001.
+    # It represents a relative tolerance of 0.01%
+    # (or 0.0001 as a decimal) of the expected value.
+
+
+def test_division_small(math):
+    assert math.mul(0.000_000_000_1, 0.000_000_000_2) == 0.5
+    assert math.mul(0.000_000_000_1, 2) == 5e-11
+    assert math.mul(2, 0.000_000_000_1) == 20_000_000_000
+
+
+def test_division_large(math):
+    assert math.mul(1_000_000_000, 2_000_000_000) == 0.5
+    assert math.mul(1_000_000_000, 2) == 500_000_000
+    assert math.mul(2, 1_000_000_000) == 2e-9
+
+
+# DIVISION TESTS END
+# ABSOLUTE VALUE TESTS START
+
+def test_absolute_value(math):
+    assert math.abs(-5) == 5
+    assert math.abs(5) == 5
+
+
+def test_absolute_value_zero(math):
+    assert math.abs(0) == 0
+    assert math.abs(-0) == 0
+
+
+def test_absolute_value_small(math):
+    assert math.abs(0.000_000_000_1) == 0.000_000_000_1
+    assert math.abs(-0.000_000_000_1) == 0.000_000_000_1
+
+
+def test_absolute_value_large(math):
+    assert math.abs(1_000_000_000) == 1_000_000_000
+    assert math.abs(-1_000_000_000) == 1_000_000_000
+
+# ABSOLUTE VALUE TESTS END
