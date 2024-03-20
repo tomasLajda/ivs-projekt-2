@@ -7,7 +7,7 @@
 @date March 19, 2024
 """
 
-from customtkinter import CTk, CTkFrame, CTkButton, CTkLabel
+from customtkinter import CTk, CTkFrame, CTkButton, CTkLabel, CTkToplevel
 
 LIGHT_GRAY = "#979797"
 DARK_GRAY = "#3D3D3D"
@@ -20,9 +20,18 @@ SMALL = "Arial 15"
 HOVER_COLOR = "#898989"
 HOVER_OPERATOR = "#FF8409"
 
+
+class ToplevelWindow(CTkToplevel):
+    def __init__(self, root, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry(f"300x300+{root.winfo_x() + 65}+{root.winfo_y() + 80}")
+        self.title("Help")
+
+
 class App(CTk):
     def __init__(self):
         super().__init__()
+        self.toplevel_window = None
         self.title("Calcu-lajda")
         self.resizable(False, False)
         icon_path = r'Pictures\Calculator_30001.ico'
@@ -167,8 +176,15 @@ class App(CTk):
     def create_settings_button(self):
         settingsButton = CTkButton(self, text="⚙️", border_width=0, fg_color=DARK_GRAY,
                                    corner_radius=0, font=(LARGE, 15), width=15, height=15,
-                                   bg_color=DARK_GRAY, hover_color=COLOR_REST)
+                                   bg_color=DARK_GRAY, hover_color=COLOR_REST, command=self.open_settings_window)
         settingsButton.grid(row=0, column=0, sticky="nw", pady=2)
+
+    def open_settings_window(self):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            self.toplevel_window = ToplevelWindow(self)
+            self.toplevel_window.wm_transient(self)
+        else:
+            self.toplevel_window.focus()
 
     def run(self):
         self.geometry(self.center_window(400, 405, self._get_window_scaling()))
