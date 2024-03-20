@@ -124,9 +124,9 @@ def test_subtraction_small_negative(math):
 
 
 def test_subtraction_large_negative(math):
-    assert math.sub(-1_000, -2_000) == -3_000
-    assert math.sub(-1_000_000, -2_000_000) == -3_000_000
-    assert math.sub(-1_000_000_000_000, -2_000_000_000_000) == -3_000_000_000_000
+    assert math.sub(-1_000, -2_000) == 1_000
+    assert math.sub(-1_000_000, -2_000_000) == 1_000_000
+    assert math.sub(-1_000_000_000_000, -2_000_000_000_000) == 1_000_000_000_000
 
 # SUBTRACTION TESTS END
 # MULTIPLICATION TESTS START
@@ -154,12 +154,12 @@ def test_multiplication_float(math):
 
 
 def test_multiplication_small(math):
-    assert math.mul(0.000_000_000_1, 0.000_000_000_2) == 2e-20
+    assert math.mul(0.000_000_000_1, 0.000_000_000_2) == 0.000_000_000_000_000_000_02
     assert math.mul(0.000_000_000_1, 2) == 0.000_000_000_2
 
 
 def test_multiplication_large(math):
-    assert math.mul(1_000_000_000_000, 2_000_000_000_000) == 2e+24
+    assert math.mul(1_000_000_000_000, 2_000_000_000_000) == 2_000_000_000_000_000_000_000_000
     assert math.mul(1_000_000_000_000, 2) == 2_000_000_000_000
 
 
@@ -197,15 +197,15 @@ def test_division_periodic(math):
 
 
 def test_division_small(math):
-    assert math.mul(0.000_000_000_1, 0.000_000_000_2) == 0.5
-    assert math.mul(0.000_000_000_1, 2) == 5e-11
-    assert math.mul(2, 0.000_000_000_1) == 20_000_000_000
+    assert math.div(0.000_000_000_1, 0.000_000_000_2) == 0.5
+    assert math.div(0.000_000_000_1, 2) == 0.000_000_000_2
+    assert math.div(2, 0.000_000_000_1) == 20_000_000_000
 
 
 def test_division_large(math):
-    assert math.mul(1_000_000_000, 2_000_000_000) == 0.5
-    assert math.mul(1_000_000_000, 2) == 500_000_000
-    assert math.mul(2, 1_000_000_000) == 2e-9
+    assert math.div(1_000_000_000, 2_000_000_000) == 0.5
+    assert math.div(1_000_000_000, 2) == 500_000_000
+    assert math.div(2, 1_000_000_000) == 0.000_000_002
 
 
 # DIVISION TESTS END
@@ -263,4 +263,3 @@ def test_factorial_negative(math):
         math.fac(-1)
     with pytest.raises(ValueError):
         math.fac(-10)
-    
