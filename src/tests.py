@@ -8,7 +8,6 @@
 @date March 19, 2024
 """
 import pytest
-import sys
 import lajdaMath  # temp name
 
 
