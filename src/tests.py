@@ -128,7 +128,6 @@ def test_subtraction_large_negative(math):
     assert math.sub(-1_000_000, -2_000_000) == -3_000_000
     assert math.sub(-1_000_000_000_000, -2_000_000_000_000) == -3_000_000_000_000
 
-
 # SUBTRACTION TESTS END
 # MULTIPLICATION TESTS START
 
@@ -232,3 +231,35 @@ def test_absolute_value_large(math):
     assert math.abs(-1_000_000_000) == 1_000_000_000
 
 # ABSOLUTE VALUE TESTS END
+# FACTORIAL TESTS START
+
+def test_factorial_zero(math):
+    assert math.fac(0) == 1
+
+def test_factorial_small_positive(math):
+    assert math.fac(1) == 1
+    assert math.fac(2) == 2
+    assert math.fac(3) == 6
+    assert math.fac(4) == 24
+    assert math.fac(5) == 120
+    assert math.fac(6) == 720
+    assert math.fac(7) == 5040
+    assert math.fac(8) == 40320
+    assert math.fac(9) == 362880
+    assert math.fac(10) == 3628800
+
+def test_factorial_big_positive(math):
+    assert math.fac(50) == 30414093201713378043612608166064768844377641568960512000000000000
+    assert math.fac(74) == 330788544151938641225953028221253782145683251820934971170611926835411235700971565459250872320000000000000000
+    assert math.fac(35) == 10333147966386144929666651337523200000000
+    assert math.fac(100) == 93326215443944152681699238856266700490715968264381621468592963895217599993229915608941463976156518286253697920827223758251185210916864000000000000000000000000
+
+def test_factorial_negative(math):
+    with pytest.raises(ValueError):
+        math.fac(-6)
+    with pytest.raises(ValueError):
+        math.fac(-1)
+    with pytest.raises(ValueError):
+        math.fac(-10)
+    
+# FACTORIAL TESTS END
