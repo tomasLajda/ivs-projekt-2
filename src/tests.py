@@ -48,7 +48,7 @@ def test_addition_zero(math):
 
 
 def test_addition_small(math):
-    assert math.add(0.000_000_000_1, 0.000_000_000_2) == 0.000_000_000_3
+    assert math.add(0.000_000_000_1, 0.000_000_000_2) == 0.000_000_000_3 # 1-e12 + 2-e12 = 3-e12
     assert math.add(0.000_000_1, 0.000_000_2) == 0.000_000_3
     assert math.add(0.000_1, 0.000_2) == 0.000_3
 
@@ -56,11 +56,11 @@ def test_addition_small(math):
 def test_addition_large(math):
     assert math.add(1_000, 2_000) == 3_000
     assert math.add(1_000_000, 2_000_000) == 3_000_000
-    assert math.add(1_000_000_000_000, 2_000_000_000_000) == 3_000_000_000_000
+    assert math.add(1_000_000_000_000, 2_000_000_000_000) == 3_000_000_000_000 # 1+e12 + 2+e12 = 3+e12
 
 
 def test_addition_small_negative(math):
-    assert math.add(-0.000_000_000_1, -0.000_000_000_2) == -0.000_000_000_3
+    assert math.add(-0.000_000_000_1, -0.000_000_000_2) == -0.000_000_000_3 # -1-e12 + -2-e12 = -3-e12
     assert math.add(-0.000_000_1, -0.000_000_2) == -0.000_000_3
     assert math.add(-0.000_1, -0.000_2) == -0.000_3
 
@@ -68,7 +68,7 @@ def test_addition_small_negative(math):
 def test_addition_large_negative(math):
     assert math.add(-1_000, -2_000) == -3_000
     assert math.add(-1_000_000, -2_000_000) == -3_000_000
-    assert math.add(-1_000_000_000_000, -2_000_000_000_000) == -3_000_000_000_000
+    assert math.add(-1_000_000_000_000, -2_000_000_000_000) == -3_000_000_000_000 # -1+e12 + -2+e12 = -3+e12
 
 
 # ADDITION TESTS END
@@ -106,7 +106,7 @@ def test_subtraction_zero(math):
 
 
 def test_subtraction_small(math):
-    assert math.sub(0.000_000_000_1, 0.000_000_000_2) == -0.000_000_000_1
+    assert math.sub(0.000_000_000_1, 0.000_000_000_2) == -0.000_000_000_1 # 1-e12 - 2-e12 = -1-e12
     assert math.sub(0.000_000_1, 0.000_000_2) == -0.000_000_1
     assert math.sub(0.000_1, 0.000_2) == -0.000_1
 
@@ -114,11 +114,11 @@ def test_subtraction_small(math):
 def test_subtraction_large(math):
     assert math.sub(1_000, 2_000) == -1_000
     assert math.sub(1_000_000, 2_000_000) == -1_000_000
-    assert math.sub(1_000_000_000_000, 2_000_000_000_000) == -1_000_000_000_000
+    assert math.sub(1_000_000_000_000, 2_000_000_000_000) == -1_000_000_000_000 # 1+e12 - 2+e12 = -1+e12
 
 
 def test_subtraction_small_negative(math):
-    assert math.sub(-0.000_000_000_1, -0.000_000_000_2) == 0.000_000_000_1
+    assert math.sub(-0.000_000_000_1, -0.000_000_000_2) == 0.000_000_000_1 # -1-e12 - -2-e12 = 1-e12
     assert math.sub(-0.000_000_1, -0.000_000_2) == 0.000_000_1
     assert math.sub(-0.000_1, -0.000_2) == 0.000_1
 
@@ -126,7 +126,7 @@ def test_subtraction_small_negative(math):
 def test_subtraction_large_negative(math):
     assert math.sub(-1_000, -2_000) == 1_000
     assert math.sub(-1_000_000, -2_000_000) == 1_000_000
-    assert math.sub(-1_000_000_000_000, -2_000_000_000_000) == 1_000_000_000_000
+    assert math.sub(-1_000_000_000_000, -2_000_000_000_000) == 1_000_000_000_000  # -1+e12 - -2+e12 = 1+e12
 
 # SUBTRACTION TESTS END
 # MULTIPLICATION TESTS START
@@ -154,13 +154,13 @@ def test_multiplication_float(math):
 
 
 def test_multiplication_small(math):
-    assert math.mul(0.000_000_000_1, 0.000_000_000_2) == 0.000_000_000_000_000_000_02
-    assert math.mul(0.000_000_000_1, 2) == 0.000_000_000_2
+    assert math.mul(0.000_000_000_1, 0.000_000_000_2) == 0.000_000_000_000_000_000_02  # 1e-10 * 2e-10 = 2e-20
+    assert math.mul(0.000_000_000_1, 2) == 0.000_000_000_2  # 1e-10 * 2 = 2e-10
 
 
 def test_multiplication_large(math):
-    assert math.mul(1_000_000_000_000, 2_000_000_000_000) == 2_000_000_000_000_000_000_000_000
-    assert math.mul(1_000_000_000_000, 2) == 2_000_000_000_000
+    assert math.mul(1_000_000_000_000, 2_000_000_000_000) == 2_000_000_000_000_000_000_000_000  # 1e+12 * 2e+12 = 2e+24
+    assert math.mul(1_000_000_000_000, 2) == 2_000_000_000_000  # 1e+12 * 2 = 2e+12
 
 
 # MULTIPLICATION TESTS END
@@ -197,15 +197,15 @@ def test_division_periodic(math):
 
 
 def test_division_small(math):
-    assert math.div(0.000_000_000_1, 0.000_000_000_2) == 0.5
-    assert math.div(0.000_000_000_1, 2) == 0.000_000_000_2
-    assert math.div(2, 0.000_000_000_1) == 20_000_000_000
+    assert math.div(0.000_000_000_1, 0.000_000_000_2) == 0.5  # 1e-10 / 2e-10 = 0.5
+    assert math.div(0.000_000_000_1, 2) == 0.000_000_000_2  # 1e-10 / 2 = 5e-10
+    assert math.div(2, 0.000_000_000_1) == 20_000_000_000  # 2 / e-10 = 2e+11
 
 
 def test_division_large(math):
-    assert math.div(1_000_000_000, 2_000_000_000) == 0.5
-    assert math.div(1_000_000_000, 2) == 500_000_000
-    assert math.div(2, 1_000_000_000) == 0.000_000_002
+    assert math.div(1_000_000_000, 2_000_000_000) == 0.5  # 1+e10 / 2+e10 = 0.5
+    assert math.div(1_000_000_000, 2) == 500_000_000  # 1+e10 / 2 = 5+e9
+    assert math.div(2, 1_000_000_000) == 0.000_000_002  # 1+e10 / 2 = 2e-9
 
 
 # DIVISION TESTS END
@@ -222,13 +222,13 @@ def test_absolute_value_zero(math):
 
 
 def test_absolute_value_small(math):
-    assert math.abs(0.000_000_000_1) == 0.000_000_000_1
-    assert math.abs(-0.000_000_000_1) == 0.000_000_000_1
+    assert math.abs(0.000_000_000_1) == 0.000_000_000_1  # abs(1-e10) = 1-e10
+    assert math.abs(-0.000_000_000_1) == 0.000_000_000_1  # abs(-1-e10) = 1-e10
 
 
 def test_absolute_value_large(math):
-    assert math.abs(1_000_000_000) == 1_000_000_000
-    assert math.abs(-1_000_000_000) == 1_000_000_000
+    assert math.abs(1_000_000_000) == 1_000_000_000  # abs(1+e10) = 1+e10
+    assert math.abs(-1_000_000_000) == 1_000_000_000  # abs(-1+e10) = 1+e10
 
 # ABSOLUTE VALUE TESTS END
 # FACTORIAL TESTS START
