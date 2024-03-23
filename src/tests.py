@@ -10,11 +10,10 @@
 import pytest
 import mymathlib  # temp name
 
+# ADDITION TESTS START
 def test_addition():
     assert mymathlib.add(1, 2) == 3
 
-
-# ADDITION TESTS START
 def test_addition_float():
     assert mymathlib.add(0.1, 0.1) == 0.2
     assert mymathlib.add(0.1, mymathlib.add(0.1, 0.1)) == 0.3
@@ -240,6 +239,18 @@ def test_factorial_small_positive():
     assert mymathlib.fac(9) == 362880
     assert mymathlib.fac(10) == 3628800
 
+def test_factorial_small_positive(math):
+    assert mymathlib.fac(1) == 1
+    assert mymathlib.fac(2) == 2
+    assert mymathlib.fac(3) == 6
+    assert mymathlib.fac(4) == 24
+    assert mymathlib.fac(5) == 120
+    assert mymathlib.fac(6) == 720
+    assert mymathlib.fac(7) == 5_040
+    assert mymathlib.fac(8) == 40_320
+    assert mymathlib.fac(9) == 362_880
+    assert mymathlib.fac(10) == 3_628_800
+
 
 def test_factorial_big_positive():
     assert mymathlib.fac(50) == 30414093201713378043612608166064768844377641568960512000000000000
@@ -255,3 +266,99 @@ def test_factorial_negative():
         mymathlib.fac(-1)
     with pytest.raises(ValueError):
         mymathlib.fac(-10)
+
+# FACTORIAL TESTS END
+# POW TESTS START
+        
+
+def test_pow_base_zero():
+    assert mymathlib.pow(0, 1_000_000_000) == 0
+    assert mymathlib.pow(0, 143) == 0
+    with pytest.raises(ValueError):
+        mymathlib.pow(0, -10)
+
+
+def test_pow_base_one():
+    assert mymathlib.pow(1, 100) == 1
+    assert mymathlib.pow(1, 10_000_000) == 1
+    
+
+def test_pow_of_positive():
+    assert mymathlib.pow(2, 2) == 4
+    assert mymathlib.pow(10, 2) == 100
+    assert mymathlib.pow(43, 5) == 147_008_443
+    assert mymathlib.pow(8, 6) == 262_144
+    assert mymathlib.pow(-7, 5) == -16_807
+    assert mymathlib.pow(-12, 12) == 8_916_100_448_256
+
+
+def test_pow_of_negative_base():
+    assert mymathlib.pow(-2, 3) == -8
+    assert mymathlib.pow(-10, 2) == 100
+    assert mymathlib.pow(-2, 4) == 16
+    assert mymathlib.pow(-5, 5) == -3125
+
+
+def test_pow_of_large_base_and_index():
+    assert mymathlib.pow(1_000, 1_000) == 1.0e+3000
+    assert mymathlib.pow(10, 10) == 10_000_000_000
+
+
+def test_pow_decimal_numbers():
+    assert mymathlib.pow(2.5, 2) == pytest.approx(6.25, rel=1e-3)  # 2.5^2 ≈ 6.25 (approx)
+    assert mymathlib.pow(1.5, 3) == pytest.approx(3.375, rel=1e-3)  # 1.5^3 ≈ 3.375 (approx)
+    assert mymathlib.pow(3.33, 2) == pytest.approx(11.088_9, rel=1e-3)  # 3.33^2 = 11.0889 (approx)
+    assert mymathlib.pow(10.5, 3) == pytest.approx(1_157.625, rel=1e-3)  # 10.5^3 ≈ 1157.625 (approx)
+
+
+def test_pow_large_decimal_numbers():
+    assert mymathlib.pow(1.000_1, 1000) == pytest.approx(1.105_165_392_6, rel=1e-3)  # 1.0001^1000 ≈ 1.105 (approx)
+    assert mymathlib.pow(1.000_01, 10_000) == pytest.approx(1.105_170_365_4, rel=1e-3)  # 1.00001^10000 ≈ 1.105 (approx)
+    assert mymathlib.pow(1.000_001, 1_000_000) == pytest.approx(2.718_280_469_0, rel=1e-3)  # 1.000001^1000000 ≈ 2.718 (approx)
+
+
+def test_pow_decimal_index():
+    with pytest.raises(TypeError):
+        mymathlib.pow(2, 1.5)
+
+
+def test_pow_negative_index_raises_error():
+    with pytest.raises(TypeError):
+        mymathlib.pow(2, -2)
+        
+
+# POW TESTS END
+# SQR TESTS START
+        
+def test_sqr_integer_root(math):
+    assert mymathlib.sqr(4, 2) == 2
+    assert mymathlib.sqr(9, 2) == 3
+    assert mymathlib.sqr(16, 2) == 4
+
+
+def test_sqr_negative_number_even_root(math):
+    with pytest.raises(ValueError):
+        mymathlib.sqr(-4, 2)
+    with pytest.raises(ValueError):
+        mymathlib.sqr(-128, 4)
+    with pytest.raises(ValueError):
+        mymathlib.sqr(-1_024, 8)
+
+
+def test_sqr_negative_number_decimal_root():
+    assert mymathlib.sqr(-8, 3) == -2
+    assert mymathlib.sqr(-27, 3) == -3
+    assert mymathlib.sqr(-64, 3) == -4
+
+
+def test_sqr_large_number():
+    assert mymathlib.sqr(10_000_000, 2) == pytest.approx(3_162.277_660_168_3, rel=1e-3)  # sqr(10_000_000, 2) ≈ 3_162.277(approx)
+    assert mymathlib.sqr(1_000_000_000, 3) == pytest.approx(999.999_999_999_9, rel=1e-3)  # sqr(1_000_000_000, 3) ≈ 999.999 (approx)
+
+
+def test_sqr_small_number():
+    assert mymathlib.sqr(0.000_1, 2) == pytest.approx(0.01, rel=1e-3)  # sqr(0.0001, 2) ≈ 0.01 (approx)
+    assert mymathlib.sqr(0.002, 3) == pytest.approx(0.125_992_104_9, rel=1e-3)  # sqr(0.001, 3) ≈ 0.125 (approx)
+
+
+# SQR TESTS END
