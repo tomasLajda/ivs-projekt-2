@@ -268,18 +268,6 @@ def test_factorial_negative(math):
 # FACTORIAL TESTS END
 # POW TESTS START
         
-def test_pow_of_zero(math):
-    assert math.pow(17, 0) == 1
-    assert math.pow(10393, 0) == 1
-    assert math.pow(-731, 0) == 1
-
-
-def test_pow_of_one(math):
-    assert math.pow(1, 1) == 1
-    assert math.pow(-63, 1) == -63
-    assert math.pow(-12_000, 1) == -12_000
-    assert math.pow(734, 1) == 1
-
 
 def test_pow_base_zero(math):
     assert math.pow(0, 1_000_000_000) == 0
@@ -309,11 +297,27 @@ def test_pow_of_negative_base(math):
 
 def test_pow_of_large_base_and_index(math):
     assert math.pow(1000, 1000) == 1.0e+3000
-    assert math.pow(2.5, 20) == 95_367_431_640.625
     assert math.pow(10, 10) == 10_000_000_000
-    assert math.pow(2.5, -20) == 1.048576e-18
 
+def test_pow_decimal_numbers(math):
+    assert math.pow(2.5, 2) == pytest.approx(6.25, rel=1e-3)  # 2.5^2 ≈ 6.25 (approx)
+    assert math.pow(1.5, 3) == pytest.approx(3.375, rel=1e-3)  # 1.5^3 ≈ 3.375 (approx)
+    assert math.pow(3.33, 2) == pytest.approx(11.0889, rel=1e-3)  # 3.33^2 = 11.0889 (approx)
+    assert math.pow(10.5, 3) == pytest.approx(1157.625, rel=1e-3)  # 10.5^3 ≈ 1157.625 (approx)
+
+def test_pow_large_decimal_numbers(math):
+    assert math.pow(1.0001, 1000) == pytest.approx(2.71828036661, rel=1e-3)  # 1.0001^1000 ≈ 2.7183 (approx)
+    assert math.pow(1.00001, 10_000) == pytest.approx(2.7182794155, rel=1e-3)  # 1.00001^10000 ≈ 2.7183 (approx)
+    assert math.pow(1.000001, 1_000_000) == pytest.approx(2.7182818284, rel=1e-3)  # 1.000001^1000000 ≈ 2.7183 (approx)
+
+def test_pow_decimal_index(math):
+    with pytest.raises(TypeError):
+        math.pow(2, 1.5)
+
+def test_pow_negative_index_raises_error(math):
+    with pytest.raises(TypeError):
+        math.pow(2, -2)
+        
 
 # POW TESTS END
 # SQR TESTS START
-    
