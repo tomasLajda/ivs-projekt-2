@@ -98,7 +98,7 @@ def absolute_value(num):
     else:
         return num
 
-def factorial(n):
+def factorial(n: int) -> int:
     """
     Function to compute the factorial of a non-negative integer.
     
@@ -118,4 +118,20 @@ def factorial(n):
     result = 1
     for i in range(1, n + 1):
         result *= i
+    return result
+
+def power(base: int, exponent: int) -> int:
+    """
+    Function to compute the power of a number.
+    
+    Parameters:
+    base (int): The base number.
+    exponent (int): The exponent.
+    
+    Returns:
+    int: The result of raising base to the power of exponent.
+    """
+    result = 1
+    for _ in range(exponent):
+        result *= base
     return result
