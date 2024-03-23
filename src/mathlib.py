@@ -136,7 +136,7 @@ def pow(base: int, exponent: int) -> int:
         result *= base
     return result
 
-def nth_root(number: float, n: int, precision: float = 0.0001) -> float:
+def root(number: float, n: int, precision: float = 0.0001) -> float:
     """
     Function to compute the nth root of a number using Newton's method.
     
