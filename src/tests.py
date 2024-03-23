@@ -262,3 +262,6 @@ def test_factorial_negative(math):
         math.fac(-1)
     with pytest.raises(ValueError):
         math.fac(-10)
+
+
+# FACTORIAL TESTS END
