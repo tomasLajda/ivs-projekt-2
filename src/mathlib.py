@@ -97,3 +97,25 @@ def absolute_value(num):
         return -num
     else:
         return num
+
+def factorial(n):
+    """
+    Function to compute the factorial of a non-negative integer.
+    
+    Parameters:
+    n (int): The non-negative integer.
+    
+    Returns:
+    int: The factorial of the input integer.
+    
+    Raises:
+    ValueError: If the input is negative.
+    """
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers.")
+    if n == 0:
+        return 1
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
