@@ -235,6 +235,7 @@ def test_absolute_value_large(math):
 def test_factorial_zero(math):
     assert math.fac(0) == 1
 
+
 def test_factorial_small_positive(math):
     assert math.fac(1) == 1
     assert math.fac(2) == 2
@@ -242,10 +243,10 @@ def test_factorial_small_positive(math):
     assert math.fac(4) == 24
     assert math.fac(5) == 120
     assert math.fac(6) == 720
-    assert math.fac(7) == 5040
-    assert math.fac(8) == 40320
-    assert math.fac(9) == 362880
-    assert math.fac(10) == 3628800
+    assert math.fac(7) == 5_040
+    assert math.fac(8) == 40_320
+    assert math.fac(9) == 362_880
+    assert math.fac(10) == 3_628_800
 
 
 def test_factorial_big_positive(math):
@@ -265,3 +266,54 @@ def test_factorial_negative(math):
 
 
 # FACTORIAL TESTS END
+# POW TESTS START
+        
+def test_pow_of_zero(math):
+    assert math.pow(17, 0) == 1
+    assert math.pow(10393, 0) == 1
+    assert math.pow(-731, 0) == 1
+
+
+def test_pow_of_one(math):
+    assert math.pow(1, 1) == 1
+    assert math.pow(-63, 1) == -63
+    assert math.pow(-12_000, 1) == -12_000
+    assert math.pow(734, 1) == 1
+
+
+def test_pow_base_zero(math):
+    assert math.pow(0, 1_000_000_000) == 0
+    assert math.pow(0, 143) == 0
+    with pytest.raises(ValueError):
+        math.pow(0, -10)    
+
+
+def test_pow_base_one(math):
+    assert math.pow(1, 100) == 1
+    assert math.pow(1, 10_000_000) == 1
+    
+
+def test_pow_of_positive(math):
+    assert math.pow(2, 2) == 4
+    assert math.pow(10, 2) == 100
+    assert math.pow(43, 5) == 147_008_443
+    assert math.pow(8, 6) == 262_144
+    assert math.pow(-7, 5) == -16_807
+    assert math.pow(-12, 12) == 8_916_100_448_256
+
+def test_pow_of_negative_base(math):
+    assert math.pow(-2, 3) == -8
+    assert math.pow(-10, 2) == 100
+    assert math.pow(-2, 4) == 16
+    assert math.pow(-5, 5) == -3125
+
+def test_pow_of_large_base_and_index(math):
+    assert math.pow(1000, 1000) == 1.0e+3000
+    assert math.pow(2.5, 20) == 95_367_431_640.625
+    assert math.pow(10, 10) == 10_000_000_000
+    assert math.pow(2.5, -20) == 1.048576e-18
+
+
+# POW TESTS END
+# SQR TESTS START
+    
