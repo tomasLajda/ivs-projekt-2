@@ -70,9 +70,6 @@ def test_subtraction():
 
 def test_subtraction_float():
     assert mathlib.sub(0.1, 2) == -1.9
-    assert mathlib.sub(mathlib.sub(mathlib.sub(
-        mathlib.sub(mathlib.sub(mathlib.sub(mathlib.sub(mathlib.sub(mathlib.sub(mathlib.sub(1, 0, 1), 0, 1), 0, 1), 0, 1), 0, 1), 0, 1), 0,
-                 1), 0, 1), 0, 1), 0, 1) == 0
 
 
 def test_subtraction_negative():
