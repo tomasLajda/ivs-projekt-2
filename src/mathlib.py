@@ -61,3 +61,18 @@ def div(num1, num2):
     if num2 == 0:
         raise ValueError("Division by zero is not allowed.")
     return num1 / num2
+
+def absolute_value(num):
+    """
+    Function to calculate the absolute value of a number.
+    
+    Parameters:
+    num: The input number.
+    
+    Returns:
+    The absolute value of the input number.
+    """
+    if num < 0:
+        return -num
+    else:
+        return num
