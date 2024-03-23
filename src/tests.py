@@ -344,38 +344,38 @@ def test_pow_negative_index_raises_error():
 
 
 # POW TESTS END
-# SQR TESTS START
+# root TESTS START
 
-def test_sqr_integer_root(math):
-    assert mathlib.sqr(4, 2) == 2
-    assert mathlib.sqr(9, 2) == 3
-    assert mathlib.sqr(16, 2) == 4
+def test_root_integer_root(math):
+    assert mathlib.root(4, 2) == 2
+    assert mathlib.root(9, 2) == 3
+    assert mathlib.root(16, 2) == 4
 
 
-def test_sqr_negative_number_even_root(math):
+def test_root_negative_number_even_root(math):
     with pytest.raises(ValueError):
-        mathlib.sqr(-4, 2)
+        mathlib.root(-4, 2)
     with pytest.raises(ValueError):
-        mathlib.sqr(-128, 4)
+        mathlib.root(-128, 4)
     with pytest.raises(ValueError):
-        mathlib.sqr(-1_024, 8)
+        mathlib.root(-1_024, 8)
 
 
-def test_sqr_negative_number_decimal_root():
-    assert mathlib.sqr(-8, 3) == -2
-    assert mathlib.sqr(-27, 3) == -3
-    assert mathlib.sqr(-64, 3) == -4
+def test_root_negative_number_decimal_root():
+    assert mathlib.root(-8, 3) == -2
+    assert mathlib.root(-27, 3) == -3
+    assert mathlib.root(-64, 3) == -4
 
 
-def test_sqr_large_number():
-    assert mathlib.sqr(10_000_000, 2) == pytest.approx(3_162.277_660_168_3,
-                                                       rel=1e-3)  # sqr(10_000_000, 2) ≈ 3_162.277(approx)
-    assert mathlib.sqr(1_000_000_000, 3) == pytest.approx(999.999_999_999_9,
-                                                          rel=1e-3)  # sqr(1_000_000_000, 3) ≈ 999.999 (approx)
+def test_root_large_number():
+    assert mathlib.root(10_000_000, 2) == pytest.approx(3_162.277_660_168_3,
+                                                       rel=1e-3)  # root(10_000_000, 2) ≈ 3_162.277(approx)
+    assert mathlib.root(1_000_000_000, 3) == pytest.approx(999.999_999_999_9,
+                                                          rel=1e-3)  # root(1_000_000_000, 3) ≈ 999.999 (approx)
 
 
-def test_sqr_small_number():
-    assert mathlib.sqr(0.000_1, 2) == pytest.approx(0.01, rel=1e-3)  # sqr(0.0001, 2) ≈ 0.01 (approx)
-    assert mathlib.sqr(0.002, 3) == pytest.approx(0.125_992_104_9, rel=1e-3)  # sqr(0.001, 3) ≈ 0.125 (approx)
+def test_root_small_number():
+    assert mathlib.root(0.000_1, 2) == pytest.approx(0.01, rel=1e-3)  # root(0.0001, 2) ≈ 0.01 (approx)
+    assert mathlib.root(0.002, 3) == pytest.approx(0.125_992_104_9, rel=1e-3)  # root(0.001, 3) ≈ 0.125 (approx)
 
-# SQR TESTS END
+# root TESTS END
