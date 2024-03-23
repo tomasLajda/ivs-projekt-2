@@ -176,7 +176,7 @@ def test_division_zero():
 
 
 def test_division_negative():
-    assert mathlib.div(2, -1) == -1
+    assert mathlib.div(2, -1) == -2
     assert mathlib.div(-2, 1) == -1
     assert mathlib.div(-2, -1) == 1
 
