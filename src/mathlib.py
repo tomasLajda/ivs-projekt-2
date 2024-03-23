@@ -138,8 +138,11 @@ def pow(base: int, exponent: int) -> int:
     Returns:
     int: The result of raising base to the power of exponent.
     """
-    if base == 0 and exponent <= 0:
-        raise ValueError("Base must be non-zero when the exponent is non-positive.")
+    if exponent < 0:
+        raise ValueError("Exponent must be non-negative.")
+    
+    if base == 0 and exponent == 0:
+        raise ValueError("0^0 is undefined.")
     
     result = 1
     for _ in range(exponent):
