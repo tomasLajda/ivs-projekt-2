@@ -8,7 +8,7 @@
 @date March 19, 2024
 """
 import pytest
-import mathlib  # temp name
+import mathlib
 
 # ADDITION TESTS START
 def test_addition():
