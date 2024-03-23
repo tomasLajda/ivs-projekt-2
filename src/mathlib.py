@@ -47,23 +47,30 @@ def mul(num1, num2):
     """
     return num1 * num2
 
-def div(dividend, divisor):
+def div(dividend, divisor, precision=10):
     """
     Function to divide two numbers.
     
     Parameters:
-    dividend: The number to be divided.
-    divisor: The number by which the dividend is divided.
+    dividend (float): The number to be divided (numerator).
+    divisor (float): The number by which the dividend is divided (denominator).
+    precision (int): Number of decimal places for rounding. Defaults to 10.
     
     Returns:
-    Quotient of num1 divided by num2 (num1 / num2).
+    float: The quotient of dividend divided by divisor.
     
     Raises:
     ValueError: If the divisor is zero.
     """
     if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
-    return dividend / divisor
+    
+    quotient = dividend // divisor
+    remainder = dividend % divisor
+    
+    result = quotient + (remainder / divisor)
+    
+    return round(result, precision)
 
 def mod(dividend, divisor):
     """
@@ -131,6 +138,9 @@ def pow(base: int, exponent: int) -> int:
     Returns:
     int: The result of raising base to the power of exponent.
     """
+    if base == 0 and exponent <= 0:
+        raise ValueError("Base must be non-zero when the exponent is non-positive.")
+    
     result = 1
     for _ in range(exponent):
         result *= base
