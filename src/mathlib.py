@@ -47,20 +47,41 @@ def mul(num1, num2):
     """
     return num1 * num2
 
-def div(num1, num2):
+def div(dividend, divisor):
     """
     Function to divide two numbers.
     
     Parameters:
-    num1: Divident.
-    num2: Divisor.
+    dividend: The number to be divided.
+    divisor: The number by which the dividend is divided.
     
     Returns:
     Quotient of num1 divided by num2 (num1 / num2).
+    
+    Raises:
+    ValueError: If the divisor is zero.
     """
-    if num2 == 0:
+    if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
-    return num1 / num2
+    return dividend / divisor
+
+def modulo(dividend, divisor):
+    """
+    Function to compute the modulo operation.
+    
+    Parameters:
+    dividend: The number to be divided.
+    divisor: The number by which the dividend is divided.
+    
+    Returns:
+    The remainder after dividing dividend by divisor.
+    
+    Raises:
+    ValueError: If the divisor is zero.
+    """
+    if divisor == 0:
+        raise ValueError("Division by zero is not allowed.")
+    return dividend % divisor
 
 def absolute_value(num):
     """
