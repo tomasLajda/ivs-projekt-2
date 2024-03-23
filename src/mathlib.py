@@ -135,3 +135,27 @@ def pow(base: int, exponent: int) -> int:
     for _ in range(exponent):
         result *= base
     return result
+
+def nth_root(number: float, n: int, precision: float = 0.0001) -> float:
+    """
+    Function to compute the nth root of a number using Newton's method.
+    
+    Parameters:
+    number (float): The number whose root is to be calculated.
+    n (int): The root to be calculated (e.g., 2 for square root).
+    precision (float): The desired precision of the result. Defaults to 0.0001.
+    
+    Returns:
+    float: The nth root of the given number.
+    """
+    if number < 0 and n % 2 == 0:
+        raise ValueError("Cannot compute even root of negative number.")
+        
+    if number == 0:
+        return 0
+    
+    x = number / 2
+    while abs(x ** n - number) > precision:
+        x -= (x ** n - number) / (n * x ** (n - 1))
+        
+    return x
