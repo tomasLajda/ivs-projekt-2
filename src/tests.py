@@ -147,9 +147,9 @@ def test_multiplication_negative():
 
 
 def test_multiplication_float():
-    assert mathlib.mul(1.1 * 10) == 11
-    assert mathlib.mul(1.1 * 1) == 1.1
-    assert mathlib.mul(0.5 * 10) == 5
+    assert mathlib.mul(1.1, 10) == 11
+    assert mathlib.mul(1.1, 1) == 1.1
+    assert mathlib.mul(0.5, 10) == 5
 
 
 def test_multiplication_small():
@@ -251,7 +251,7 @@ def test_factorial_small_positive():
     assert mathlib.fac(10) == 3628800
 
 
-def test_factorial_small_positive(math):
+def test_factorial_small_positive():
     assert mathlib.fac(1) == 1
     assert mathlib.fac(2) == 2
     assert mathlib.fac(3) == 6
