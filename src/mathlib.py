@@ -65,7 +65,7 @@ def div(dividend, divisor):
         raise ValueError("Division by zero is not allowed.")
     return dividend / divisor
 
-def modulo(dividend, divisor):
+def mod(dividend, divisor):
     """
     Function to compute the modulo operation.
     
@@ -83,7 +83,7 @@ def modulo(dividend, divisor):
         raise ValueError("Division by zero is not allowed.")
     return dividend % divisor
 
-def absolute_value(num):
+def abs(num):
     """
     Function to calculate the absolute value of a number.
     
@@ -98,7 +98,7 @@ def absolute_value(num):
     else:
         return num
 
-def factorial(n: int) -> int:
+def fac(n: int) -> int:
     """
     Function to compute the factorial of a non-negative integer.
     
@@ -120,7 +120,7 @@ def factorial(n: int) -> int:
         result *= i
     return result
 
-def power(base: int, exponent: int) -> int:
+def pow(base: int, exponent: int) -> int:
     """
     Function to compute the power of a number.
     
