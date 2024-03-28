@@ -130,7 +130,7 @@ class App(CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.totalLabel = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=40,
+        self.totalLabel = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=10,
                                    font=(SMALL, 25), text_color="white")
         self.totalLabel.pack(side="top", expand=True, fill="both")
 
@@ -139,10 +139,14 @@ class App(CTk):
         self.currentLabel.pack(side="top", expand=True, fill="both")
 
     def update_total_label(self):
-        self.totalLabel.configure(text=self.totalExpression)
+        expression = self.totalExpression
+
+        for operator, symbol in self.operations.items():
+            expression = expression.replace(operator, f'{symbol}')
+        self.totalLabel.configure(text=expression[:25])
 
     def update_current_label(self):
-        self.currentLabel.configure(text=self.currentExpression)
+        self.currentLabel.configure(text=self.currentExpression[:14])
 
     def create_button_frame(self):
         """
@@ -216,6 +220,17 @@ class App(CTk):
                                   width=75, height=45, hover_color=GRAY)
         decimalButton.grid(row=4, column=1, sticky="nsew", padx=2, pady=2)
 
+    def clear(self):
+        """
+        @brief Clears both the current and totol expression
+        @param self: Instance of the class
+        """
+
+        self.currentExpression = ""
+        self.totalExpression = ""
+        self.update_total_label()
+        self.update_current_label()
+
     def create_clean_button(self):
         """
         @brief Creates Clean button in the calculator interface that clears the expression
@@ -223,8 +238,18 @@ class App(CTk):
         """
 
         cleanButton = CTkButton(self.buttonFrame, text="C", border_width=0, fg_color=COLOR_REST,
-                                corner_radius=10, font=(LARGE, 25), width=75, height=45, hover_color=HOVER_COLOR)
+                                corner_radius=10, font=(LARGE, 25), width=75, height=45, hover_color=HOVER_COLOR,
+                                command=self.clear)
         cleanButton.grid(row=0, column=3, sticky="nsew", padx=2, pady=2)
+
+    def delete(self):
+        """
+        @brief Deletes the last character from the current expression
+        @param self: Instance of the class
+        """
+        if self.currentExpression:
+            self.currentExpression = self.currentExpression[:-1]
+            self.update_current_label()
 
     def create_delete_button(self):
         """
@@ -234,7 +259,7 @@ class App(CTk):
 
         deleteButton = CTkButton(self.buttonFrame, text="⌫", border_width=0, fg_color=COLOR_REST,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=75, height=45, hover_color=HOVER_COLOR)
+                                 width=75, height=45, hover_color=HOVER_COLOR, command=self.delete)
         deleteButton.grid(row=0, column=4, sticky="nsew", padx=2, pady=2)
 
     def create_bracket_buttons(self):
