@@ -4,7 +4,8 @@
 
 @author
 - Martin Valapka (xvalapm00)
-@date March 19, 2024
+
+@date - March 19, 2024
 """
 
 from customtkinter import *
@@ -61,6 +62,8 @@ class App(CTk):
 
     def __init__(self):
         super().__init__()
+        self.currentLabel = None
+        self.totalLabel = None
         self.buttonFrame = None
         self.displayFrame = None
         self.toplevel_window = None
@@ -69,8 +72,8 @@ class App(CTk):
         icon_path = r'Pictures\Calculator_30001 (1).ico'
         self.iconbitmap(icon_path)
 
-        self.totalExpression = "0"
-        self.currentExpression = "0"
+        self.totalExpression = ""
+        self.currentExpression = ""
 
         self.digits = {
             7: (1, 1),
@@ -127,13 +130,19 @@ class App(CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        totalLabel = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=15,
-                              font=(SMALL, 30), text_color="white")
-        totalLabel.pack(side="top", expand=True, fill="both")
+        self.totalLabel = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=40,
+                                   font=(SMALL, 25), text_color="white")
+        self.totalLabel.pack(side="top", expand=True, fill="both")
 
-        currentLabel = CTkLabel(self.displayFrame, text=self.currentExpression, anchor="e", padx=15, pady=20,
-                                font=(LARGE, 50), text_color="white")
-        currentLabel.pack(side="top", expand=True, fill="both")
+        self.currentLabel = CTkLabel(self.displayFrame, text=self.currentExpression, anchor="e", padx=15, pady=20,
+                                     font=(LARGE, 50), text_color="white")
+        self.currentLabel.pack(side="top", expand=True, fill="both")
+
+    def update_total_label(self):
+        self.totalLabel.configure(text=self.totalExpression)
+
+    def update_current_label(self):
+        self.currentLabel.configure(text=self.currentExpression)
 
     def create_button_frame(self):
         """
@@ -146,6 +155,10 @@ class App(CTk):
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
+    def show_numbers(self, value):
+        self.currentExpression += str(value)
+        self.update_current_label()
+
     def create_digit_buttons(self):
         """
         @brief Creates digit buttons in the calculator interface
@@ -155,8 +168,15 @@ class App(CTk):
         for digit, (row, column) in self.digits.items():
             button = CTkButton(self.buttonFrame, text=str(digit), bg_color=GRAY, fg_color=LIGHT_GRAY,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45, hover_color=GRAY)
+                               width=75, height=45, hover_color=GRAY, command=lambda x=digit: self.show_numbers(x))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
+
+    def show_operators(self, operator):
+        self.currentExpression += operator
+        self.totalExpression += self.currentExpression
+        self.currentExpression = ""
+        self.update_total_label()
+        self.update_current_label()
 
     def create_operator_buttons(self):
         """
@@ -169,7 +189,8 @@ class App(CTk):
         for operator, symbol in self.operations.items():
             button = CTkButton(self.buttonFrame, text=symbol, fg_color=ORANGE,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45, hover_color=HOVER_OPERATOR)
+                               width=75, height=45, hover_color=HOVER_OPERATOR,
+                               command=lambda op=operator: self.show_operators(op))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             row += 1
 
