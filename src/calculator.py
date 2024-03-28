@@ -240,9 +240,10 @@ class App(CTk):
         @param self: Instance of the class
         """
 
-        if not self.currentExpression or '.' not in self.currentExpression:
-            self.currentExpression += '.'
-            self.update_current_label()
+        if any(char.isdigit() for char in self.currentExpression):
+            if not self.currentExpression or '.' not in self.currentExpression:
+                self.currentExpression += '.'
+                self.update_current_label()
 
     def create_decimal_button(self):
         """
