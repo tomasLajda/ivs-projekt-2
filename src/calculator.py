@@ -139,6 +139,10 @@ class App(CTk):
         self.currentLabel.pack(side="top", expand=True, fill="both")
 
     def update_total_label(self):
+        """
+        @brief Updates the total expression label
+        @param self: Instance of the class
+        """
         expression = self.totalExpression
 
         for operator, symbol in self.operations.items():
@@ -146,6 +150,10 @@ class App(CTk):
         self.totalLabel.configure(text=expression[:25])
 
     def update_current_label(self):
+        """
+        @brief Updates the current expression label by truncating if necessary
+        @param self: Instance of the class
+        """
         self.currentLabel.configure(text=self.currentExpression[:14])
 
     def create_button_frame(self):
@@ -160,6 +168,12 @@ class App(CTk):
         self.grid_columnconfigure(0, weight=1)
 
     def show_numbers(self, value):
+        """
+        @brief Appends the provided value to the current expression and updates the current label.
+        @param self: Instance of the class
+        @param value: The value to append to the current expression
+        """
+
         self.currentExpression += str(value)
         self.update_current_label()
 
@@ -177,9 +191,15 @@ class App(CTk):
 
     def show_operators(self, operator):
         # TODO: NEEDS FIX
+        """
+        @brief Appends the provided operator to the current expression and updates the labels.
+        @param self: Instance of the class
+        @param operator: The operator to append to the current expression
+        """
+
         self.currentExpression += operator
         self.totalExpression += self.currentExpression
-        self.currentExpression = self.currentExpression[:-1]
+        self.currentExpression = ''
         self.update_total_label()
         self.update_current_label()
 
@@ -225,6 +245,7 @@ class App(CTk):
         @brief Creates decimal point button in the calculator interface
         @param self: Instance of the class
         """
+
         decimalButton = CTkButton(self.buttonFrame, text=".", border_width=0, fg_color=LIGHT_GRAY,
                                   corner_radius=10, font=(LARGE, 25),
                                   width=75, height=45, hover_color=GRAY,
@@ -258,6 +279,7 @@ class App(CTk):
         @brief Deletes the last character from the current expression
         @param self: Instance of the class
         """
+
         if self.currentExpression:
             self.currentExpression = self.currentExpression[:-1]
             self.update_current_label()
@@ -273,6 +295,16 @@ class App(CTk):
                                  width=75, height=45, hover_color=HOVER_COLOR, command=self.delete)
         deleteButton.grid(row=0, column=4, sticky="nsew", padx=2, pady=2)
 
+    def show_brackets(self, bracket):
+        """
+        @brief Appends the selected bracket to the current expression and updates the display label
+        @param self: Instance of the class
+        @param bracket: The bracket symbol to be added
+        """
+
+        self.currentExpression += self.brackets[bracket]
+        self.update_current_label()
+
     def create_bracket_buttons(self):
         """
         @brief Creates bracket buttons in the calculator interface
@@ -284,9 +316,14 @@ class App(CTk):
         for bracket in self.brackets:
             button = CTkButton(self.buttonFrame, text=bracket, fg_color=COLOR_REST,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45, hover_color=HOVER_COLOR)
+                               width=75, height=45, hover_color=HOVER_COLOR,
+                               command=lambda b=bracket: self.show_brackets(b))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             column += 1
+
+    def exponentiation(self):
+        # TODO: IMPLEMENT
+        pass
 
     def create_exponentiation_button(self):
         """
@@ -299,6 +336,10 @@ class App(CTk):
                                          width=75, height=45, hover_color=HOVER_COLOR)
         exponentiationButton.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
+    def root(self):
+        # TODO: IMPLEMENT
+        pass
+
     def create_root_button(self):
         """
         @brief Creates root button in the calculator interface
@@ -309,6 +350,10 @@ class App(CTk):
                                corner_radius=10, font=(LARGE, 25),
                                width=75, height=45, hover_color=HOVER_COLOR)
         rootButton.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
+
+    def factorial(self):
+        # TODO: IMPLEMENT
+        pass
 
     def create_factorial_button(self):
         """
@@ -321,6 +366,10 @@ class App(CTk):
                                     width=75, height=45, hover_color=HOVER_COLOR)
         factorialButton.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
 
+    def abs(self):
+        # TODO: IMPLEMENT
+        pass
+
     def create_abs_button(self):
         """
         @brief Creates button in the calculator interface for the absolute value of the expression
@@ -331,6 +380,10 @@ class App(CTk):
                               corner_radius=10, font=(LARGE, 25),
                               width=75, height=45, hover_color=HOVER_COLOR)
         absButton.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
+
+    def modulo(self):
+        # TODO: IMPLEMENT
+        pass
 
     def create_modulo_button(self):
         """
