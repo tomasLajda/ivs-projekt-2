@@ -130,7 +130,7 @@ class App(CTk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.totalLabel = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=10,
+        self.totalLabel = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=20,
                                    font=(SMALL, 25), text_color="white")
         self.totalLabel.pack(side="top", expand=True, fill="both")
 
@@ -176,9 +176,10 @@ class App(CTk):
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
 
     def show_operators(self, operator):
+        # TODO: NEEDS FIX
         self.currentExpression += operator
         self.totalExpression += self.currentExpression
-        self.currentExpression = ""
+        self.currentExpression = self.currentExpression[:-1]
         self.update_total_label()
         self.update_current_label()
 
@@ -209,15 +210,25 @@ class App(CTk):
                                  width=75, height=45, hover_color=HOVER_OPERATOR)
         equalsButton.grid(row=4, column=3, sticky="nsew", padx=2, pady=2)
 
+    def decimal(self):
+        """
+        @brief Adds a decimal point to the current expression
+        @param self: Instance of the class
+        """
+
+        if not self.currentExpression or '.' not in self.currentExpression:
+            self.currentExpression += '.'
+            self.update_current_label()
+
     def create_decimal_button(self):
         """
         @brief Creates decimal point button in the calculator interface
         @param self: Instance of the class
         """
-
         decimalButton = CTkButton(self.buttonFrame, text=".", border_width=0, fg_color=LIGHT_GRAY,
                                   corner_radius=10, font=(LARGE, 25),
-                                  width=75, height=45, hover_color=GRAY)
+                                  width=75, height=45, hover_color=GRAY,
+                                  command=self.decimal)
         decimalButton.grid(row=4, column=1, sticky="nsew", padx=2, pady=2)
 
     def clear(self):
