@@ -219,6 +219,10 @@ class App(CTk):
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             row += 1
 
+    def equals(self):
+        # TODO: IMPLEMENT
+        pass
+
     def create_equals_button(self):
         """
         @brief Creates equals button in the calculator interface that evaluates the expression
@@ -425,6 +429,26 @@ class App(CTk):
         else:
             self.toplevel_window.focus()
 
+    def bind_keys(self):
+        # TODO: MISSING KEYS
+        """
+        @brief Binds keyboard keys to calculator operations and digits
+        @param self: Instance of the class
+        """
+
+        for key in self.digits:
+            self.bind(str(key), lambda event, digit=key: self.show_numbers(digit))
+
+        for key in self.operations:
+            self.bind(str(key), lambda event, op=key: self.show_operators(op))
+
+        for key in self.brackets:
+            self.bind(str(key), lambda event, bracket=key: self.show_brackets(bracket))
+
+        self.bind("<BackSpace>", lambda event: self.delete())
+        self.bind("<c>", lambda event: self.clear())
+        self.bind("<.>", lambda event: self.decimal())
+
     def run(self):
         """
         @brief Runs the application.
@@ -447,6 +471,7 @@ class App(CTk):
         self.create_abs_button()
         self.create_modulo_button()
         self.create_settings_button()
+        self.bind_keys()
         self.mainloop()
 
 
