@@ -34,6 +34,7 @@ class ToplevelWindow(CTkToplevel):
     """
 
     def __init__(self, root, *args, **kwargs):
+        # TODO: REDO
         super().__init__(*args, **kwargs)
         self.geometry(f"300x300+{root.winfo_x() + 65}+{root.winfo_y() + 80}")
         self.title("Help")
@@ -42,15 +43,54 @@ class ToplevelWindow(CTkToplevel):
 
         frame = CTkScrollableFrame(self)
         frame.configure(fg_color=DARK_GRAY)
-        frame.pack(fill="both", expand=True)
+        frame.grid(row=0, column=0, sticky="nsew")
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
-        self.helpLabel = CTkLabel(frame, text="Usage", anchor="w", padx=10, pady=10,
+        self.helpLabel = CTkLabel(frame, text="Usage", anchor="w", padx=5, pady=10,
                                   font=("Bahnschrift bold", 25), text_color=ORANGE)
-        self.helpLabel.pack(side="top", expand=True, fill="both")
+        self.helpLabel.grid(row=0, column=0, sticky="nsew")
 
         subFrame = CTkFrame(frame)
-        subFrame.configure(fg_color=GRAY, border_color="black", border_width=1, corner_radius=30)
-        subFrame.pack(side="top", expand=True, fill="both", pady=10, padx=5)
+        subFrame.configure(fg_color=GRAY, border_color="black", border_width=1, corner_radius=20)
+        subFrame.grid(row=1, column=0, sticky="nsew", pady=10, padx=5)
+        frame.grid_rowconfigure(1, weight=1)
+        frame.grid_columnconfigure(0, weight=1)
+
+        clearImagePath = r'Pictures\Clear.ico'
+        clearImage = CTkImage(Image.open(clearImagePath), size=(45, 35))
+        clear_label = CTkLabel(subFrame, image=clearImage, text="")
+        clear_label.grid(row=0, column=0, sticky="w", padx=10, pady=10)
+
+        deleteImagePath = r'Pictures\Del.ico'
+        deleteImage = CTkImage(Image.open(deleteImagePath), size=(45, 35))
+        delete_label = CTkLabel(subFrame, image=deleteImage, text="")
+        delete_label.grid(row=1, column=0, sticky="w", padx=10, pady=10)
+
+        expImagePath = r'Pictures\^.ico'
+        expImage = CTkImage(Image.open(expImagePath), size=(45, 35))
+        exp_label = CTkLabel(subFrame, image=expImage, text="")
+        exp_label.grid(row=2, column=0, sticky="w", padx=10, pady=10)
+
+        rootImagePath = r'Pictures\Root.ico'
+        rootImage = CTkImage(Image.open(rootImagePath), size=(45, 35))
+        root_label = CTkLabel(subFrame, image=rootImage, text="")
+        root_label.grid(row=3, column=0, sticky="w", padx=10, pady=10)
+
+        factImagePath = r'Pictures\Fact.ico'
+        factImage = CTkImage(Image.open(factImagePath), size=(45, 35))
+        fact_label = CTkLabel(subFrame, image=factImage, text="")
+        fact_label.grid(row=4, column=0, sticky="w", padx=10, pady=10)
+
+        absImagePath = r'Pictures\Abs.ico'
+        absImage = CTkImage(Image.open(absImagePath), size=(45, 35))
+        abs_label = CTkLabel(subFrame, image=absImage, text="")
+        abs_label.grid(row=5, column=0, sticky="w", padx=10, pady=10)
+
+        modImagePath = r'Pictures\Mod.ico'
+        modImage = CTkImage(Image.open(modImagePath), size=(45, 35))
+        mod_label = CTkLabel(subFrame, image=modImage, text="")
+        mod_label.grid(row=6, column=0, sticky="w", padx=10, pady=10)
 
         if platform.startswith("win"):
             self.after(200, lambda: self.iconbitmap(help_path))
