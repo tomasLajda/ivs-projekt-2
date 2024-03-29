@@ -44,13 +44,13 @@ class ToplevelWindow(CTkToplevel):
         frame.configure(fg_color=DARK_GRAY)
         frame.pack(fill="both", expand=True)
 
-        self.helpLabel = CTkLabel(frame, text="How to use:", anchor="w", padx=10, pady=10,
-                                  font=("Arial bold", 25), text_color="white")
+        self.helpLabel = CTkLabel(frame, text="Usage", anchor="w", padx=10, pady=10,
+                                  font=("Bahnschrift bold", 25), text_color=ORANGE)
         self.helpLabel.pack(side="top", expand=True, fill="both")
 
-        sub_frame = CTkFrame(frame)
-        sub_frame.configure(fg_color=GRAY, corner_radius=30)
-        sub_frame.pack(side="top", expand=True, fill="both", pady=10, padx=5)
+        subFrame = CTkFrame(frame)
+        subFrame.configure(fg_color=GRAY, border_color="black", border_width=1, corner_radius=30)
+        subFrame.pack(side="top", expand=True, fill="both", pady=10, padx=5)
 
         if platform.startswith("win"):
             self.after(200, lambda: self.iconbitmap(help_path))
@@ -165,7 +165,9 @@ class App(CTk):
         @brief Updates the current expression label by truncating if necessary
         @param self: Instance of the class
         """
-        self.currentLabel.configure(text=self.currentExpression[:14])
+        if len(self.currentExpression) > 14:
+            self.currentExpression = self.currentExpression[-14:]
+        self.currentLabel.configure(text=self.currentExpression)
 
     def create_button_frame(self):
         """
