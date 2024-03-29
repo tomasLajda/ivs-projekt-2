@@ -7,10 +7,9 @@
 
 @date - March 19, 2024
 """
-
-from customtkinter import *
-from PIL import Image
 from sys import platform
+from PIL import Image
+from customtkinter import *
 
 LIGHT_GRAY = "#979797"
 DARK_GRAY = "#3D3D3D"
@@ -40,6 +39,18 @@ class ToplevelWindow(CTkToplevel):
         self.title("Help")
         help_path = r'Pictures\questionmark1_83827.ico'
         self.iconbitmap(help_path)
+
+        frame = CTkScrollableFrame(self)
+        frame.configure(fg_color=DARK_GRAY)
+        frame.pack(fill="both", expand=True)
+
+        self.helpLabel = CTkLabel(frame, text="How to use:", anchor="w", padx=10, pady=10,
+                                  font=("Arial bold", 25), text_color="white")
+        self.helpLabel.pack(side="top", expand=True, fill="both")
+
+        sub_frame = CTkFrame(frame)
+        sub_frame.configure(fg_color=GRAY, corner_radius=30)
+        sub_frame.pack(side="top", expand=True, fill="both", pady=10, padx=5)
 
         if platform.startswith("win"):
             self.after(200, lambda: self.iconbitmap(help_path))
