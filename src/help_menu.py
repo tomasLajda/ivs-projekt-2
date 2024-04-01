@@ -25,7 +25,7 @@ class ToplevelWindow(CTkToplevel):
     """
 
     def __init__(self, root, *args, **kwargs):
-        # TODO: REDO
+        # TODO: FINISH
         super().__init__(*args, **kwargs)
         self.geometry(f"300x300+{root.winfo_x() + 65}+{root.winfo_y() + 80}")
         self.resizable(False, True)

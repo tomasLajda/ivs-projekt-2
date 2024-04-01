@@ -179,15 +179,18 @@ class App(CTk):
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
 
     def show_operators(self, operator):
-        # TODO: NEEDS FIX
         """
         @brief Appends the provided operator to the current expression and updates the labels.
         @param self: Instance of the class
         @param operator: The operator to append to the current expression
         """
 
-        self.currentExpression += operator
-        self.totalExpression += self.currentExpression
+        # If the last character in totalExpression is an operator, replace it
+        if self.totalExpression and self.totalExpression[-1] in "+-*/" and self.currentExpression == '':
+            self.totalExpression = self.totalExpression[:-1] + operator
+        else:
+            self.totalExpression += self.currentExpression + operator
+
         self.currentExpression = ''
         self.update_total_label()
         self.update_current_label()
