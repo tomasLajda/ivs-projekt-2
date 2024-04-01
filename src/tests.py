@@ -52,7 +52,7 @@ def test_addition_small():
 def test_addition_large():
     assert mathlib.add(1_000, 2_000) == 3_000
     assert mathlib.add(1_000_000, 2_000_000) == 3_000_000
-    assert mathlib.add(1_000_000_000_000, 2_000_000_000_000) == 3_000_000_000_000  # 1+e12 + 2+e12 = 3+e12
+    assert mathlib.add(1_000_000_000_000, 2_000_000_000_000) == 3_000_000_000_000  # 1e12 + 2e12 = 3e12
 
 
 def test_addition_small_negative():
@@ -64,7 +64,7 @@ def test_addition_small_negative():
 def test_addition_large_negative():
     assert mathlib.add(-1_000, -2_000) == -3_000
     assert mathlib.add(-1_000_000, -2_000_000) == -3_000_000
-    assert mathlib.add(-1_000_000_000_000, -2_000_000_000_000) == -3_000_000_000_000  # -1+e12 + -2+e12 = -3+e12
+    assert mathlib.add(-1_000_000_000_000, -2_000_000_000_000) == -3_000_000_000_000  # -1e12 + -2e12 = -3e12
 
 
 # ADDITION TESTS END
@@ -112,7 +112,7 @@ def test_subtraction_small():
 def test_subtraction_large():
     assert mathlib.sub(1_000, 2_000) == -1_000
     assert mathlib.sub(1_000_000, 2_000_000) == -1_000_000
-    assert mathlib.sub(1_000_000_000_000, 2_000_000_000_000) == -1_000_000_000_000  # 1+e12 - 2+e12 = -1+e12
+    assert mathlib.sub(1_000_000_000_000, 2_000_000_000_000) == -1_000_000_000_000  # 1e12 - 2e12 = -1e12
 
 
 def test_subtraction_small_negative():
@@ -124,7 +124,7 @@ def test_subtraction_small_negative():
 def test_subtraction_large_negative():
     assert mathlib.sub(-1_000, -2_000) == 1_000
     assert mathlib.sub(-1_000_000, -2_000_000) == 1_000_000
-    assert mathlib.sub(-1_000_000_000_000, -2_000_000_000_000) == 1_000_000_000_000  # -1+e12 - -2+e12 = 1+e12
+    assert mathlib.sub(-1_000_000_000_000, -2_000_000_000_000) == 1_000_000_000_000  # -1e12 - -2e12 = 1e12
 
 
 # SUBTRACTION TESTS END
@@ -159,8 +159,8 @@ def test_multiplication_small():
 
 def test_multiplication_large():
     assert mathlib.mul(1_000_000_000_000,
-                       2_000_000_000_000) == 2_000_000_000_000_000_000_000_000  # 1e+12 * 2e+12 = 2e+24
-    assert mathlib.mul(1_000_000_000_000, 2) == 2_000_000_000_000  # 1e+12 * 2 = 2e+12
+                       2_000_000_000_000) == 2_000_000_000_000_000_000_000_000  # 1e12 * 2e12 = 2e24
+    assert mathlib.mul(1_000_000_000_000, 2) == 2_000_000_000_000  # 1e12 * 2 = 2e12
 
 
 # MULTIPLICATION TESTS END
@@ -199,13 +199,13 @@ def test_division_periodic():
 def test_division_small():
     assert mathlib.div(0.000_000_000_1, 0.000_000_000_2) == 0.5  # 1e-10 / 2e-10 = 0.5
     assert mathlib.div(0.000_000_000_1, 2) == 0.000_000_000_2  # 1e-10 / 2 = 5e-10
-    assert mathlib.div(2, 0.000_000_000_1) == 20_000_000_000  # 2 / e-10 = 2e+11
+    assert mathlib.div(2, 0.000_000_000_1) == 20_000_000_000  # 2 / e-10 = 2e11
 
 
 def test_division_large():
-    assert mathlib.div(1_000_000_000, 2_000_000_000) == 0.5  # 1+e10 / 2+e10 = 0.5
-    assert mathlib.div(1_000_000_000, 2) == 500_000_000  # 1+e10 / 2 = 5+e9
-    assert mathlib.div(2, 1_000_000_000) == 0.000_000_002  # 1+e10 / 2 = 2e-9
+    assert mathlib.div(1_000_000_000, 2_000_000_000) == 0.5  # 1e10 / 2e10 = 0.5
+    assert mathlib.div(1_000_000_000, 2) == 500_000_000  # 1e10 / 2 = 5e9
+    assert mathlib.div(2, 1_000_000_000) == 0.000_000_002  # 1e10 / 2 = 2e-9
 
 
 # DIVISION TESTS END
@@ -261,8 +261,8 @@ def test_absolute_value_small():
 
 
 def test_absolute_value_large():
-    assert mathlib.abs(1_000_000_000) == 1_000_000_000  # abs(1+e10) = 1+e10
-    assert mathlib.abs(-1_000_000_000) == 1_000_000_000  # abs(-1+e10) = 1+e10
+    assert mathlib.abs(1_000_000_000) == 1_000_000_000  # abs(1e10) = 1e10
+    assert mathlib.abs(-1_000_000_000) == 1_000_000_000  # abs(-1e10) = 1e10
 
 
 # ABSOLUTE VALUE TESTS END
@@ -349,7 +349,7 @@ def test_pow_of_negative_base():
 
 
 def test_pow_of_large_base_and_index():
-    assert mathlib.pow(1_000, 1_000) == 1.0e+3000
+    assert mathlib.pow(1_000, 1_000) == 1e3000
     assert mathlib.pow(10, 10) == 10_000_000_000
 
 
