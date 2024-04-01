@@ -25,10 +25,10 @@ class ToplevelWindow(CTkToplevel):
     """
 
     def __init__(self, root, *args, **kwargs):
-        # TODO: FINISH
+        # TODO: FINISH, FIX THE WEIRD BORDER EFFECT
         super().__init__(*args, **kwargs)
         self.geometry(f"300x300+{root.winfo_x() + 65}+{root.winfo_y() + 80}")
-        self.resizable(False, True)
+        self.resizable(True, True)
         self.title("Help")
         help_path = r'Pictures\questionmark1_83827.ico'
         self.iconbitmap(help_path)
@@ -38,6 +38,8 @@ class ToplevelWindow(CTkToplevel):
         frame.grid(row=0, column=0, sticky="nsew")
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
+
+        # =====================================First part===============================================
 
         self.helpLabel = CTkLabel(frame, text="Usage", anchor="w", padx=5, pady=10,
                                   font=("Bahnschrift bold", 25), text_color=ORANGE)
@@ -49,77 +51,76 @@ class ToplevelWindow(CTkToplevel):
         frame.grid_rowconfigure(1, weight=1)
         frame.grid_columnconfigure(0, weight=1)
 
-        clearImagePath = r'Pictures\Clear.ico'
-        clearImage = CTkImage(Image.open(clearImagePath), size=(45, 35))
-        clear_label = CTkLabel(subFrame, image=clearImage, text="")
-        clear_label.grid(row=0, column=0, sticky="w", padx=10, pady=10)
+        def add_image_and_label(frame_use, row, image_path, text):
+            image = CTkImage(Image.open(image_path), size=(45, 35))
+            label_image = CTkLabel(frame_use, image=image, text="")
+            label_image.grid(row=row, column=0, sticky="w", padx=10, pady=10)
 
-        labelClear = CTkLabel(subFrame, text="Clears both the current and total expression",
-                              font=("Bahnschrift bold", 15), text_color="white", wraplength=200)
-        labelClear.grid(row=0, column=1, sticky="w", pady=10, padx=(0, 10))
+            label_text = CTkLabel(frame_use, text=text, font=("Bahnschrift bold", 15), text_color="white")
+            label_text.grid(row=row, column=1, sticky="w", pady=10, padx=(0, 10))
 
-        deleteImagePath = r'Pictures\Del.ico'
-        deleteImage = CTkImage(Image.open(deleteImagePath), size=(45, 35))
-        delete_label = CTkLabel(subFrame, image=deleteImage, text="")
-        delete_label.grid(row=1, column=0, sticky="w", padx=10, pady=10)
+            def resize_wraplength(event):
+                label_text.configure(wraplength=event.width - 100)
 
-        labelErase = CTkLabel(subFrame, text="Erases the last digit/operator in the current expression",
-                              font=("Bahnschrift bold", 15), text_color="white", wraplength=200)
-        labelErase.grid(row=1, column=1, sticky="w", pady=10, padx=(0, 10))
+            frame_use.bind("<Configure>", resize_wraplength)
 
-        expImagePath = r'Pictures\^.ico'
-        expImage = CTkImage(Image.open(expImagePath), size=(45, 35))
-        exp_label = CTkLabel(subFrame, image=expImage, text="")
-        exp_label.grid(row=2, column=0, sticky="w", padx=10, pady=10)
+        add_image_and_label(subFrame, row=0, image_path=r'Pictures\Clear.ico',
+                            text="Clears both the current and total expression")
 
-        labelExp = CTkLabel(subFrame, text="Exponentiation: Base^Exponent = Product\n"
-                                           "5^2 = 25",
-                            font=("Bahnschrift bold", 15), text_color="white", wraplength=200)
-        labelExp.grid(row=2, column=1, sticky="w", pady=10, padx=(0, 10))
+        add_image_and_label(subFrame, row=1, image_path=r'Pictures\Del.ico',
+                            text="Erases the last digit/operator in the current expression")
 
-        rootImagePath = r'Pictures\Root.ico'
-        rootImage = CTkImage(Image.open(rootImagePath), size=(45, 35))
-        root_label = CTkLabel(subFrame, image=rootImage, text="")
-        root_label.grid(row=3, column=0, sticky="w", padx=10, pady=10)
+        add_image_and_label(subFrame, row=2, image_path=r'Pictures\^.ico',
+                            text="Exponentiation: \nBase^Exponent = Product\n5^2 = 25")
 
-        labelRoot = CTkLabel(subFrame, text="Root: ⁿ√x = Root\n"
-                                            "n - degree, x - radical\n"
-                                            "²√25 = 5",
-                             font=("Bahnschrift bold", 15), text_color="white", wraplength=200)
-        labelRoot.grid(row=3, column=1, sticky="w", pady=10, padx=(0, 10))
+        add_image_and_label(subFrame, row=3, image_path=r'Pictures\Root.ico',
+                            text="Root: ⁿ√x = Root\nn - degree, x - radical\n²√25 = 5")
 
-        factImagePath = r'Pictures\Fact.ico'
-        factImage = CTkImage(Image.open(factImagePath), size=(45, 35))
-        fact_label = CTkLabel(subFrame, image=factImage, text="")
-        fact_label.grid(row=4, column=0, sticky="w", padx=10, pady=10)
+        add_image_and_label(subFrame, row=4, image_path=r'Pictures\Fact.ico',
+                            text="Factorial: Number\n(Num-1)\u00D7(Num-2) \u00D7 ... \u00D7 1\n4! = 4 \u00D7 3 \u00D7 "
+                                 "2 \u00D7 1")
 
-        labelFact = CTkLabel(subFrame, text="Factorial: Number\n"
-                                            "(Num-1)\u00D7(Num-2) \u00D7 ... \u00D7 1\n"
-                                            "4! = 4 \u00D7 3 \u00D7 2 \u00D7 1",
-                             font=("Bahnschrift bold", 15), text_color="white", wraplength=200)
-        labelFact.grid(row=4, column=1, sticky="w", pady=10, padx=(0, 10))
+        add_image_and_label(subFrame, row=5, image_path=r'Pictures\Abs.ico',
+                            text="Absolute value: |Number|\nReturns the distance from 0\n|5| = 5 and |-5| = 5")
 
-        absImagePath = r'Pictures\Abs.ico'
-        absImage = CTkImage(Image.open(absImagePath), size=(45, 35))
-        abs_label = CTkLabel(subFrame, image=absImage, text="")
-        abs_label.grid(row=5, column=0, sticky="w", padx=10, pady=10)
+        add_image_and_label(subFrame, row=6, image_path=r'Pictures\Mod.ico',
+                            text="Modulo: Num % Num = R\nEvaluates the remainder after division\n7 % 3 = 1")
 
-        labelAbs = CTkLabel(subFrame, text="Absolute value: |Number|\n"
-                                           "Returns the distance from 0\n"
-                                           "|5| = 5 and |-5| = 5",
-                            font=("Bahnschrift bold", 15), text_color="white", wraplength=200)
-        labelAbs.grid(row=5, column=1, sticky="w", pady=10, padx=(0, 10))
+        # =====================================Second part===============================================
 
-        modImagePath = r'Pictures\Mod.ico'
-        modImage = CTkImage(Image.open(modImagePath), size=(45, 35))
-        mod_label = CTkLabel(subFrame, image=modImage, text="")
-        mod_label.grid(row=6, column=0, sticky="w", padx=10, pady=10)
+        self.helpLabel2 = CTkLabel(frame, text="Specific usage", anchor="w", padx=5, pady=10,
+                                   font=("Bahnschrift bold", 25), text_color=ORANGE)
+        self.helpLabel2.grid(row=7, column=0, sticky="nsew")
 
-        labelMod = CTkLabel(subFrame, text="Modulo: Num % Num = R\n"
-                                           "Evaluates the remainder after division\n"
-                                           "7 % 3 = 1",
-                            font=("Bahnschrift bold", 15), text_color="white", wraplength=200)
-        labelMod.grid(row=6, column=1, sticky="w", pady=10, padx=(0, 10))
+        self.helpLabel3 = CTkLabel(frame, text="More detailed usage of specific buttons\n", anchor="w", padx=5, pady=10,
+                                   font=("Bahnschrift bold", 15), text_color="white")
+        self.helpLabel3.grid(row=8, column=0, sticky="nsew")
+
+        subFrame2 = CTkFrame(frame)
+        subFrame2.configure(fg_color=GRAY, border_color="black", border_width=1, corner_radius=20)
+        subFrame2.grid(row=9, column=0, sticky="nsew", pady=10, padx=5)
+        frame.grid_rowconfigure(1, weight=1)
+        frame.grid_columnconfigure(0, weight=1)
+
+        add_image_and_label(subFrame2, row=9, image_path=r'Pictures\^.ico',
+                            text="How to use Exponentiation: \n1. Choose the base \n2. Select the exponentiaiton "
+                                 "button or '^'\n 3. Choose the Exponent")
+
+        add_image_and_label(subFrame2, row=10, image_path=r'Pictures\Root.ico',
+                            text="How to use Root: \n1. Choose the degree \n2. Select the root "
+                                 "button or 'r'\n 3. Choose the radical")
+
+        add_image_and_label(subFrame2, row=11, image_path=r'Pictures\Fact.ico',
+                            text="How to use Factrial: \n1. Choose the number \n2. Select the factorial button or '!'")
+
+        add_image_and_label(subFrame2, row=12, image_path=r'Pictures\Abs.ico',
+                            text="How to use Absolute value: \n1. Choose the number \n"
+                                 "2. Select the Abs. value button or 'a'")
+
+        add_image_and_label(subFrame2, row=13, image_path=r'Pictures\Mod.ico',
+                            text="How to use Modulo: \n1. Choose the number \n"
+                                 "2. Select the Modulo b. or '%'\n"
+                                 "3. Choose the divisor")
 
         if platform.startswith("win"):
             self.after(200, lambda: self.iconbitmap(help_path))

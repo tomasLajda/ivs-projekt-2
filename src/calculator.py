@@ -184,9 +184,10 @@ class App(CTk):
         @param self: Instance of the class
         @param operator: The operator to append to the current expression
         """
+        # TODO NEEDS FIXES WITH FIRST CHAR AS AN OPERATOR
 
-        # If the last character in totalExpression is an operator, replace it
-        if self.totalExpression and self.totalExpression[-1] in "+-*/" and self.currentExpression == '':
+        if (self.totalExpression and self.totalExpression[-1] in "+-*/" and not self.currentExpression and
+                len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
             self.totalExpression += self.currentExpression + operator
@@ -449,11 +450,12 @@ class App(CTk):
         self.bind("<BackSpace>", lambda event: self.delete())
         self.bind("<c>", lambda event: self.clear())
         self.bind("<.>", lambda event: self.decimal())
+        self.bind("<=>", lambda event: self.equals())
 
-        # self.bind("^", lambda event: self.exponentiation())
-        # self.bind("<root>", lambda event: self.root())
-        # self.bind("!", lambda event: self.factorial())
-        # self.bind("%", lambda event: self.modulo())
+        # self.bind("<^>", lambda event: self.exponentiation())
+        # self.bind("<r>", lambda event: self.root())
+        # self.bind("<!>", lambda event: self.factorial())
+        # self.bind("<%>", lambda event: self.modulo())
 
     def run(self):
         """
