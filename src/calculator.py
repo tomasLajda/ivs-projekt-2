@@ -52,7 +52,7 @@ class App(CTk):
         self.iconbitmap(icon_path)
 
         self.totalExpression = ""
-        self.currentExpression = ""
+        self.currentExpression = "0"
 
         self.digits = {
             7: (1, 1),
@@ -133,9 +133,17 @@ class App(CTk):
         @brief Updates the current expression label by truncating if necessary
         @param self: Instance of the class
         """
+        if self.currentExpression.startswith("0"):
+            self.currentExpression = self.currentExpression[1:]
+
         if len(self.currentExpression) > 14:
-            self.currentExpression = self.currentExpression[-14:]
-        self.currentLabel.configure(text=self.currentExpression)
+            self.currentExpression = self.currentExpression[:14]
+
+        # If currentExpression is empty or "0", display "0"
+        if not self.currentExpression or self.currentExpression == "0":
+            self.currentLabel.configure(text="0")
+        else:
+            self.currentLabel.configure(text=self.currentExpression)
 
     def create_button_frame(self):
         """
@@ -240,13 +248,17 @@ class App(CTk):
 
     def clear(self):
         """
-        @brief Clears both the current and totol expression
+        @brief Clears both the current and total expression
         @param self: Instance of the class
         """
 
-        self.currentExpression = ""
+        self.currentExpression = "0"
         self.totalExpression = ""
         self.update_total_label()
+
+        if not self.currentExpression:
+            self.currentExpression = "0"
+
         self.update_current_label()
 
     def create_clean_button(self):
@@ -268,6 +280,10 @@ class App(CTk):
 
         if self.currentExpression:
             self.currentExpression = self.currentExpression[:-1]
+            self.update_current_label()
+
+        if len(self.currentExpression) == 0:
+            self.currentExpression = "0"
             self.update_current_label()
 
     def create_delete_button(self):
@@ -430,6 +446,11 @@ class App(CTk):
         self.bind("<BackSpace>", lambda event: self.delete())
         self.bind("<c>", lambda event: self.clear())
         self.bind("<.>", lambda event: self.decimal())
+
+        # self.bind("^", lambda event: self.exponentiation())
+        # self.bind("<root>", lambda event: self.root())
+        # self.bind("!", lambda event: self.factorial())
+        # self.bind("%", lambda event: self.modulo())
 
     def run(self):
         """

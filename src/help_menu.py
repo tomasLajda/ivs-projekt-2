@@ -28,6 +28,7 @@ class ToplevelWindow(CTkToplevel):
         # TODO: REDO
         super().__init__(*args, **kwargs)
         self.geometry(f"300x300+{root.winfo_x() + 65}+{root.winfo_y() + 80}")
+        self.resizable(False, True)
         self.title("Help")
         help_path = r'Pictures\questionmark1_83827.ico'
         self.iconbitmap(help_path)
@@ -115,7 +116,7 @@ class ToplevelWindow(CTkToplevel):
         mod_label.grid(row=6, column=0, sticky="w", padx=10, pady=10)
 
         labelMod = CTkLabel(subFrame, text="Modulo: Num % Num = R\n"
-                                           "Evaluates the remainder after division"
+                                           "Evaluates the remainder after division\n"
                                            "7 % 3 = 1",
                             font=("Bahnschrift bold", 15), text_color="white", wraplength=200)
         labelMod.grid(row=6, column=1, sticky="w", pady=10, padx=(0, 10))
