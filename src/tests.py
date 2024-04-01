@@ -209,6 +209,40 @@ def test_division_large():
 
 
 # DIVISION TESTS END
+
+# MODULUS TESTS START
+
+def test_modulus():
+    assert mathlib.mod(4, 2) == 0
+    assert mathlib.mod(5, 2) == 1
+    assert mathlib.mod(2, 5) == 2
+
+
+def test_modulus_zero():
+    with pytest.raises(ValueError):
+        mathlib.mod(4, 0)
+
+
+def test_modulus_negative():
+    assert mathlib.mod(-11, 7) == -4
+    assert mathlib.mod(-11, -7) == -4
+    assert mathlib.mod(11, -7) == -4
+
+
+def test_modulus_float():
+    assert mathlib.mod(5.5, 5) == 0.5
+    assert mathlib.mod(3.33, 1.11) == 0
+    assert mathlib.mod(5, 5.5) == 5
+
+
+def test_modulus_small():
+    assert mathlib.mod(0.000_000_000_1, 0.000_000_000_2) == 0.000_000_000_1  # 1e-10 % 2e-10 = 1e-10
+
+def test_modulus_large():
+    assert mathlib.mod(1_000_000_000, 2_000_000_000) == 1_000_000_000  # 1e10 % 2e10 = 1e10
+
+
+# MODULUS TESTS END
 # ABSOLUTE VALUE TESTS START
 
 def test_absolute_value():
