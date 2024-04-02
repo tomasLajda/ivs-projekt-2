@@ -8,8 +8,9 @@
 @date - March 19, 2024
 """
 
+import platform
 from help_menu import ToplevelWindow
-from PIL import Image
+from PIL import Image, ImageTk
 from customtkinter import *
 
 LIGHT_GRAY = "#979797"
@@ -41,6 +42,7 @@ class App(CTk):
 
     def __init__(self):
         super().__init__()
+        self.settingsImagePath = None
         self.currentLabel = None
         self.totalLabel = None
         self.buttonFrame = None
@@ -48,8 +50,9 @@ class App(CTk):
         self.toplevel_window = None
         self.title("Calcu-lajda")
         self.resizable(False, False)
-        icon_path = r'Pictures\Calculator_30001 (1).ico'
-        self.iconbitmap(icon_path)
+        self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "Calculator_30001 (1).png"))
+        self.wm_iconbitmap()
+        self.iconphoto(False, self.iconpath)
 
         self.totalExpression = ""
         self.currentExpression = "0"
@@ -80,22 +83,36 @@ class App(CTk):
         }
 
     def center_window(self, width, height, scalefactor=1.0):
-
         """
         @brief Calculates the position to center a window on the screen
-
         @param self: Instance of the class
         @param width: The width of the window
         @param height: The height of the window
         @param scalefactor: Optional scale factor to adjust the centering position
         @return: String representing the window geometry
         """
+        os_name = platform.system()
 
-        screenWidth = self.winfo_screenwidth()
-        screenHeight = self.winfo_screenheight()
-        x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
-        y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
-        return f"{width}x{height}+{x}+{y}"
+        if os_name == 'Windows':
+            screenWidth = self.winfo_screenwidth()
+            screenHeight = self.winfo_screenheight()
+            x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
+            y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
+            return f"{width}x{height}+{x}+{y}"
+
+        elif os_name == 'Linux':
+            screenWidth = self.winfo_screenwidth()
+            screenHeight = self.winfo_screenheight()
+            x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
+            y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
+            return f"{width + 75}x{height + 80}+{x}+{y}"
+
+        else:
+            screenWidth = self.winfo_screenwidth()
+            screenHeight = self.winfo_screenheight()
+            x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
+            y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
+            return f"{width}x{height}+{x}+{y}"
 
     def create_display_frame(self):
         """
@@ -173,10 +190,32 @@ class App(CTk):
         """
 
         for digit, (row, column) in self.digits.items():
+            button_width = 75
+            button_height = 45
+            if platform.system() == 'Linux':
+                button_width += 10  # Adjust width for Linux
+                button_height += 10  # Adjust height for Linux
             button = CTkButton(self.buttonFrame, text=str(digit), bg_color=GRAY, fg_color=LIGHT_GRAY,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45, hover_color=GRAY, command=lambda x=digit: self.show_numbers(x))
+                               width=button_width, height=button_height, hover_color=GRAY,
+                               command=lambda x=digit: self.show_numbers(x))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
+
+    def add(self):
+        # TODO: IMPLEMENT
+        pass
+
+    def sub(self):
+        # TODO: IMPLEMENT
+        pass
+
+    def mul(self):
+        # TODO: IMPLEMENT
+        pass
+
+    def div(self):
+        # TODO: IMPLEMENT
+        pass
 
     def show_operators(self, operator):
         """
@@ -204,10 +243,16 @@ class App(CTk):
 
         row = 1
         column = 4
+        button_width = 75
+        button_height = 45
+        if platform.system() == 'Linux':
+            button_width += 10  # Adjust width for Linux
+            button_height += 10  # Adjust height for Linux
+
         for operator, symbol in self.operations.items():
             button = CTkButton(self.buttonFrame, text=symbol, fg_color=ORANGE,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45, hover_color=HOVER_OPERATOR,
+                               width=button_width, height=button_height, hover_color=HOVER_OPERATOR,
                                command=lambda op=operator: self.show_operators(op))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             row += 1
@@ -407,11 +452,14 @@ class App(CTk):
         @brief Creates a settings/help button in the calculator interface
         @param self: Instance of the class
         """
+        settings_image = Image.open(os.path.join("Pictures", "Vrstva 1.png"))
+        settings_image = settings_image.resize((50, 50), Image.Resampling.LANCZOS)
 
-        settingsImagePath = r'Pictures\Vrstva 1.ico'
-        settingsImage = CTkImage(Image.open(settingsImagePath))
-        settingsButton = CTkButton(self, image=settingsImage, text="", border_width=0, fg_color=DARK_GRAY,
-                                   corner_radius=25, font=(LARGE, 15), width=10, height=10,
+        # Create a CTkImage from the resized image
+        ctk_settings_image = CTkImage(settings_image)
+
+        settingsButton = CTkButton(self, image=ctk_settings_image, text="", border_width=0, fg_color=DARK_GRAY,
+                                   corner_radius=25, font=(LARGE, 15), width=5, height=5,
                                    bg_color=DARK_GRAY, hover_color=COLOR_REST, command=self.open_settings_window)
         settingsButton.grid(row=0, column=0, sticky="nw", pady=2)
 
@@ -449,8 +497,8 @@ class App(CTk):
 
         self.bind("<BackSpace>", lambda event: self.delete())
         self.bind("<c>", lambda event: self.clear())
-        self.bind("<.>", lambda event: self.decimal())
-        self.bind("<=>", lambda event: self.equals())
+        self.bind(".", lambda event: self.decimal())
+        self.bind("=", lambda event: self.equals())
 
         # self.bind("<^>", lambda event: self.exponentiation())
         # self.bind("<r>", lambda event: self.root())
