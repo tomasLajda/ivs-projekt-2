@@ -1,5 +1,6 @@
 from PIL import Image, ImageTk
 from customtkinter import *
+import platform
 
 LIGHT_GRAY = "#979797"
 DARK_GRAY = "#3D3D3D"
@@ -26,7 +27,12 @@ class ToplevelWindow(CTkToplevel):
     def __init__(self, root, *args, **kwargs):
         # TODO: FINISH, FIX THE WEIRD BORDER EFFECT
         super().__init__(*args, **kwargs)
-        self.geometry(f"300x300+{root.winfo_x() + 65}+{root.winfo_y() + 80}")
+
+        if platform.system() == 'Linux':
+            self.geometry(f"400x350+{root.winfo_x() + 40}+{root.winfo_y() + 65}")
+        else:
+            self.geometry(f"300x300+{root.winfo_x() + 65}+{root.winfo_y() + 80}")
+
         self.resizable(True, True)
         self.title("Help")
         self.help_path = ImageTk.PhotoImage(file=os.path.join("Pictures", 'questionmark1_83827.png'))
@@ -58,9 +64,13 @@ class ToplevelWindow(CTkToplevel):
             label_text.grid(row=row, column=1, sticky="w", pady=10, padx=(0, 10))
 
             def resize_wraplength(event):
-                label_text.configure(wraplength=event.width - 140)
+                if platform.system() == 'Linux':
+                    label_text.configure(wraplength=event.width - 70)
+                else:
+                    label_text.configure(wraplength=event.width - 140)
 
             frame_use.bind("<Configure>", resize_wraplength)
+            frame_use.grid_rowconfigure(row, weight=1)
 
         # =====================================First part===============================================
 
@@ -111,7 +121,7 @@ class ToplevelWindow(CTkToplevel):
                                  "button or 'r'\n 3. Choose the radical")
 
         add_image_and_label(subFrame2, row=11, image_path=r'Pictures/Fact.ico',
-                            text="How to use Factrial: \n1. Choose the number \n2. Select the factorial button or '!'")
+                            text="How to use Factorial: \n1. Choose the number \n2. Select the factorial button or '!'")
 
         add_image_and_label(subFrame2, row=12, image_path=r'Pictures/Abs.ico',
                             text="How to use Absolute value: \n1. Choose the number \n"
