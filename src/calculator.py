@@ -50,6 +50,10 @@ class App(CTk):
         self.toplevel_window = None
         self.title("Calcu-lajda")
         self.resizable(False, False)
+
+        if platform == "Linux":
+            self.resizable(width=False, height=False)
+
         self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "Calculator_30001 (1).png"))
         self.wm_iconbitmap()
         self.iconphoto(False, self.iconpath)
@@ -173,6 +177,19 @@ class App(CTk):
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
+    def adjust_button_size(self, width, height):
+        """
+        @brief Adjusts the button size based on the platform
+        @param self: Instance of the class
+        @param width: Original button width
+        @param height: Original button height
+        @return: Adjusted button width and height
+        """
+        if platform.system() == 'Linux':
+            width += 15
+            height += 15
+        return width, height
+
     def show_numbers(self, value):
         """
         @brief Appends the provided value to the current expression and updates the current label.
@@ -188,13 +205,9 @@ class App(CTk):
         @brief Creates digit buttons in the calculator interface
         @param self: Instance of the class
         """
+        button_width, button_height = self.adjust_button_size(75, 45)
 
         for digit, (row, column) in self.digits.items():
-            button_width = 75
-            button_height = 45
-            if platform.system() == 'Linux':
-                button_width += 10  # Adjust width for Linux
-                button_height += 10  # Adjust height for Linux
             button = CTkButton(self.buttonFrame, text=str(digit), bg_color=GRAY, fg_color=LIGHT_GRAY,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
                                width=button_width, height=button_height, hover_color=GRAY,
@@ -243,12 +256,7 @@ class App(CTk):
 
         row = 1
         column = 4
-        button_width = 75
-        button_height = 45
-        if platform.system() == 'Linux':
-            button_width += 10  # Adjust width for Linux
-            button_height += 10  # Adjust height for Linux
-
+        button_width, button_height = self.adjust_button_size(75, 45)
         for operator, symbol in self.operations.items():
             button = CTkButton(self.buttonFrame, text=symbol, fg_color=ORANGE,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
@@ -266,10 +274,10 @@ class App(CTk):
         @brief Creates equals button in the calculator interface that evaluates the expression
         @param self: Instance of the class
         """
-
+        button_width, button_height = self.adjust_button_size(75, 45)
         equalsButton = CTkButton(self.buttonFrame, text="=", border_width=0, fg_color=ORANGE,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=75, height=45, hover_color=HOVER_OPERATOR)
+                                 width=button_width, height=button_height, hover_color=HOVER_OPERATOR)
         equalsButton.grid(row=4, column=3, sticky="nsew", padx=2, pady=2)
 
     def decimal(self):
@@ -288,10 +296,10 @@ class App(CTk):
         @brief Creates decimal point button in the calculator interface
         @param self: Instance of the class
         """
-
+        button_width, button_height = self.adjust_button_size(75, 45)
         decimalButton = CTkButton(self.buttonFrame, text=".", border_width=0, fg_color=LIGHT_GRAY,
                                   corner_radius=10, font=(LARGE, 25),
-                                  width=75, height=45, hover_color=GRAY,
+                                  width=button_width, height=button_height, hover_color=GRAY,
                                   command=self.decimal)
         decimalButton.grid(row=4, column=1, sticky="nsew", padx=2, pady=2)
 
@@ -315,10 +323,10 @@ class App(CTk):
         @brief Creates Clean button in the calculator interface that clears the expression
         @param self: Instance of the class
         """
-
+        button_width, button_height = self.adjust_button_size(75, 45)
         cleanButton = CTkButton(self.buttonFrame, text="C", border_width=0, fg_color=COLOR_REST,
-                                corner_radius=10, font=(LARGE, 25), width=75, height=45, hover_color=HOVER_COLOR,
-                                command=self.clear)
+                                corner_radius=10, font=(LARGE, 25), width=button_width, height=button_height,
+                                hover_color=HOVER_COLOR, command=self.clear)
         cleanButton.grid(row=0, column=3, sticky="nsew", padx=2, pady=2)
 
     def delete(self):
@@ -340,10 +348,11 @@ class App(CTk):
         @brief Creates Delete button in the calculator interface that erases the last character
         @param self: Instance of the class
         """
-
+        button_width, button_height = self.adjust_button_size(75, 45)
         deleteButton = CTkButton(self.buttonFrame, text="⌫", border_width=0, fg_color=COLOR_REST,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=75, height=45, hover_color=HOVER_COLOR, command=self.delete)
+                                 width=button_width, height=button_height, hover_color=HOVER_COLOR,
+                                 command=self.delete)
         deleteButton.grid(row=0, column=4, sticky="nsew", padx=2, pady=2)
 
     def show_brackets(self, bracket):
@@ -361,13 +370,13 @@ class App(CTk):
         @brief Creates bracket buttons in the calculator interface
         @param self: Instance of the class
         """
-
+        button_width, button_height = self.adjust_button_size(75, 45)
         row = 0
         column = 1
         for bracket in self.brackets:
             button = CTkButton(self.buttonFrame, text=bracket, fg_color=COLOR_REST,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45, hover_color=HOVER_COLOR,
+                               width=button_width, height=button_height, hover_color=HOVER_COLOR,
                                command=lambda b=bracket: self.show_brackets(b))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             column += 1
@@ -382,10 +391,13 @@ class App(CTk):
         @param self: Instance of the class
         """
 
+        button_width, button_height = self.adjust_button_size(75, 45)
         exponentiationButton = CTkButton(self.buttonFrame, text="x\u207F", border_width=0, fg_color=COLOR_REST,
                                          corner_radius=10, font=(LARGE, 25),
-                                         width=75, height=45, hover_color=HOVER_COLOR)
+                                         width=button_width, height=button_height, hover_color=HOVER_COLOR)
         exponentiationButton.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+
+    # Similarly adjust other methods
 
     def root(self):
         # TODO: IMPLEMENT
@@ -397,9 +409,10 @@ class App(CTk):
         @param self: Instance of the class
         """
 
+        button_width, button_height = self.adjust_button_size(75, 45)
         rootButton = CTkButton(self.buttonFrame, text="ⁿ√x", border_width=0, fg_color=COLOR_REST,
                                corner_radius=10, font=(LARGE, 25),
-                               width=75, height=45, hover_color=HOVER_COLOR)
+                               width=button_width, height=button_height, hover_color=HOVER_COLOR)
         rootButton.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
 
     def factorial(self):
@@ -412,9 +425,10 @@ class App(CTk):
         @param self: Instance of the class
         """
 
+        button_width, button_height = self.adjust_button_size(75, 45)
         factorialButton = CTkButton(self.buttonFrame, text="x!", border_width=0, fg_color=COLOR_REST,
                                     corner_radius=10, font=(LARGE, 25),
-                                    width=75, height=45, hover_color=HOVER_COLOR)
+                                    width=button_width, height=button_height, hover_color=HOVER_COLOR)
         factorialButton.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
 
     def abs(self):
@@ -427,9 +441,10 @@ class App(CTk):
         @param self: Instance of the class
         """
 
+        button_width, button_height = self.adjust_button_size(75, 45)
         absButton = CTkButton(self.buttonFrame, text="|x|", border_width=0, fg_color=COLOR_REST,
                               corner_radius=10, font=(LARGE, 25),
-                              width=75, height=45, hover_color=HOVER_COLOR)
+                              width=button_width, height=button_height, hover_color=HOVER_COLOR)
         absButton.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
 
     def modulo(self):
@@ -442,9 +457,10 @@ class App(CTk):
         @param self: Instance of the class
         """
 
+        button_width, button_height = self.adjust_button_size(75, 45)
         moduloButton = CTkButton(self.buttonFrame, text="mod", border_width=0, fg_color=COLOR_REST,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=75, height=45, hover_color=HOVER_COLOR)
+                                 width=button_width, height=button_height, hover_color=HOVER_COLOR)
         moduloButton.grid(row=4, column=0, sticky="nsew", padx=2, pady=2)
 
     def create_settings_button(self):
