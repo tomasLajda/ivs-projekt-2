@@ -1,3 +1,13 @@
+"""
+@file help_menu.py
+@brief File containing the help menu
+
+@author
+- Martin Valapka (xvalapm00)
+
+@date - April 3, 2024
+"""
+
 from PIL import Image, ImageTk
 from customtkinter import *
 import platform
@@ -16,12 +26,12 @@ HOVER_OPERATOR = "#FF8409"
 
 class ToplevelWindow(CTkToplevel):
     """
-    @brief Initialization of the top-level window
+    @brief Top-level window for displaying help information
 
-    @param self: Instance of the class
     @param root: The parent widget
-    @param *args: Variable length argument list
-    @param **kwargs: Arbitrary keyword arguments
+
+    Attributes:
+        help_path (str): The path to the help image
     """
 
     def __init__(self, root, *args, **kwargs):
