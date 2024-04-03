@@ -205,10 +205,11 @@ class App(CTk):
         @brief Creates digit buttons in the calculator interface
         @param self: Instance of the class
         """
+        button_width, button_height = adjust_button_size(75, 45)
         for digit, (row, column) in self.digits.items():
             button = CTkButton(self.buttonFrame, text=str(digit), bg_color=GRAY, fg_color=LIGHT_GRAY,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=5, height=2, hover_color=GRAY,  # Adjusted width and height
+                               width=button_width, height=button_height, hover_color=GRAY,
                                command=lambda x=digit: self.show_numbers(x))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             self.buttonFrame.grid_rowconfigure(row, weight=1)  # Allow row to expand
@@ -260,7 +261,7 @@ class App(CTk):
         for operator, symbol in self.operations.items():
             button = CTkButton(self.buttonFrame, text=symbol, fg_color=ORANGE,
                                border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=5, height=2, hover_color=HOVER_OPERATOR,  # Adjusted width and height
+                               width=button_width, height=button_height, hover_color=HOVER_OPERATOR,
                                command=lambda op=operator: self.show_operators(op))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             self.buttonFrame.grid_rowconfigure(row, weight=1)  # Allow row to expand
@@ -279,7 +280,7 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         equalsButton = CTkButton(self.buttonFrame, text="=", border_width=0, fg_color=ORANGE,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=5, height=2, hover_color=HOVER_OPERATOR)  # Adjusted width and height
+                                 width=button_width, height=button_height, hover_color=HOVER_OPERATOR)
         equalsButton.grid(row=4, column=3, sticky="nsew", padx=2, pady=2)
         self.buttonFrame.grid_rowconfigure(4, weight=1)  # Allow row to expand
         self.buttonFrame.grid_columnconfigure(3, weight=1)  # Allow column to expand
