@@ -29,3 +29,12 @@ profile:
 help:
 	@echo "Help message:"
 	# Add more detailed help message here
+
+test:
+	@echo "Running tests..."
+	# Add commands to run the tests here
+
+# Generate documentation
+doc:
+	@echo "Generating documentation..."
+	# Add commands to generate the documentation here
