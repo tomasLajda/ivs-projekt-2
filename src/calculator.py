@@ -224,10 +224,10 @@ class App(CTk):
 
         result = mathlib.add(float(self.totalExpression), float(self.currentExpression))
         result = int(result)
-        print(result)
+        self.totalExpression = str(self.totalExpression) + '+' + str(self.currentExpression)
+        self.update_total_label()
         self.currentExpression = str(result)
         self.update_current_label()
-        self.update_total_label()
 
     def sub(self):
         # TODO: IMPLEMENT
@@ -424,13 +424,8 @@ class App(CTk):
                                          corner_radius=10, font=(LARGE, 25),
                                          width=button_width, height=button_height, hover_color=HOVER_COLOR)
         exponentiationButton.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(0, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
-
-    # Similarly adjust other methods
 
     def root(self):
         # TODO: IMPLEMENT
@@ -454,8 +449,11 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def factorial(self):
-        # TODO: IMPLEMENT
-        pass
+        result = mathlib.fac(int(self.currentExpression))
+        self.totalExpression = str(self.currentExpression) + '!'
+        self.update_total_label()
+        self.currentExpression = str(result)
+        self.update_current_label()
 
     def create_factorial_button(self):
         """
@@ -466,12 +464,10 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         factorialButton = CTkButton(self.buttonFrame, text="x!", border_width=0, fg_color=COLOR_REST,
                                     corner_radius=10, font=(LARGE, 25),
-                                    width=button_width, height=button_height, hover_color=HOVER_COLOR)
+                                    width=button_width, height=button_height, hover_color=HOVER_COLOR,
+                                    command=self.factorial)
         factorialButton.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(2, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def abs(self):
