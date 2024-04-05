@@ -8,6 +8,7 @@
 @date - March 19, 2024
 """
 
+import mathlib
 import platform
 from help_menu import ToplevelWindow
 from PIL import Image, ImageTk
@@ -216,8 +217,17 @@ class App(CTk):
             self.buttonFrame.grid_columnconfigure(column, weight=1)  # Allow column to expand
 
     def add(self):
-        # TODO: IMPLEMENT
-        pass
+        """
+        @brief Adds two numbers
+        @param self: Instance of the class
+        """
+
+        result = mathlib.add(float(self.totalExpression), float(self.currentExpression))
+        result = int(result)
+        print(result)
+        self.currentExpression = str(result)
+        self.update_current_label()
+        self.update_total_label()
 
     def sub(self):
         # TODO: IMPLEMENT
@@ -270,7 +280,8 @@ class App(CTk):
 
     def equals(self):
         # TODO: IMPLEMENT
-        pass
+        self.totalExpression = self.totalExpression[:-1]
+        self.add()
 
     def create_equals_button(self):
         """
@@ -280,7 +291,8 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         equalsButton = CTkButton(self.buttonFrame, text="=", border_width=0, fg_color=ORANGE,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=button_width, height=button_height, hover_color=HOVER_OPERATOR)
+                                 width=button_width, height=button_height, hover_color=HOVER_OPERATOR,
+                                 command=self.equals)
         equalsButton.grid(row=4, column=3, sticky="nsew", padx=2, pady=2)
         self.buttonFrame.grid_rowconfigure(4, weight=1)  # Allow row to expand
         self.buttonFrame.grid_columnconfigure(3, weight=1)  # Allow column to expand
