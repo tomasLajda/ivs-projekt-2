@@ -274,8 +274,8 @@ class App(CTk):
                                width=button_width, height=button_height, hover_color=HOVER_OPERATOR,
                                command=lambda op=operator: self.show_operators(op))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
-            self.buttonFrame.grid_rowconfigure(row, weight=1)  # Allow row to expand
-            self.buttonFrame.grid_columnconfigure(column, weight=1)  # Allow column to expand
+            self.buttonFrame.grid_rowconfigure(row, weight=1)
+            self.buttonFrame.grid_columnconfigure(column, weight=1)
             row += 1
 
     def equals(self):
@@ -294,8 +294,8 @@ class App(CTk):
                                  width=button_width, height=button_height, hover_color=HOVER_OPERATOR,
                                  command=self.equals)
         equalsButton.grid(row=4, column=3, sticky="nsew", padx=2, pady=2)
-        self.buttonFrame.grid_rowconfigure(4, weight=1)  # Allow row to expand
-        self.buttonFrame.grid_columnconfigure(3, weight=1)  # Allow column to expand
+        self.buttonFrame.grid_rowconfigure(4, weight=1)
+        self.buttonFrame.grid_columnconfigure(3, weight=1)
 
     def decimal(self):
         """
@@ -319,8 +319,8 @@ class App(CTk):
                                   width=button_width, height=button_height, hover_color=GRAY,
                                   command=self.decimal)
         decimalButton.grid(row=4, column=1, sticky="nsew", padx=2, pady=2)
-        self.buttonFrame.grid_rowconfigure(4, weight=1)  # Allow row to expand
-        self.buttonFrame.grid_columnconfigure(1, weight=1)  # Allow column to expand
+        self.buttonFrame.grid_rowconfigure(4, weight=1)
+        self.buttonFrame.grid_columnconfigure(1, weight=1)
 
     def clear(self):
         """
@@ -403,10 +403,7 @@ class App(CTk):
                                command=lambda b=bracket: self.show_brackets(b))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             column += 1
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(row, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(column - 1, weight=1)
 
     def exponentiation(self):
@@ -442,13 +439,15 @@ class App(CTk):
                                corner_radius=10, font=(LARGE, 25),
                                width=button_width, height=button_height, hover_color=HOVER_COLOR)
         rootButton.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(1, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def factorial(self):
+        """
+        @brief Computes the factorial of the current expression
+        @param self: Instance of the class
+        """
+        # TODO: IMPLEMENT
         result = mathlib.fac(int(self.currentExpression))
         self.totalExpression = str(self.currentExpression) + '!'
         self.update_total_label()
@@ -471,8 +470,20 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def abs(self):
+        """
+        @brief Computes the absolute value of the current expression
+        @param self: Instance of the class
+        """
         # TODO: IMPLEMENT
-        pass
+        if '.' in self.currentExpression:
+            result = mathlib.abs(float(self.currentExpression))
+        else:
+            result = mathlib.abs(int(self.currentExpression))
+
+        self.totalExpression = '|' + str(self.currentExpression) + '|'
+        self.update_total_label()
+        self.currentExpression = str(result)
+        self.update_current_label()
 
     def create_abs_button(self):
         """
@@ -483,12 +494,9 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         absButton = CTkButton(self.buttonFrame, text="|x|", border_width=0, fg_color=COLOR_REST,
                               corner_radius=10, font=(LARGE, 25),
-                              width=button_width, height=button_height, hover_color=HOVER_COLOR)
+                              width=button_width, height=button_height, hover_color=HOVER_COLOR, command=self.abs)
         absButton.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(3, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def modulo(self):
@@ -506,10 +514,7 @@ class App(CTk):
                                  corner_radius=10, font=(LARGE, 25),
                                  width=button_width, height=button_height, hover_color=HOVER_COLOR)
         moduloButton.grid(row=4, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(4, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def create_settings_button(self):
