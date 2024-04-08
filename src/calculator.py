@@ -66,12 +66,12 @@ class App(CTk):
         self.title("Calcu-lajda")
         self.resizable(False, False)
 
-        if platform == "Linux":
-            self.resizable(width=False, height=False)
+        if platform.system() == "Linux":
+            self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "Calculator_30001 (1)-1.png"))
+            self.wm_iconbitmap()
+            self.iconphoto(False, self.iconpath)
 
-        self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "Calculator_30001 (1).png"))
-        self.wm_iconbitmap()
-        self.iconphoto(False, self.iconpath)
+        self.iconbitmap("Pictures/Calculator_30001 (1).ico")
 
         self.totalExpression = ""
         self.currentExpression = "0"
@@ -101,23 +101,23 @@ class App(CTk):
             ")": ")"
         }
 
-        precedences = {
+        self.precedences = {
             "+": (1, 2),
             "-": (1, 2),
             "*": (3, 4),
             "/": (3, 4)
         }
 
-        Integer = "Integer"
-        Operator = "Operator"
-        Paren = "Parenthesis"
-        EOF = "EOF"
+        self.Integer = "Integer"
+        self.Operator = "Operator"
+        self.Paren = "Parenthesis"
+        self.EOF = "EOF"
 
-        Functions = {
-            "+": lambda a, b: a + b,
-            "-": lambda a, b: a - b,
-            "*": lambda a, b: a * b,
-            "/": lambda a, b: a / b
+        self.functions = {
+            "+": lambda a, b: mathlib.add(a, b),
+            "-": lambda a, b: mathlib.sub(a, b),
+            "\u00D7": lambda a, b: mathlib.mul(a, b),
+            "\u00F7": lambda a, b: mathlib.div(a, b)
         }
 
     def center_window(self, width, height, scalefactor=1.0):
@@ -130,24 +130,15 @@ class App(CTk):
         @return: String representing the window geometry
         """
         os_name = platform.system()
+        screenWidth = self.winfo_screenwidth()
+        screenHeight = self.winfo_screenheight()
 
-        if os_name == 'Windows':
-            screenWidth = self.winfo_screenwidth()
-            screenHeight = self.winfo_screenheight()
-            x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
-            y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
-            return f"{width}x{height}+{x}+{y}"
-
-        elif os_name == 'Linux':
-            screenWidth = self.winfo_screenwidth()
-            screenHeight = self.winfo_screenheight()
+        if os_name == 'Linux':
             x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
             y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
             return f"{width + 75}x{height + 80}+{x}+{y}"
 
         else:
-            screenWidth = self.winfo_screenwidth()
-            screenHeight = self.winfo_screenheight()
             x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
             y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
             return f"{width}x{height}+{x}+{y}"
@@ -166,11 +157,15 @@ class App(CTk):
 
         self.totalLabel = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=20,
                                    font=(SMALL, 25), text_color="white")
-        self.totalLabel.pack(side="top", expand=True, fill="both")
+        self.totalLabel.grid(row=0, column=0, sticky="nsew")
 
         self.currentLabel = CTkLabel(self.displayFrame, text=self.currentExpression, anchor="e", padx=15, pady=20,
                                      font=(LARGE, 50), text_color="white")
-        self.currentLabel.pack(side="top", expand=True, fill="both")
+        self.currentLabel.grid(row=1, column=0, sticky="nsew")
+
+        self.displayFrame.grid_rowconfigure(0, weight=1)
+        self.displayFrame.grid_rowconfigure(1, weight=1)
+        self.displayFrame.grid_columnconfigure(0, weight=1)
 
     def update_total_label(self):
         """
@@ -247,18 +242,6 @@ class App(CTk):
         self.update_total_label()
         self.currentExpression = str(result)
         self.update_current_label()
-
-    def sub(self):
-        # TODO: IMPLEMENT
-        pass
-
-    def mul(self):
-        # TODO: IMPLEMENT
-        pass
-
-    def div(self):
-        # TODO: IMPLEMENT
-        pass
 
     def show_operators(self, operator):
         """
