@@ -59,3 +59,13 @@ def test_profiling_same_numbers():
     numbers = [5, 5, 5, 5, 5]
     expected_std_dev = 0  # standard deviation of a list with same numbers is 0
     assert profiling.calculate_std_dev(numbers) == pytest.approx(expected_std_dev)
+
+def test_profiling_zero():
+    numbers = [0, 1, 2, 3, 4]
+    expected_std_dev = 1.4142135623730951  # pre-calculated standard deviation for this list
+    assert profiling.calculate_std_dev(numbers) == pytest.approx(expected_std_dev)
+
+def test_profiling_list_with_duplicates():
+    numbers = [1, 2, 2, 3, 4, 4, 5]
+    expected_std_dev = 1.3451854182698108  # pre-calculated standard deviation for this list
+    assert profiling.calculate_std_dev(numbers) == pytest.approx(expected_std_dev)
