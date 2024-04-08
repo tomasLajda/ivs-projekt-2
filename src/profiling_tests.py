@@ -69,3 +69,5 @@ def test_profiling_list_with_duplicates():
     numbers = [1, 2, 2, 3, 4, 4, 5]
     expected_std_dev = 1.3451854182698108  # pre-calculated standard deviation for this list
     assert profiling.calculate_std_dev(numbers) == pytest.approx(expected_std_dev)
+
+# End of profiling_tests.py

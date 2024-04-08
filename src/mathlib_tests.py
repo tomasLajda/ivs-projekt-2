@@ -1,5 +1,5 @@
 """
-@file tests.py
+@file mathlib_tests.py
 @brief File containing math library functionality tests.
 
 @author
@@ -12,6 +12,7 @@ import mathlib
 
 
 # ADDITION TESTS START
+
 def test_addition():
     assert mathlib.add(1, 2) == 3
 
@@ -69,6 +70,7 @@ def test_addition_large_negative():
 
 # ADDITION TESTS END
 # SUBTRACTION TESTS START
+
 def test_subtraction():
     assert mathlib.sub(1, 1) == 0
 
@@ -207,9 +209,7 @@ def test_division_large():
     assert mathlib.div(1_000_000_000, 2) == 500_000_000  # 1e10 / 2 = 5e9
     assert mathlib.div(2, 1_000_000_000) == 0.000_000_002  # 1e10 / 2 = 2e-9
 
-
 # DIVISION TESTS END
-
 # MODULUS TESTS START
 
 def test_modulus():
@@ -264,7 +264,6 @@ def test_absolute_value_large():
     assert mathlib.abs(1_000_000_000) == 1_000_000_000  # abs(1e10) = 1e10
     assert mathlib.abs(-1_000_000_000) == 1_000_000_000  # abs(-1e10) = 1e10
 
-
 # ABSOLUTE VALUE TESTS END
 # FACTORIAL TESTS START
 
@@ -315,10 +314,8 @@ def test_factorial_negative():
     with pytest.raises(ValueError):
         mathlib.fac(-10)
 
-
 # FACTORIAL TESTS END
 # POW TESTS START
-
 
 def test_pow_base_zero():
     assert mathlib.pow(0, 1_000_000_000) == 0
@@ -376,9 +373,8 @@ def test_pow_negative_index_raises_error():
     with pytest.raises(TypeError):
         mathlib.pow(2, -2)
 
-
 # POW TESTS END
-# root TESTS START
+# ROOT TESTS START
 
 def test_root_integer_root(math):
     assert mathlib.root(4, 2) == 2
@@ -412,4 +408,6 @@ def test_root_small_number():
     assert mathlib.root(0.000_1, 2) == pytest.approx(0.01, rel=1e-3)  # root(0.0001, 2) ≈ 0.01 (approx)
     assert mathlib.root(0.002, 3) == pytest.approx(0.125_992_104_9, rel=1e-3)  # root(0.001, 3) ≈ 0.125 (approx)
 
-# root TESTS END
+# ROOT TESTS END
+
+# End of matlib_tests.py
