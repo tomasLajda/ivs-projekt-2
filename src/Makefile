@@ -1,40 +1,58 @@
 .PHONY: all pack clean run profile help
+TEST_FILES = mathlib_tests.py profiling_tests.py
 
 # Start the program
-all:
+all: setup run profile
 	@echo "Starting the program..."
-	# Add commands to start the program here
 
-# Pack the project
-pack:
+pack: clean setup doc
 	@echo "Packing the project..."
-	# Add commands to pack the project here
+	mkdir -p ../xcsirim00_xgajduv00_xlajdat00_xvalapm00
+	cp -r . ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	git archive --format zip --output ../xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip HEAD
+	cp installer.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	cp uninstaller.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	cp -r ../doc ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	zip -r xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
 
-# Clean up
 clean:
 	@echo "Cleaning up..."
-	# Add commands to delete all files that should not be committed here
+	rm -rf ../doc
 
-# Run the program
 run:
 	@echo "Running the program..."
-	# Add commands to run the program here
+	python3 calculator.py
 
-# Profile the program
-profile:
+profile: setup
 	@echo "Profiling the program..."
-	# Add commands to calculate standard deviation with sample test input here
+	python3 profiling.py
 
-# Print help message
 help:
-	@echo "Help message:"
-	# Add more detailed help message here
+	@echo "Makefile options:"
+	@echo "make all - Compiles the project, including the profiling program."
+	@echo "make pack - Packs the project for submission."
+	@echo "make clean - Deletes all files that should not be submitted."
+	@echo "make test - Runs the tests for the math library."
+	@echo "make doc - Generates project documentation."
+	@echo "make run - Runs calculator program."
+	@echo "make profile - Compiles the standard deviation calculation program for profiling."
+	@echo "make setup - Sets up the necessary dependencies for the project."
+	@echo "make setup_tests - Sets up the necessary dependencies for the project tests."
+	@echo "If make is run without specifying a target, make all is executed."
 
 test:
 	@echo "Running tests..."
-	# Add commands to run the tests here
+	pytest $(TEST_FILES)
 
-# Generate documentation
-doc:
-	@echo "Generating documentation..."
-	# Add commands to generate the documentation here
+doc: Doxyfile
+	rm -rf ../doc
+	mkdir ../doc
+	doxygen Doxyfile
+
+setup:
+	@echo "Setting up the project..."
+	pip3 install -r requirements.txt
+
+setup_tests:
+	@echo "Setting up the project for testing..."
+	pip3 install -r requirements_tests.txt
