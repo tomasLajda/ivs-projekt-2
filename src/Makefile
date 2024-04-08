@@ -1,3 +1,9 @@
+##
+# @file Makefile
+# @author Matúš Csirik (xcsirim00)
+# @date April 8, 2024
+##
+
 .PHONY: all pack clean run profile help
 TEST_FILES = mathlib_tests.py profiling_tests.py
 
