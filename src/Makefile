@@ -4,7 +4,7 @@
 # @date April 8, 2024
 ##
 
-.PHONY: all pack clean run profile help
+.PHONY: all pack clean run profile help setup setup_tests test doc
 TEST_FILES = mathlib_tests.py profiling_tests.py
 
 # Start the program
