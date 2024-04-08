@@ -56,6 +56,7 @@ class App(CTk):
 
     def __init__(self):
         super().__init__()
+        self.numbers = None
         self.settingsImagePath = None
         self.currentLabel = None
         self.totalLabel = None
@@ -98,6 +99,25 @@ class App(CTk):
         self.brackets = {
             "(": "(",
             ")": ")"
+        }
+
+        precedences = {
+            "+": (1, 2),
+            "-": (1, 2),
+            "*": (3, 4),
+            "/": (3, 4)
+        }
+
+        Integer = "Integer"
+        Operator = "Operator"
+        Paren = "Parenthesis"
+        EOF = "EOF"
+
+        Functions = {
+            "+": lambda a, b: a + b,
+            "-": lambda a, b: a - b,
+            "*": lambda a, b: a * b,
+            "/": lambda a, b: a / b
         }
 
     def center_window(self, width, height, scalefactor=1.0):
@@ -221,7 +241,6 @@ class App(CTk):
         @brief Adds two numbers
         @param self: Instance of the class
         """
-
         result = mathlib.add(float(self.totalExpression), float(self.currentExpression))
         result = int(result)
         self.totalExpression = str(self.totalExpression) + '+' + str(self.currentExpression)
@@ -570,11 +589,6 @@ class App(CTk):
         self.bind(".", lambda event: self.decimal())
         self.bind("=", lambda event: self.equals())
 
-        # self.bind("<^>", lambda event: self.exponentiation())
-        # self.bind("<r>", lambda event: self.root())
-        # self.bind("<!>", lambda event: self.factorial())
-        # self.bind("<%>", lambda event: self.modulo())
-
     def run(self):
         """
         @brief Runs the application.
@@ -604,3 +618,5 @@ class App(CTk):
 if __name__ == "__main__":
     app = App()
     app.run()
+
+# END OF calculator.py file
