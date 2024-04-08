@@ -1,3 +1,4 @@
+
 ##
 # @file Makefile
 # @author Matúš Csirik (xcsirim00)
@@ -14,16 +15,18 @@ all: setup run profile
 pack: clean setup doc
 	@echo "Packing the project..."
 	mkdir -p ../xcsirim00_xgajduv00_xlajdat00_xvalapm00
-	cp -r . ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
-	git archive --format zip --output ../xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip HEAD
-	cp installer.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
-	cp uninstaller.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
-	cp -r ../doc ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
-	zip -r xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	cp -r ../. ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+#	git archive --format zip --output ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00_git.zip HEAD
+#	cp installer.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+#	cp uninstaller.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+#	cp -r ../doc ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	zip -r xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
 
 clean:
 	@echo "Cleaning up..."
 	rm -rf ../doc
+	rm -f xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip
+	rm -rf __pycache__
 
 run:
 	@echo "Running the program..."
@@ -57,6 +60,9 @@ doc: Doxyfile
 
 setup:
 	@echo "Setting up the project..."
+	sudo apt-get install python3-tk
+	sudo apt-get update
+	sudo apt-get install tk-dev
 	pip3 install -r requirements.txt
 
 setup_tests:
