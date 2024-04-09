@@ -39,6 +39,26 @@ def adjust_button_size(width, height):
     return width, height
 
 
+precedences = {
+    "+": (1, 2),
+    "-": (1, 2),
+    "*": (3, 4),
+    "/": (3, 4)
+}
+
+Integer = "Integer"
+Operator = "Operator"
+Paren = "Parenthesis"
+EOF = "EOF"
+
+functions = {
+    "+": lambda a, b: mathlib.add(a, b),
+    "-": lambda a, b: mathlib.sub(a, b),
+    "*": lambda a, b: mathlib.mul(a, b),
+    "/": lambda a, b: mathlib.div(a, b)
+}
+
+
 class App(CTk):
     """
     @brief Initialization of the calculator application.
@@ -99,25 +119,6 @@ class App(CTk):
         self.brackets = {
             "(": "(",
             ")": ")"
-        }
-
-        self.precedences = {
-            "+": (1, 2),
-            "-": (1, 2),
-            "*": (3, 4),
-            "/": (3, 4)
-        }
-
-        self.Integer = "Integer"
-        self.Operator = "Operator"
-        self.Paren = "Parenthesis"
-        self.EOF = "EOF"
-
-        self.functions = {
-            "+": lambda a, b: mathlib.add(a, b),
-            "-": lambda a, b: mathlib.sub(a, b),
-            "\u00D7": lambda a, b: mathlib.mul(a, b),
-            "\u00F7": lambda a, b: mathlib.div(a, b)
         }
 
     def center_window(self, width, height, scalefactor=1.0):
@@ -230,60 +231,6 @@ class App(CTk):
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             self.buttonFrame.grid_rowconfigure(row, weight=1)  # Allow row to expand
             self.buttonFrame.grid_columnconfigure(column, weight=1)  # Allow column to expand
-
-    def add(self):
-        """
-        @brief Adds two numbers
-        @param self: Instance of the class
-        """
-        result = mathlib.add(float(self.totalExpression), float(self.currentExpression))
-        result = int(result)
-        self.totalExpression = str(self.totalExpression) + '+' + str(self.currentExpression)
-        self.update_total_label()
-        self.currentExpression = str(result)
-        self.update_current_label()
-
-    def show_operators(self, operator):
-        """
-        @brief Appends the provided operator to the current expression and updates the labels.
-        @param self: Instance of the class
-        @param operator: The operator to append to the current expression
-        """
-        # TODO NEEDS FIXES WITH FIRST CHAR AS AN OPERATOR
-
-        if (self.totalExpression and self.totalExpression[-1] in "+-*/" and not self.currentExpression and
-                len(self.totalExpression) != 0):
-            self.totalExpression = self.totalExpression[:-1] + operator
-        else:
-            self.totalExpression += self.currentExpression + operator
-
-        self.currentExpression = ''
-        self.update_total_label()
-        self.update_current_label()
-
-    def create_operator_buttons(self):
-        """
-        @brief Creates operator buttons in the calculator interface
-        @param self: Instance of the class
-        """
-
-        row = 1
-        column = 4
-        button_width, button_height = adjust_button_size(75, 45)
-        for operator, symbol in self.operations.items():
-            button = CTkButton(self.buttonFrame, text=symbol, fg_color=ORANGE,
-                               border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=button_width, height=button_height, hover_color=HOVER_OPERATOR,
-                               command=lambda op=operator: self.show_operators(op))
-            button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
-            self.buttonFrame.grid_rowconfigure(row, weight=1)
-            self.buttonFrame.grid_columnconfigure(column, weight=1)
-            row += 1
-
-    def equals(self):
-        # TODO: IMPLEMENT
-        self.totalExpression = self.totalExpression[:-1]
-        self.add()
 
     def create_equals_button(self):
         """
