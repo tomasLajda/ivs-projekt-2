@@ -232,6 +232,75 @@ class App(CTk):
             self.buttonFrame.grid_rowconfigure(row, weight=1)  # Allow row to expand
             self.buttonFrame.grid_columnconfigure(column, weight=1)  # Allow column to expand
 
+    def tokenize(self):
+        # TODO: NEEDS FIXES
+        # Concatenate totalExpression and currentExpression with a space between them
+        print(type(self.totalExpression))
+        print(type(self.currentExpression))
+        user_input = self.totalExpression + self.currentExpression
+        print(type(user_input))
+        print(user_input)
+        i = 0
+        result = []
+        while i < len(user_input):
+            if user_input[i].isdigit():
+                v = ""
+                while i < len(user_input) and user_input[i].isdigit():
+                    v += user_input[i]
+                    i += 1
+                i -= 1
+                result.append((Integer, int(v)))
+            elif user_input[i] in precedences.keys():
+                result.append((Operator, user_input[i]))
+            elif user_input[i] in "()":
+                result.append((Paren, user_input[i]))
+            else:
+                raise ValueError("Invalid character: " + user_input[i])
+            i += 1
+        print(result)
+        return result
+
+    def show_operators(self, operator):
+        """
+        @brief Appends the provided operator to the current expression and updates the labels.
+        @param self: Instance of the class
+        @param operator: The operator to append to the current expression
+        """
+        # TODO NEEDS FIXES WITH FIRST CHAR AS AN OPERATOR
+
+        if (self.totalExpression and self.totalExpression[-1] in "+-*/" and not self.currentExpression and
+                len(self.totalExpression) != 0):
+            self.totalExpression = self.totalExpression[:-1] + operator
+        else:
+            self.totalExpression += self.currentExpression + operator
+
+        self.currentExpression = ''
+        self.update_total_label()
+        self.update_current_label()
+
+    def create_operator_buttons(self):
+        """
+        @brief Creates operator buttons in the calculator interface
+        @param self: Instance of the class
+        """
+
+        row = 1
+        column = 4
+        button_width, button_height = adjust_button_size(75, 45)
+        for operator, symbol in self.operations.items():
+            button = CTkButton(self.buttonFrame, text=symbol, fg_color=ORANGE,
+                               border_width=0, corner_radius=10, font=(LARGE, 25),
+                               width=button_width, height=button_height, hover_color=HOVER_OPERATOR,
+                               command=lambda op=operator: self.show_operators(op))
+            button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
+            self.buttonFrame.grid_rowconfigure(row, weight=1)
+            self.buttonFrame.grid_columnconfigure(column, weight=1)
+            row += 1
+
+    def equals(self):
+        # TODO: IMPLEMENT
+        pass
+
     def create_equals_button(self):
         """
         @brief Creates equals button in the calculator interface that evaluates the expression
