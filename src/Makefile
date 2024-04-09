@@ -12,14 +12,16 @@ TEST_FILES = mathlib_tests.py profiling_tests.py
 all: setup run profile
 	@echo "Starting the program..."
 
+# Copies the entire directory for now
 pack: clean setup doc
 	@echo "Packing the project..."
 	mkdir -p ../xcsirim00_xgajduv00_xlajdat00_xvalapm00
-	cp -r ../. ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
-#	git archive --format zip --output ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00_git.zip HEAD
-#	cp installer.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
-#	cp uninstaller.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
-#	cp -r ../doc ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	mkdir ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/doc
+	cp -pr ../doc ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/doc
+	mkdir ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo
+	git clone --mirror . ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo
+	#	cp installer.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	#	cp uninstaller.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
 	zip -r xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
 
 clean:
@@ -68,6 +70,7 @@ setup:
 	sudo apt-get -y install tk-dev
 	pip3 install -r requirements.txt
 
+# Doesnt work yet
 setup_tests:
 	@echo "Setting up the project for testing..."
 	pip3 install -r requirements_tests.txt
