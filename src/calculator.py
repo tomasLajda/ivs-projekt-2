@@ -357,9 +357,21 @@ class App(CTk):
             self.buttonFrame.grid_columnconfigure(column, weight=1)
             row += 1
 
+    def execute(self, nodes):
+        if type(nodes) == int:
+            return nodes
+        else:
+            return nodes[0](*map(self.execute, nodes[1:]))
+
     def equals(self):
         # TODO: IMPLEMENT
-        pass
+        tokens = Iterator(self.tokenize())
+        syntax_tree = self.parse(tokens, 0)
+        result = self.execute(syntax_tree)
+        self.totalExpression = self.totalExpression + self.currentExpression
+        self.currentExpression = str(result)
+        self.update_total_label()
+        self.update_current_label()
 
     def create_equals_button(self):
         """
