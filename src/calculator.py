@@ -110,12 +110,9 @@ class App(CTk):
         self.title("Calcu-lajda")
         self.resizable(False, False)
 
-        if platform.system() == "Linux":
-            self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "Calculator_30001 (1)-1.png"))
-            self.wm_iconbitmap()
-            self.iconphoto(False, self.iconpath)
-
-        self.iconbitmap("Pictures/Calculator_30001 (1).ico")
+        self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "Calculator_30001 (1)-1.png"))
+        self.wm_iconbitmap()
+        self.iconphoto(False, self.iconpath)
 
         self.totalExpression = ""
         self.currentExpression = "0"
