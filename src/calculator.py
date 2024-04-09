@@ -59,6 +59,30 @@ functions = {
 }
 
 
+class Iterator:
+    def __init__(self, value: list) -> None:
+        self.EOF = None
+        self.value = value
+
+    def next(self):
+        try:
+            result = self.value.pop(0)
+            print("Next: ", result)
+            return result
+        except IndexError:
+            print("Next: EOF")
+            return self.EOF, None
+
+    def peek(self):
+        try:
+            result = self.value[0]
+            print("Peek: ", result)
+            return result
+        except IndexError:
+            print("Peek: EOF")
+            return self.EOF, None
+
+
 class App(CTk):
     """
     @brief Initialization of the calculator application.
@@ -259,6 +283,42 @@ class App(CTk):
             i += 1
         print(result)
         return result
+
+    def parse(self, tokens: Iterator, precedence: int):
+        leftType, left = tokens.next()
+
+        if leftType == Paren and left == "(":
+            left = self.parse(tokens, 0)
+            k, v = tokens.next()
+            if k != Paren or v != ")":
+                raise SyntaxError("Exprected ')', got " + repr(v))
+
+        # Tu treba upravit pre -cislo: -1/-2 atd
+        elif leftType != Integer:
+            raise SyntaxError("Expected Num, got: " + repr(left))
+
+        while True:
+            operatorType, operatorValue = tokens.peek()
+
+            if operatorType is None:
+                break
+
+            if operatorType in (EOF, Paren):
+                break
+            if operatorType != Operator:
+                print("Operator type: " + operatorType)
+                print("Operator: " + Operator)
+                raise SyntaxError("Expected one of " + ', '.join(precedences.keys()) + ", got " + repr(operatorValue))
+
+            l, r = precedences[operatorValue]
+            if l < precedence:
+                break
+            tokens.next()
+
+            right = self.parse(tokens, r)
+            left = (functions[operatorValue], left, right)
+
+        return left
 
     def show_operators(self, operator):
         """
