@@ -57,12 +57,15 @@ doc: Doxyfile
 	rm -rf ../doc
 	mkdir ../doc
 	doxygen Doxyfile
+	mv ../html/ ../doc
+	rm -rf ../latex/
 
 setup:
 	@echo "Setting up the project..."
-	sudo apt-get install python3-tk
-	sudo apt-get update
-	sudo apt-get install tk-dev
+	sudo apt-get -y update
+	sudo apt-get -y install python3-pip
+	sudo apt-get -y install python3-tk
+	sudo apt-get -y install tk-dev
 	pip3 install -r requirements.txt
 
 setup_tests:
