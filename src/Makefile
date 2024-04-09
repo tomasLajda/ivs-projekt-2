@@ -3,6 +3,7 @@
 # @file Makefile
 # @author Matúš Csirik (xcsirim00)
 # @date April 8, 2024
+# @todo  Bude-li to možné, Makefile nebude obsahovat jméno ani jednoho ze zdrojových souborů.
 ##
 
 .PHONY: all pack clean run profile help setup setup_tests test doc
