@@ -6,14 +6,13 @@
 # @todo  Bude-li to možné, Makefile nebude obsahovat jméno ani jednoho ze zdrojových souborů.
 ##
 
-.PHONY: all pack clean run profile help setup setup_tests test doc install
+.PHONY: all pack clean run profile help setup test doc install
 DIR = ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 
 # Start the program
 all: setup run profile
 	@echo "Starting the program..."
 
-# Copies the entire directory for now
 pack: clean install doc
 	@echo "Packing the project..."
 	mkdir -p $(DIR)/doc $(DIR)/repo $(DIR)/install
@@ -41,7 +40,7 @@ profile: profiling.py setup
 help:
 	@echo "Makefile options:"
 	@echo "make all - Compiles the project, including the profiling program."
-	@echo "make pack - Packs the project for submission."
+	@echo "make pack - Packs the project for submission. (Local directory: $(DIR))"
 	@echo "make clean - Deletes all files that should not be submitted."
 	@echo "make test - Runs the tests for the math library."
 	@echo "make doc - Generates project documentation."
@@ -71,12 +70,7 @@ setup:
 	sudo apt-get install tk-dev
 	pip3 install -r requirements.txt
 
-# Doesnt work yet
-setup_tests: $(TEST_FILES)
-	@echo "Setting up the project for testing..."
-	pip3 install -r requirements_tests.txt
-
-# Setup the installation zip file
+# Setup the installation zip file and clean after itself
 install: setup calculator.py help_menu.py mathlib.py profiling.py
 	@echo "Setting up the installer..."
 	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1).png':Pictures calculator.py mathlib.py help_menu.py
