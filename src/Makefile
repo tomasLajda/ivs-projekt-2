@@ -29,11 +29,6 @@ clean:
 	rm -rf $(DIR)
 	rm -f installer.zip
 	rm -rf __pycache__
-	rm -rf dist
-	rm -rf build
-	rm -f *.spec
-	rm -rf ../installer/Kalkulajda
-	rm -f calculator profiling
 
 run: calculator.py
 	@echo "Running the calculator..."
