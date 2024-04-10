@@ -25,6 +25,10 @@ cp -r Pictures Kalkulajda/usr/bin/
 cp calculator Kalkulajda/usr/bin/
 cp profiling Kalkulajda/usr/bin/
 
+# Assign the executable permissions to the binaries
+chmod +x calculator
+chmod +x profiling
+
 # Create symbolic links to the executables
 ln -sf /usr/bin/calculator Kalkulajda/usr/local/bin/kalkulajda
 ln -sf /usr/bin/profiling Kalkulajda/usr/local/bin/kalkulajda_p
