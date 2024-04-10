@@ -59,30 +59,6 @@ functions = {
 }
 
 
-class Iterator:
-    def __init__(self, value: list) -> None:
-        self.EOF = None
-        self.value = value
-
-    def next(self):
-        try:
-            result = self.value.pop(0)
-            print("Next: ", result)
-            return result
-        except IndexError:
-            print("Next: EOF")
-            return self.EOF, None
-
-    def peek(self):
-        try:
-            result = self.value[0]
-            print("Peek: ", result)
-            return result
-        except IndexError:
-            print("Peek: EOF")
-            return self.EOF, None
-
-
 class App(CTk):
     """
     @brief Initialization of the calculator application.
@@ -253,70 +229,6 @@ class App(CTk):
             self.buttonFrame.grid_rowconfigure(row, weight=1)  # Allow row to expand
             self.buttonFrame.grid_columnconfigure(column, weight=1)  # Allow column to expand
 
-    def tokenize(self):
-        # TODO: NEEDS FIXES
-        # Concatenate totalExpression and currentExpression with a space between them
-        print(type(self.totalExpression))
-        print(type(self.currentExpression))
-        user_input = self.totalExpression + self.currentExpression
-        print(type(user_input))
-        print(user_input)
-        i = 0
-        result = []
-        while i < len(user_input):
-            if user_input[i].isdigit():
-                v = ""
-                while i < len(user_input) and user_input[i].isdigit():
-                    v += user_input[i]
-                    i += 1
-                i -= 1
-                result.append((Integer, int(v)))
-            elif user_input[i] in precedences.keys():
-                result.append((Operator, user_input[i]))
-            elif user_input[i] in "()":
-                result.append((Paren, user_input[i]))
-            else:
-                raise ValueError("Invalid character: " + user_input[i])
-            i += 1
-        print(result)
-        return result
-
-    def parse(self, tokens: Iterator, precedence: int):
-        leftType, left = tokens.next()
-
-        if leftType == Paren and left == "(":
-            left = self.parse(tokens, 0)
-            k, v = tokens.next()
-            if k != Paren or v != ")":
-                raise SyntaxError("Exprected ')', got " + repr(v))
-
-        # Tu treba upravit pre -cislo: -1/-2 atd
-        elif leftType != Integer:
-            raise SyntaxError("Expected Num, got: " + repr(left))
-
-        while True:
-            operatorType, operatorValue = tokens.peek()
-
-            if operatorType is None:
-                break
-
-            if operatorType in (EOF, Paren):
-                break
-            if operatorType != Operator:
-                print("Operator type: " + operatorType)
-                print("Operator: " + Operator)
-                raise SyntaxError("Expected one of " + ', '.join(precedences.keys()) + ", got " + repr(operatorValue))
-
-            l, r = precedences[operatorValue]
-            if l < precedence:
-                break
-            tokens.next()
-
-            right = self.parse(tokens, r)
-            left = (functions[operatorValue], left, right)
-
-        return left
-
     def show_operators(self, operator):
         """
         @brief Appends the provided operator to the current expression and updates the labels.
@@ -354,21 +266,72 @@ class App(CTk):
             self.buttonFrame.grid_columnconfigure(column, weight=1)
             row += 1
 
-    def execute(self, nodes):
-        if type(nodes) == int:
-            return nodes
+    def parsing(self):
+        if len(self.totalExpression) >= 3:
+            lastOperator = self.totalExpression[-1]
+            print("\nPosledny operator: " + lastOperator)
+
+        self.totalExpression = self.totalExpression[:-1]
+        print("Cely vyraz: " + self.totalExpression)
+
+        # Find the index of the second last operator (separator)
+        separatorIndex = max(self.totalExpression.rfind('+'), self.totalExpression.rfind('-'),
+                             self.totalExpression.rfind('*'), self.totalExpression.rfind('/'))
+
+        # Split the expression using the separator
+        leftSide = self.totalExpression[:separatorIndex]
+        rightSide = self.totalExpression[separatorIndex + 1:]
+
+        # Save the separator
+        separator = self.totalExpression[separatorIndex]
+
+        print("Left side: " + leftSide)
+        print("Right side: " + rightSide)
+        print("Used operator: " + separator)
+
+        array = [leftSide, separator, rightSide, lastOperator]
+        return array
+
+    def add(self):
+        # TODO: IMPLEMENT
+        """
+        @brief Adds two numbers
+        @param self: Instance of the class
+        """
+        # result = mathlib.add(float(self.totalExpression), float(self.currentExpression))
+        #result = int(result)
+        #print(result)
+        #self.totalExpression = self.totalExpression + '+' + self.currentExpression
+        #self.update_total_label()
+        #self.currentExpression = str(result)
+        #self.update_current_label()
+
+        components = self.parsing()
+        leftSide, separator, rightSide, lastOperator = components
+
+        # Perform addition only if the separator is '+'
+        if separator == '+':
+            result = mathlib.add(float(leftSide), float(rightSide))
+            print("Result:", result)
         else:
-            return nodes[0](*map(self.execute, nodes[1:]))
+            print("Invalid operation")
+
+    def sub(self):
+        # TODO: IMPLEMENT
+        pass
+
+    def mul(self):
+        # TODO: IMPLEMENT
+        pass
+
+    def div(self):
+        # TODO: IMPLEMENT
+        pass
 
     def equals(self):
         # TODO: IMPLEMENT
-        tokens = Iterator(self.tokenize())
-        syntax_tree = self.parse(tokens, 0)
-        result = self.execute(syntax_tree)
-        self.totalExpression = self.totalExpression + self.currentExpression
-        self.currentExpression = str(result)
-        self.update_total_label()
-        self.update_current_label()
+        # self.totalExpression = self.totalExpression[:-1]
+        self.add()
 
     def create_equals_button(self):
         """
