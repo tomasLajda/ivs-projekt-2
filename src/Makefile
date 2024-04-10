@@ -29,6 +29,7 @@ clean:
 	@echo "Cleaning up..."
 	rm -rf ../doc
 	rm -f xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip
+	rm -f installer.zip
 	rm -rf __pycache__
 	rm -rf dist
 	rm -rf build
@@ -72,10 +73,10 @@ doc: Doxyfile
 
 setup:
 	@echo "Setting up the project..."
-	sudo apt-get -y update
-	sudo apt-get -y install python3-pip
-	sudo apt-get -y install python3-tk
-	sudo apt-get -y install tk-dev
+	sudo apt-get update
+	sudo apt-get install python3-pip
+	sudo apt-get install python3-tk
+	sudo apt-get install tk-dev
 	pip3 install -r requirements.txt
 
 # Doesnt work yet
@@ -83,9 +84,19 @@ setup_tests:
 	@echo "Setting up the project for testing..."
 	pip3 install -r requirements_tests.txt
 
+# Setup the installation zip file
 install: setup calculator.py help_menu.py mathlib.py profiling.py
 	@echo "Setting up the installer..."
 	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1).png':Pictures calculator.py mathlib.py help_menu.py
 	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1).png':Pictures profiling.py mathlib.py
 	mv dist/calculator ../installer
 	mv dist/profiling ../installer
+	rm -rf dist
+	rm -rf build
+	rm -f *.spec
+	rm -rf ../installer/Kalkulajda
+	if [ -f "../installer/Kalkulajda.deb" ]; then rm ../installer/Kalkulajda.deb; fi
+	if [ -f "calculator" ]; then rm calculator; fi
+	if [ -f "profiling" ]; then rm profiling; fi
+	@echo "installer.zip created."
+	zip -r installer.zip ../installer/*
