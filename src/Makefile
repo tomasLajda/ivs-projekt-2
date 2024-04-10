@@ -32,9 +32,12 @@ clean:
 	rm -rf __pycache__
 	rm -rf dist
 	rm -rf build
+	rm -f *.spec
 	rm -rf ../installer/Kalkulajda
-	rm ../installer/Kalkulajda.deb
-	rm -rf ../installer/env
+	if [ -f "../installer/Kalkulajda.deb" ]; then rm ../installer/Kalkulajda.deb; fi
+	if [ -f "calculator" ]; then rm calculator; fi
+	if [ -f "profiling" ]; then rm profiling; fi
+
 run:
 	@echo "Running the program..."
 	python3 calculator.py
@@ -80,7 +83,7 @@ setup_tests:
 	@echo "Setting up the project for testing..."
 	pip3 install -r requirements_tests.txt
 
-install:
+install: setup calculator.py help_menu.py mathlib.py profiling.py
 	@echo "Setting up the installer..."
 	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1).png':Pictures calculator.py mathlib.py help_menu.py
 	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1).png':Pictures profiling.py mathlib.py
