@@ -14,21 +14,23 @@ all: setup run profile
 	@echo "Starting the program..."
 
 # Copies the entire directory for now
-pack: clean setup doc
+pack: clean install doc
 	@echo "Packing the project..."
-	mkdir -p ../xcsirim00_xgajduv00_xlajdat00_xvalapm00
-	mkdir ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/doc
-	cp -pr ../doc ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/doc
-	mkdir ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo
-	git clone --mirror . ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo
-	#	cp installer.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
-	#	cp uninstaller.py ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
-	zip -r xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	mkdir -p ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
+	mkdir ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/doc
+	mkdir ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo
+	mkdir ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/install
+	cp -r doc ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
+	rm -rf ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo
+	cd .. && git clone --mirror . ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo && cd src
+	cp installer.zip ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/install
+	zip -r ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
 
 clean:
 	@echo "Cleaning up..."
 	rm -rf ../doc
 	rm -f xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip
+	rm -rf ../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 	rm -f installer.zip
 	rm -rf __pycache__
 	rm -rf dist
@@ -38,6 +40,7 @@ clean:
 	if [ -f "../installer/Kalkulajda.deb" ]; then rm ../installer/Kalkulajda.deb; fi
 	if [ -f "calculator" ]; then rm calculator; fi
 	if [ -f "profiling" ]; then rm profiling; fi
+	rm -rf ../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 
 run:
 	@echo "Running the calculator..."
@@ -66,11 +69,11 @@ test:
 	pytest $(TEST_FILES)
 
 doc: Doxyfile
-	rm -rf ../doc
-	mkdir ../doc
+	rm -rf doc
+	mkdir doc
 	doxygen Doxyfile
-	mv ../html/ ../doc
-	rm -rf ../latex/
+	mv html doc
+	rm -rf latex
 
 setup:
 	@echo "Setting up the project..."
@@ -81,7 +84,7 @@ setup:
 	pip3 install -r requirements.txt
 
 # Doesnt work yet
-setup_tests:
+setup_tests: $(TEST_FILES)
 	@echo "Setting up the project for testing..."
 	pip3 install -r requirements_tests.txt
 
