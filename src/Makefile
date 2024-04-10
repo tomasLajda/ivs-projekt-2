@@ -7,7 +7,7 @@
 ##
 
 .PHONY: all pack clean run profile help setup setup_tests test doc install
-TEST_FILES = mathlib_tests.py profiling_tests.py
+DIR = ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 
 # Start the program
 all: setup run profile
@@ -16,39 +16,32 @@ all: setup run profile
 # Copies the entire directory for now
 pack: clean install doc
 	@echo "Packing the project..."
-	mkdir -p ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
-	mkdir ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/doc
-	mkdir ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo
-	mkdir ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/install
-	cp -r doc ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
-	rm -rf ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo
-	cd .. && git clone --mirror . ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo && cd src
-	cp installer.zip ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/install
-	zip -r ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00/
+	mkdir -p $(DIR)/doc $(DIR)/repo $(DIR)/install
+	cp -r doc $(DIR)
+	cd .. && git clone --mirror . $(DIR)/repo && cd src
+	cp installer.zip $(DIR)/install
+	zip -r $(DIR).zip $(DIR)
 
 clean:
 	@echo "Cleaning up..."
 	rm -rf ../doc
-	rm -f xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip
-	rm -rf ../xcsirim00_xgajduv00_xlajdat00_xvalapm00
+	rm -f $(DIR).zip
+	rm -rf $(DIR)
 	rm -f installer.zip
 	rm -rf __pycache__
 	rm -rf dist
 	rm -rf build
 	rm -f *.spec
 	rm -rf ../installer/Kalkulajda
-	if [ -f "../installer/Kalkulajda.deb" ]; then rm ../installer/Kalkulajda.deb; fi
-	if [ -f "calculator" ]; then rm calculator; fi
-	if [ -f "profiling" ]; then rm profiling; fi
-	rm -rf ../xcsirim00_xgajduv00_xlajdat00_xvalapm00
+	rm -f calculator profiling
 
-run:
+run: calculator.py
 	@echo "Running the calculator..."
-	python3 calculator.py
+	python3 $<
 
-profile: setup
+profile: profiling.py setup
 	@echo "Running the profiling script..."
-	python3 profiling.py
+	python3 $<
 
 help:
 	@echo "Makefile options:"
@@ -66,12 +59,12 @@ help:
 
 test:
 	@echo "Running tests..."
-	pytest $(TEST_FILES)
+	pytest *_tests.py
 
 doc: Doxyfile
 	rm -rf doc
 	mkdir doc
-	doxygen Doxyfile
+	doxygen $<
 	mv html doc
 	rm -rf latex
 
