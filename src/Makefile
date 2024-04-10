@@ -30,7 +30,11 @@ clean:
 	rm -rf ../doc
 	rm -f xcsirim00_xgajduv00_xlajdat00_xvalapm00.zip
 	rm -rf __pycache__
-
+	rm -rf dist
+	rm -rf build
+	rm -rf ../installer/Kalkulajda
+	rm ../installer/Kalkulajda.deb
+	rm -rf ../installer/env
 run:
 	@echo "Running the program..."
 	python3 calculator.py
@@ -75,3 +79,10 @@ setup:
 setup_tests:
 	@echo "Setting up the project for testing..."
 	pip3 install -r requirements_tests.txt
+
+install:
+	@echo "Setting up the installer..."
+	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1).png':Pictures calculator.py mathlib.py help_menu.py
+	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1).png':Pictures profiling.py mathlib.py
+	mv dist/calculator ../installer
+	mv dist/profiling ../installer
