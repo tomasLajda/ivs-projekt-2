@@ -58,6 +58,7 @@ help:
 	@echo "make profile - Compiles the standard deviation calculation program for profiling."
 	@echo "make setup - Sets up the necessary dependencies for the project."
 	@echo "make setup_tests - Sets up the necessary dependencies for the project tests."
+	@echo "make install - Sets up installation zip package."
 	@echo "If make is run without specifying a target, make all is executed."
 
 test:
