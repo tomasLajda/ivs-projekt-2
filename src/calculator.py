@@ -289,49 +289,49 @@ class App(CTk):
         print("Right side: " + rightSide)
         print("Used operator: " + separator)
 
-        array = [leftSide, separator, rightSide, lastOperator]
-        return array
+        return leftSide, separator, rightSide, lastOperator
 
-    def add(self):
-        # TODO: IMPLEMENT
+    def evaluate(self):
         """
-        @brief Adds two numbers
+        @brief Evaluate the expression
         @param self: Instance of the class
         """
-        # result = mathlib.add(float(self.totalExpression), float(self.currentExpression))
-        #result = int(result)
-        #print(result)
-        #self.totalExpression = self.totalExpression + '+' + self.currentExpression
-        #self.update_total_label()
-        #self.currentExpression = str(result)
-        #self.update_current_label()
-
         components = self.parsing()
         leftSide, separator, rightSide, lastOperator = components
 
-        # Perform addition only if the separator is '+'
-        if separator == '+':
-            result = mathlib.add(float(leftSide), float(rightSide))
-            print("Result:", result)
+        if '.' in leftSide:
+            leftSide_float = float(leftSide)
         else:
-            print("Invalid operation")
+            leftSide_float = int(leftSide)
 
-    def sub(self):
-        # TODO: IMPLEMENT
-        pass
+        if '.' in rightSide:
+            rightSide_float = float(rightSide)
+        else:
+            rightSide_float = int(rightSide)
 
-    def mul(self):
-        # TODO: IMPLEMENT
-        pass
+        if separator == '+':
+            result = mathlib.add(leftSide_float, rightSide_float)
+        elif separator == '-':
+            result = mathlib.sub(leftSide_float, rightSide_float)
+        elif separator == '*':
+            result = mathlib.mul(leftSide_float, rightSide_float)
+        elif separator == '/':
+            result = mathlib.div(leftSide_float, rightSide_float)
+        else:
+            return
 
-    def div(self):
-        # TODO: IMPLEMENT
-        pass
+        # Update the current expression with the result
+        self.currentExpression = str(result)
+        self.update_current_label()
+
+        # Update the total expression with the new result and the operator
+        self.totalExpression = str(result) + lastOperator
+        self.update_total_label()
 
     def equals(self):
         # TODO: IMPLEMENT
         # self.totalExpression = self.totalExpression[:-1]
-        self.add()
+        self.evaluate()
 
     def create_equals_button(self):
         """
