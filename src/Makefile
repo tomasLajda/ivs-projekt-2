@@ -6,7 +6,7 @@
 # @todo  Bude-li to možné, Makefile nebude obsahovat jméno ani jednoho ze zdrojových souborů.
 ##
 
-.PHONY: all pack clean run profile help setup setup_tests test doc 
+.PHONY: all pack clean run profile help setup setup_tests test doc install
 TEST_FILES = mathlib_tests.py profiling_tests.py
 
 # Start the program
