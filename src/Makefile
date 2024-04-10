@@ -6,7 +6,7 @@
 # @todo  Bude-li to možné, Makefile nebude obsahovat jméno ani jednoho ze zdrojových souborů.
 ##
 
-.PHONY: all pack clean run profile help setup setup_tests test doc
+.PHONY: all pack clean run profile help setup setup_tests test doc 
 TEST_FILES = mathlib_tests.py profiling_tests.py
 
 # Start the program
@@ -40,11 +40,11 @@ clean:
 	if [ -f "profiling" ]; then rm profiling; fi
 
 run:
-	@echo "Running the program..."
+	@echo "Running the calculator..."
 	python3 calculator.py
 
 profile: setup
-	@echo "Profiling the program..."
+	@echo "Running the profiling script..."
 	python3 profiling.py
 
 help:
