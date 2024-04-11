@@ -10,6 +10,10 @@
 import pytest
 import profiling  # replace with the actual name of your module
 
+# Define a custom approx function to use a relative tolerance
+def approx(value, rel=1e-1):
+    return pytest.approx(value, rel=rel)
+
 def test_basic_profiling():
     numbers = [1, 2, 3, 4, 5]
     expected_std_dev = 1.5811388300841898  # pre-calculated standard deviation for this list
