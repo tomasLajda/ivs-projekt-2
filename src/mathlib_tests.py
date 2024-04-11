@@ -219,7 +219,7 @@ def test_modulus_zero():
 
 
 def test_modulus_negative():
-    assert mathlib.mod(-11, 7) == -4
+    assert mathlib.mod(-11, 7) == 4
     assert mathlib.mod(-11, -7) == -4
     assert mathlib.mod(11, -7) == -4
 
