@@ -47,7 +47,10 @@ def mul(num1, num2):
     num1_dec = Decimal(str(num1))
     num2_dec = Decimal(str(num2))
     result = num1_dec * num2_dec
-    return float(result)
+    if isinstance(num1, int) and isinstance(num2, int):
+        return int(result)
+    else:
+        return float(result)
 
 def div(dividend, divisor):
     """
