@@ -370,13 +370,13 @@ def test_pow_negative_index_raises_error():
 # POW TESTS END
 # ROOT TESTS START
 
-def test_root_integer_root(math):
+def test_root_integer_root():
     assert mathlib.root(4, 2) == 2
     assert mathlib.root(9, 2) == 3
     assert mathlib.root(16, 2) == 4
 
 
-def test_root_negative_number_even_root(math):
+def test_root_negative_number_even_root():
     with pytest.raises(ValueError):
         mathlib.root(-4, 2)
     with pytest.raises(ValueError):
