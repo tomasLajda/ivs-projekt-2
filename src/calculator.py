@@ -235,9 +235,17 @@ class App(CTk):
         @param self: Instance of the class
         @param operator: The operator to append to the current expression
         """
-        # TODO NEEDS FIXES WITH FIRST CHAR AS AN OPERATOR
+        self.update_current_label()
+        # Prevent operator as the first character
+        if not self.totalExpression and not self.currentExpression:
+            if operator == '-':
+                self.currentExpression = operator
+                self.update_current_label()
+                return
+            else:
+                return
 
-        if (self.totalExpression and self.totalExpression[-1] in "+-*/" and not self.currentExpression and
+        if (self.totalExpression and self.totalExpression[-1] in "+*/" and not self.currentExpression and
                 len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
@@ -398,8 +406,8 @@ class App(CTk):
                                 corner_radius=10, font=(LARGE, 25), width=button_width, height=button_height,
                                 hover_color=HOVER_COLOR, command=self.clear)
         cleanButton.grid(row=0, column=3, sticky="nsew", padx=2, pady=2)
-        self.buttonFrame.grid_rowconfigure(0, weight=1)  # Allow row to expand
-        self.buttonFrame.grid_columnconfigure(3, weight=1)  # Allow column to expand
+        self.buttonFrame.grid_rowconfigure(0, weight=1)
+        self.buttonFrame.grid_columnconfigure(3, weight=1)
 
     def delete(self):
         """
