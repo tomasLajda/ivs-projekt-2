@@ -2,6 +2,13 @@ import sys
 import mathlib
 
 def seperate_numbers_from_std():
+  """
+  @brief Reads input from standard input and separates the numbers.
+  
+  @return A list of integers extracted from the input.
+  
+  @throws SystemExit If the input contains a non-numeric value.
+  """
   inputString = sys.stdin.read()
 
   numbersString = inputString.split()
@@ -16,13 +23,16 @@ def seperate_numbers_from_std():
       print(f"Error: '{numberString}' isn't a number.")
       sys.exit()
 
-  #if len(numbers) < 1000:
-  #  print("Error: The list must have at least 1000 numbers.")
-  #  sys.exit()
-  
   return numbers
 
 def arithmetic_mean(numbers):
+  """
+  @brief Calculates the arithmetic mean of a list of numbers.
+  
+  @param numbers A list of numbers.
+  
+  @return The arithmetic mean of the numbers.
+  """
   sum = 0
   for number in numbers:
     sum = mathlib.add(sum, number)
@@ -30,6 +40,13 @@ def arithmetic_mean(numbers):
   return mathlib.div(sum, len(numbers))
 
 def standard_deviation(numbers):
+  """
+  @brief Calculates the standard deviation of a list of numbers.
+  
+  @param numbers A list of numbers.
+  
+  @return The standard deviation of the numbers.
+  """
   mean = arithmetic_mean(numbers)
 
   sum = 0
