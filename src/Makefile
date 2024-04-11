@@ -90,7 +90,7 @@ setup:
 install: setup calculator.py help_menu.py mathlib.py profiling.py
 	@echo "Setting up the installer..."
 	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1).png':Pictures calculator.py mathlib.py help_menu.py
-	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1).png':Pictures profiling.py mathlib.py
+	pyinstaller --onefile profiling.py mathlib.py
 	mv dist/calculator ../installer
 	mv dist/profiling ../installer
 	rm -rf dist
