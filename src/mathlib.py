@@ -4,63 +4,53 @@
 
 @author
 - Vojtěch Gajdušek (xgajduv00)
-- Martin Valapka (xvalapm00)
-@date March 23, 2024
+@date April 11, 2024
 """
 
 def add(num1, num2):
     """
-    Function to add two numbers.
+    @brief Function to add two numbers.
     
-    Parameters:
-    num1: First number.
-    num2: Second number.
+    @param num1: First number.
+    @param num2: Second number.
     
-    Returns:
-    Sum of numbers num1 and num2.
+    @return Sum of numbers num1 and num2.
     """
     return num1 + num2
 
 def sub(num1, num2):
     """
-    Function to subtract two numbers.
-
-    Parameters:
-    num1: First number.
-    num2: Second number.
+    @brief Function to subtract two numbers.
     
-    Returns:
-    Difference of numbers num1 and num2 (num1 - num2).
+    @param num1: First number.
+    @param num2: Second number.
+    
+    @return Difference of numbers num1 and num2 (num1 - num2).
     """
     return num1 - num2
 
 def mul(num1, num2):
     """
-    Function to multiply two numbers.
+    @brief Function to multiply two numbers.
     
-    Parameters:
-    num1: First number.
-    num2: Second number.
+    @param num1: First number.
+    @param num2: Second number.
     
-    Returns:
-    Product of num1 and num2 (num1 * num2).
+    @return Product of num1 and num2 (num1 * num2).
     """
     return num1 * num2
 
 def div(dividend, divisor, precision=10):
     """
-    Function to divide two numbers.
+    @brief Function to divide two numbers.
     
-    Parameters:
-    dividend (float): The number to be divided (numerator).
-    divisor (float): The number by which the dividend is divided (denominator).
-    precision (int): Number of decimal places for rounding. Defaults to 10.
+    @param dividend (float): The number to be divided (numerator).
+    @param divisor (float): The number by which the dividend is divided (denominator).
+    @param precision (int): Number of decimal places for rounding. Defaults to 10.
     
-    Returns:
-    float: The quotient of dividend divided by divisor.
+    @return The quotient of dividend divided by divisor.
     
-    Raises:
-    ValueError: If the divisor is zero.
+    //TODO: @throws ValueError: If the divisor is zero.
     """
     if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
@@ -74,15 +64,13 @@ def div(dividend, divisor, precision=10):
 
 def mod(dividend, divisor):
     """
-    Function to compute the modulo operation.
+    @brief Function to compute the modulo operation.
     
-    Parameters:
-    dividend: The number to be divided.
-    divisor: The number by which the dividend is divided.
+    @param dividend: The number to be divided.
+    @param divisor: The number by which the dividend is divided.
     
-    Returns:
-    The remainder after dividing dividend by divisor.
-    
+    @return The remainder after dividing dividend by divisor.
+    //TODO:
     Raises:
     ValueError: If the divisor is zero.
     """
@@ -92,13 +80,11 @@ def mod(dividend, divisor):
 
 def abs(num):
     """
-    Function to calculate the absolute value of a number.
+    @brief Function to calculate the absolute value of a number.
     
-    Parameters:
-    num: The input number.
+    @param num: The input number.
     
-    Returns:
-    The absolute value of the input number.
+    @return The absolute value of the input number.
     """
     if num < 0:
         return -num
@@ -107,14 +93,12 @@ def abs(num):
 
 def fac(n: int) -> int:
     """
-    Function to compute the factorial of a non-negative integer.
+    @brief Function to compute the factorial of a non-negative integer.
     
-    Parameters:
-    n (int): The non-negative integer.
+    @param n: The non-negative integer.
     
-    Returns:
-    int: The factorial of the input integer.
-    
+    @return The factorial of the input integer.
+    //TODO:
     Raises:
     ValueError: If the input is negative.
     """
@@ -129,14 +113,12 @@ def fac(n: int) -> int:
 
 def pow(base: int, exponent: int) -> int:
     """
-    Function to compute the power of a number.
+    @brief Function to compute the power of a number.
     
-    Parameters:
-    base (int): The base number.
-    exponent (int): The exponent.
+    @param base: The base number.
+    @param exponent: The exponent.
     
-    Returns:
-    int: The result of raising base to the power of exponent.
+    @return The result of raising base to the power of exponent.
     """
     if exponent < 0:
         raise ValueError("Exponent must be non-negative.")
@@ -151,15 +133,13 @@ def pow(base: int, exponent: int) -> int:
 
 def root(number: float, n: int, precision: float = 0.0001) -> float:
     """
-    Function to compute the nth root of a number using Newton's method.
+    @brief Function to compute the nth root of a number using Newton's method.
     
-    Parameters:
-    number (float): The number whose root is to be calculated.
-    n (int): The root to be calculated (e.g., 2 for square root).
-    precision (float): The desired precision of the result. Defaults to 0.0001.
+    @param number: The number whose root is to be calculated.
+    @param n: The root to be calculated (e.g., 2 for square root).
+    @param precision: The desired precision of the result. Defaults to 0.0001.
     
-    Returns:
-    float: The nth root of the given number.
+    @return The nth root of the given number.
     """
     if number < 0 and n % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
