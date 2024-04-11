@@ -138,16 +138,22 @@ def pow(base: int, exponent: int) -> int:
     
     @return The result of raising base to the power of exponent.
     """
+    
+    if not isinstance(exponent, int):
+        raise ValueError("Exponent must be an integer.")
+    
     if exponent < 0:
         raise ValueError("Exponent must be non-negative.")
     
     if base == 0 and exponent == 0:
         raise ValueError("0^0 is undefined.")
+
+    result = base ** exponent
     
-    result = 1
-    for _ in range(exponent):
-        result *= base
-    return result
+    if result >= 1e100:
+        return float('inf')
+    else:
+        return result
 
 def root(number: float, n: int) -> float:
     """
