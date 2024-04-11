@@ -179,14 +179,13 @@ def test_division_zero():
 
 def test_division_negative():
     assert mathlib.div(2, -1) == -2
-    assert mathlib.div(-2, 1) == -1
-    assert mathlib.div(-2, -1) == 1
+    assert mathlib.div(-2, 1) == -2
+    assert mathlib.div(-2, -1) == 2
 
 
 def test_division_float():
     assert mathlib.div(1, 2) == 0.5
     assert mathlib.div(1, 100) == 0.01
-    assert mathlib.div(3, 90) == 0.05
 
 
 def test_division_periodic():
