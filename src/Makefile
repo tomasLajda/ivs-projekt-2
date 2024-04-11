@@ -23,7 +23,7 @@ pack: clean install doc
 
 clean:
 	@echo "Cleaning up..."
-	rm -rf ../doc
+	rm -rf doc
 	rm -f $(DIR).zip
 	rm -rf $(DIR)
 	rm -f installer.zip
@@ -74,10 +74,8 @@ test_prof:
 
 doc: Doxyfile
 	rm -rf doc
-	mkdir doc
-	doxygen $<
-	mv html doc
-	rm -rf latex
+	doxygen Doxyfile
+	cd doc/html && open index.html
 
 setup:
 	@echo "Setting up the project..."
