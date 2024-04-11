@@ -154,7 +154,7 @@ class App(CTk):
         self.grid_columnconfigure(0, weight=1)
 
         self.totalLabel = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=20,
-                                   font=(SMALL, 25), text_color="white")
+                                   font=(SMALL, 22), text_color="white")
         self.totalLabel.grid(row=0, column=0, sticky="nsew")
 
         self.currentLabel = CTkLabel(self.displayFrame, text=self.currentExpression, anchor="e", padx=15, pady=20,
@@ -174,14 +174,14 @@ class App(CTk):
 
         for operator, symbol in self.operations.items():
             expression = expression.replace(operator, f'{symbol}')
-        self.totalLabel.configure(text=expression[:25])
+        self.totalLabel.configure(text=expression[:30])
 
     def update_current_label(self):
         """
         @brief Updates the current expression label by truncating if necessary
         @param self: Instance of the class
         """
-        if self.currentExpression.startswith("0"):
+        if self.currentExpression.startswith("0") and not self.currentExpression.startswith("0."):
             self.currentExpression = self.currentExpression[1:]
 
         if len(self.currentExpression) > 14:
@@ -226,8 +226,8 @@ class App(CTk):
                                width=button_width, height=button_height, hover_color=GRAY,
                                command=lambda x=digit: self.show_numbers(x))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
-            self.buttonFrame.grid_rowconfigure(row, weight=1)  # Allow row to expand
-            self.buttonFrame.grid_columnconfigure(column, weight=1)  # Allow column to expand
+            self.buttonFrame.grid_rowconfigure(row, weight=1)
+            self.buttonFrame.grid_columnconfigure(column, weight=1)
 
     def show_operators(self, operator):
         """
@@ -353,10 +353,11 @@ class App(CTk):
         @param self: Instance of the class
         """
 
-        if any(char.isdigit() for char in self.currentExpression):
-            if not self.currentExpression or '.' not in self.currentExpression:
-                self.currentExpression += '.'
-                self.update_current_label()
+        if not self.currentExpression:
+            self.currentExpression += '0.'
+        elif '.' not in self.currentExpression:
+            self.currentExpression += '.'
+        self.update_current_label()
 
     def create_decimal_button(self):
         """
