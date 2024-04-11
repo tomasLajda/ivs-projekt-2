@@ -7,8 +7,6 @@
 @date April 11, 2024
 """
 
-# IMPORTS
-import math
 from decimal import Decimal, getcontext
 
 def add(num1, num2):
@@ -20,7 +18,7 @@ def add(num1, num2):
     
     @return Sum of numbers num1 and num2.
     """
-    result = math.fsum([num1, num2])
+    result = num1 + num2
     return round(result, 10)
 
 def sub(num1, num2):
