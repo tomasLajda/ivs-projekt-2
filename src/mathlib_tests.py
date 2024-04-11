@@ -189,13 +189,9 @@ def test_division_float():
 
 
 def test_division_periodic():
-    assert mathlib.div(1, 3) == pytest.approx(0.3333, rel=1e-4)
-    assert mathlib.div(2, 7) == pytest.approx(0.2857, rel=1e-4)
-    assert mathlib.div(1, 6) == pytest.approx(0.1667, rel=1e-4)
-    # 1e-4 is scientific notation for 0.0001.
-    # It represents a relative tolerance of 0.01%
-    # (or 0.0001 as a decimal) of the expected value.
-
+    assert mathlib.div(1, 3) == pytest.approx(0.3333333333333333, rel=1e-4)
+    assert mathlib.div(2, 7) == pytest.approx(0.2857142857142857, rel=1e-4)
+    assert mathlib.div(1, 6) == pytest.approx(0.16666666666666666, rel=1e-4)
 
 def test_division_small():
     assert mathlib.div(0.000_000_000_1, 0.000_000_000_2) == 0.5  # 1e-10 / 2e-10 = 0.5
