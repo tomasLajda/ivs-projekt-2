@@ -7,6 +7,9 @@
 @date April 11, 2024
 """
 
+import math
+from decimal import Decimal, getcontext
+
 def add(num1, num2):
     """
     @brief Function to add two numbers.
@@ -16,7 +19,8 @@ def add(num1, num2):
     
     @return Sum of numbers num1 and num2.
     """
-    return num1 + num2
+    result = math.fsum([num1, num2])
+    return round(result, 10)
 
 def sub(num1, num2):
     """
@@ -27,7 +31,8 @@ def sub(num1, num2):
     
     @return Difference of numbers num1 and num2 (num1 - num2).
     """
-    return num1 - num2
+    result = num1 - num2
+    return round(result, 10)
 
 def mul(num1, num2):
     """
@@ -38,15 +43,21 @@ def mul(num1, num2):
     
     @return Product of num1 and num2 (num1 * num2).
     """
-    return num1 * num2
+    getcontext().prec = 28
+    num1_dec = Decimal(str(num1))
+    num2_dec = Decimal(str(num2))
+    result = num1_dec * num2_dec
+    if isinstance(num1, int) and isinstance(num2, int):
+        return int(result)
+    else:
+        return float(result)
 
-def div(dividend, divisor, precision=10):
+def div(dividend, divisor):
     """
     @brief Function to divide two numbers.
     
-    @param dividend (float): The number to be divided (numerator).
-    @param divisor (float): The number by which the dividend is divided (denominator).
-    @param precision (int): Number of decimal places for rounding. Defaults to 10.
+    @param dividend: The number to be divided (numerator).
+    @param divisor: The number by which the dividend is divided (denominator).
     
     @return The quotient of dividend divided by divisor.
     
@@ -55,12 +66,13 @@ def div(dividend, divisor, precision=10):
     if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
     
-    quotient = dividend // divisor
-    remainder = dividend % divisor
-    
-    result = quotient + (remainder / divisor)
-    
-    return round(result, precision)
+    dividend_dec = Decimal(str(dividend))
+    divisor_dec = Decimal(str(divisor))
+    result = dividend_dec / divisor_dec
+    if isinstance(dividend, int) and isinstance(divisor, int) and result % 1 == 0:
+        return int(result)
+    else:
+        return float(result)
 
 def mod(dividend, divisor):
     """
@@ -131,13 +143,12 @@ def pow(base: int, exponent: int) -> int:
         result *= base
     return result
 
-def root(number: float, n: int, precision: float = 0.0001) -> float:
+def root(number: float, n: int) -> float:
     """
     @brief Function to compute the nth root of a number using Newton's method.
     
     @param number: The number whose root is to be calculated.
     @param n: The root to be calculated (e.g., 2 for square root).
-    @param precision: The desired precision of the result. Defaults to 0.0001.
     
     @return The nth root of the given number.
     """
@@ -148,7 +159,7 @@ def root(number: float, n: int, precision: float = 0.0001) -> float:
         return 0
     
     x = number / 2
-    while abs(x ** n - number) > precision:
+    while abs(x ** n - number) > 0.0001:
         x -= (x ** n - number) / (n * x ** (n - 1))
         
     return x
