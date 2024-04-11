@@ -21,5 +21,13 @@ def seperate_numbers_from_std():
     sys.exit()
   
   return numbers
+def arithmetic_mean(numbers):
+  sum = 0
+  for number in numbers:
+    sum = mathlib.add(sum, number)
+
+  return sum / len(numbers)
+
 
 numbers = seperate_numbers_from_std()
+arithmetic_mean(numbers)
