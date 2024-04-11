@@ -7,6 +7,7 @@
 @date April 11, 2024
 """
 
+# IMPORTS
 import math
 from decimal import Decimal, getcontext
 
@@ -61,7 +62,7 @@ def div(dividend, divisor):
     
     @return The quotient of dividend divided by divisor.
     
-    //TODO: @throws ValueError: If the divisor is zero.
+    @exception ValueError: If the divisor is zero.
     """
     if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
@@ -82,9 +83,8 @@ def mod(dividend, divisor):
     @param divisor: The number by which the dividend is divided.
     
     @return The remainder after dividing dividend by divisor.
-    //TODO:
-    Raises:
-    ValueError: If the divisor is zero.
+
+    @exception ValueError: If the divisor is zero.
     """
     if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
@@ -116,9 +116,8 @@ def fac(n: int) -> int:
     @param n: The non-negative integer.
     
     @return The factorial of the input integer.
-    //TODO:
-    Raises:
-    ValueError: If the input is negative.
+
+    @exception ValueError: If the input is negative.
     """
     if n < 0:
         raise ValueError("Factorial is not defined for negative numbers.")
@@ -149,7 +148,7 @@ def pow(base: int, exponent: int) -> int:
         raise ValueError("0^0 is undefined.")
 
     result = base ** exponent
-    
+
     if result >= 1e100:
         return float('inf')
     else:
