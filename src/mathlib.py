@@ -88,7 +88,13 @@ def mod(dividend, divisor):
     """
     if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
-    return dividend % divisor
+    dividend_decimal = Decimal(str(abs(dividend)))
+    divisor_decimal = Decimal(str(abs(divisor)))
+
+    remainder = dividend_decimal % divisor_decimal
+    if divisor < 0:
+        remainder = -remainder
+    return float(remainder)
 
 def abs(num):
     """
@@ -150,7 +156,7 @@ def root(number: float, n: int) -> float:
     @param number: The number whose root is to be calculated.
     @param n: The root to be calculated (e.g., 2 for square root).
     
-    @return The nth root of the given number.
+    @return Nth root of the given number.
     """
     if number < 0 and n % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
@@ -158,8 +164,16 @@ def root(number: float, n: int) -> float:
     if number == 0:
         return 0
     
-    x = number / 2
-    while abs(x ** n - number) > 0.0001:
-        x -= (x ** n - number) / (n * x ** (n - 1))
+    getcontext().prec = 50
+    number_decimal = Decimal(str(number))
+    x = number_decimal / 2
+    tolerance = Decimal('0.0000000001')
+    while abs(x ** n - number_decimal) > tolerance:
+        x -= (x ** n - number_decimal) / (n * x ** (n - 1))
         
-    return x
+    result_decimal = x
+    if isinstance(number, int) and isinstance(n, int):
+        return int(result_decimal)
+    else:
+        return float(result_decimal)
+
