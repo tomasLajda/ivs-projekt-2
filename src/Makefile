@@ -6,7 +6,7 @@
 # @todo  Bude-li to možné, Makefile nebude obsahovat jméno ani jednoho ze zdrojových souborů.
 ##
 
-.PHONY: all pack clean run profile help setup test doc install
+.PHONY: all pack clean run profile help setup test test_lib test_prof doc install
 DIR = ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 
 # Start the program
@@ -42,7 +42,9 @@ help:
 	@echo "make all - Compiles the project, including the profiling program."
 	@echo "make pack - Packs the project for submission. (Local directory: $(DIR))"
 	@echo "make clean - Deletes all files that should not be submitted."
-	@echo "make test - Runs the tests for the math library."
+	@echo "make test - Runs all tests."
+	@echo "make test_lib - Runs the tests for the math library."
+	@echo "make test_prof - Runs the tests for the profiling function."
 	@echo "make doc - Generates project documentation."
 	@echo "make run - Runs calculator program."
 	@echo "make profile - Compiles the standard deviation calculation program for profiling."
@@ -52,8 +54,16 @@ help:
 	@echo "If make is run without specifying a target, make all is executed."
 
 test:
-	@echo "Running tests..."
+	@echo "Running all tests..."
 	pytest *_tests.py
+
+test_lib:
+	@echo "Running math library tests..."
+	pytest mathlib_tests.py
+
+test_prof:
+	@echo "Running profiling tests..."
+	pytest profiling_tests.py
 
 doc: Doxyfile
 	rm -rf doc
