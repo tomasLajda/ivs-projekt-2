@@ -47,6 +47,9 @@ def standard_deviation(numbers):
   
   @return The standard deviation of the numbers.
   """
+  if len(numbers) == 1:
+    return 0
+  
   mean = arithmetic_mean(numbers)
 
   sum = 0
