@@ -66,12 +66,13 @@ def div(dividend, divisor):
     if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
     
-    quotient = dividend // divisor
-    remainder = dividend % divisor
-    
-    result = quotient + (remainder / divisor)
-    
-    return round(result, 6)
+    dividend_dec = Decimal(str(dividend))
+    divisor_dec = Decimal(str(divisor))
+    result = dividend_dec / divisor_dec
+    if isinstance(dividend, int) and isinstance(divisor, int) and result % 1 == 0:
+        return int(result)
+    else:
+        return float(result)
 
 def mod(dividend, divisor):
     """
