@@ -199,7 +199,7 @@ def test_division_periodic():
 
 def test_division_small():
     assert mathlib.div(0.000_000_000_1, 0.000_000_000_2) == 0.5  # 1e-10 / 2e-10 = 0.5
-    assert mathlib.div(0.000_000_000_1, 2) == 0.000_000_000_5  # 1e-10 / 2 = 5e-10
+    assert mathlib.div(0.000_000_000_1, 2) == 0.000_000_000_05  # 1e-10 / 2 = 5e-10
     assert mathlib.div(2, 0.000_000_000_1) == 20_000_000_000  # 2 / e-10 = 2e11
 
 
