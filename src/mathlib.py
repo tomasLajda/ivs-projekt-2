@@ -8,6 +8,7 @@
 """
 
 import math
+from decimal import Decimal, getcontext
 
 def add(num1, num2):
     """
@@ -42,7 +43,11 @@ def mul(num1, num2):
     
     @return Product of num1 and num2 (num1 * num2).
     """
-    return round(num1 * num2, 6)
+    getcontext().prec = 28
+    num1_dec = Decimal(str(num1))
+    num2_dec = Decimal(str(num2))
+    result = num1_dec * num2_dec
+    return float(result)
 
 def div(dividend, divisor):
     """
