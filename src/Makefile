@@ -33,9 +33,10 @@ run: calculator.py
 	@echo "Running the calculator..."
 	python3 $<
 
-profile: profiling.py setup
+profile: profiling.py
 	@echo "Running the profiling script..."
-	python3 $<
+	python3 -m cProfile -o ../profiling/test.profile profiling.py
+	snakeviz ../profiling/test.profile
 
 help:
 	@echo "Makefile options:"
