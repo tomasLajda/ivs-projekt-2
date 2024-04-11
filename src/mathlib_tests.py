@@ -348,15 +348,14 @@ def test_pow_of_large_base_and_index():
 def test_pow_decimal_numbers():
     assert mathlib.pow(2.5, 2) == pytest.approx(6.25, rel=1e-3)  # 2.5^2 ≈ 6.25 (approx)
     assert mathlib.pow(1.5, 3) == pytest.approx(3.375, rel=1e-3)  # 1.5^3 ≈ 3.375 (approx)
-    assert mathlib.pow(3.33, 2) == pytest.approx(11.088_9, rel=1e-3)  # 3.33^2 = 11.0889 (approx)
-    assert mathlib.pow(10.5, 3) == pytest.approx(1_157.625, rel=1e-3)  # 10.5^3 ≈ 1157.625 (approx)
+    assert mathlib.pow(3.33, 2) == pytest.approx(11.0889, rel=1e-3)  # 3.33^2 = 11.0889 (approx)
+    assert mathlib.pow(10.5, 3) == pytest.approx(1157.625, rel=1e-3)  # 10.5^3 ≈ 1157.625 (approx)
 
 
 def test_pow_large_decimal_numbers():
-    assert mathlib.pow(1.000_1, 1000) == pytest.approx(1.105_165_392_6, rel=1e-3)  # 1.0001^1000 ≈ 1.105 (approx)
-    assert mathlib.pow(1.000_01, 10_000) == pytest.approx(1.105_170_365_4, rel=1e-3)  # 1.00001^10000 ≈ 1.105 (approx)
-    assert mathlib.pow(1.000_001, 1_000_000) == pytest.approx(2.718_280_469_0,
-                                                              rel=1e-3)  # 1.000001^1000000 ≈ 2.718 (approx)
+    assert mathlib.pow(1.0001, 1000) == pytest.approx(1.1051709180756477, rel=1e-4)
+    assert mathlib.pow(1.00001, 10000) == pytest.approx(1.1051709180756477, rel=1e-4)
+    assert mathlib.pow(1.000001, 1000000) == pytest.approx(2.7182804690957534, rel=1e-4)
 
 
 def test_pow_decimal_index():
@@ -393,16 +392,13 @@ def test_root_negative_number_decimal_root():
 
 
 def test_root_large_number():
-    assert mathlib.root(10_000_000, 2) == pytest.approx(3_162.277_660_168_3,
-                                                       rel=1e-3)  # root(10_000_000, 2) ≈ 3_162.277(approx)
-    assert mathlib.root(1_000_000_000, 3) == pytest.approx(999.999_999_999_9,
-                                                          rel=1e-3)  # root(1_000_000_000, 3) ≈ 999.999 (approx)
+    assert mathlib.root(10000000, 2) == pytest.approx(3162.2776601683795, rel=1e-4)
+    assert mathlib.root(1000000000, 3) == pytest.approx(1000.0, rel=1e-4)
 
 
 def test_root_small_number():
-    assert mathlib.root(0.000_1, 2) == pytest.approx(0.01, rel=1e-3)  # root(0.0001, 2) ≈ 0.01 (approx)
-    assert mathlib.root(0.002, 3) == pytest.approx(0.125_992_104_9, rel=1e-3)  # root(0.001, 3) ≈ 0.125 (approx)
-
+    assert mathlib.root(0.0001, 2) == pytest.approx(0.01, rel=1e-4)
+    assert mathlib.root(0.002, 3) == pytest.approx(0.1259921052362699, rel=1e-4)
 # ROOT TESTS END
 
 # End of matlib_tests.py
