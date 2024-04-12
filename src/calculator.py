@@ -545,8 +545,6 @@ class App(CTk):
         else:
             result = mathlib.abs(int(self.currentExpression))
 
-        self.totalExpression = '|' + str(self.currentExpression) + '|'
-        self.update_total_label()
         self.currentExpression = str(result)
         self.update_current_label()
 
