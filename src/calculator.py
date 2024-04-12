@@ -39,26 +39,6 @@ def adjust_button_size(width, height):
     return width, height
 
 
-precedences = {
-    "+": (1, 2),
-    "-": (1, 2),
-    "*": (3, 4),
-    "/": (3, 4)
-}
-
-Integer = "Integer"
-Operator = "Operator"
-Paren = "Parenthesis"
-EOF = "EOF"
-
-functions = {
-    "+": lambda a, b: mathlib.add(a, b),
-    "-": lambda a, b: mathlib.sub(a, b),
-    "*": lambda a, b: mathlib.mul(a, b),
-    "/": lambda a, b: mathlib.div(a, b)
-}
-
-
 class App(CTk):
     """
     @brief Initialization of the calculator application.
@@ -236,6 +216,7 @@ class App(CTk):
         @param operator: The operator to append to the current expression
         """
         self.update_current_label()
+
         # Prevent operator as the first character except '-'
         if not self.totalExpression and not self.currentExpression:
             if operator == '-':
@@ -254,6 +235,11 @@ class App(CTk):
         self.currentExpression = ''
         self.update_total_label()
         self.update_current_label()
+
+        if self.signal():
+            self.evaluate()
+        else:
+            pass
 
     def create_operator_buttons(self):
         """
@@ -275,12 +261,13 @@ class App(CTk):
             row += 1
 
     def parsing(self):
+        lastOperator = ""
         if len(self.totalExpression) >= 3:
             lastOperator = self.totalExpression[-1]
-            print("\nPosledny operator: " + lastOperator)
+            # print("\nPosledny operator: " + lastOperator)
 
         self.totalExpression = self.totalExpression[:-1]
-        print("Cely vyraz: " + self.totalExpression)
+        # print("Cely vyraz: " + self.totalExpression)
 
         # Find the index of the second last operator (separator)
         separatorIndex = max(self.totalExpression.rfind('+'), self.totalExpression.rfind('-'),
@@ -294,9 +281,9 @@ class App(CTk):
         # Save the separator
         separator = self.totalExpression[separatorIndex]
 
-        print("Left side: " + leftSide)
-        print("Right side: " + rightSide)
-        print("Used operator: " + separator)
+        # print("Left side: " + leftSide)
+        # print("Right side: " + rightSide)
+        # print("Used operator: " + separator)
 
         return leftSide, separator, rightSide, lastOperator
 
@@ -360,6 +347,24 @@ class App(CTk):
         equalsButton.grid(row=4, column=3, sticky="nsew", padx=2, pady=2)
         self.buttonFrame.grid_rowconfigure(4, weight=1)
         self.buttonFrame.grid_columnconfigure(3, weight=1)
+
+    def signal(self):
+        """
+        @brief Handles signal when the total expression has two operators
+        @param self: Instance of the class
+        @return: True if the total expression has two operators, False otherwise
+        """
+        if self.totalExpression and len(self.totalExpression) >= 2:
+            operators = ['+', '-', '*', '/', '%']
+            operatorCount = 0
+
+            for char in self.totalExpression:
+                if char in operators:
+                    operatorCount += 1
+            print("Count of the operators:", operatorCount)
+            print("Total expression: " + self.totalExpression)
+            return operatorCount == 2
+        return False
 
     def decimal(self):
         """
@@ -575,7 +580,8 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         moduloButton = CTkButton(self.buttonFrame, text="mod", border_width=0, fg_color=COLOR_REST,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=button_width, height=button_height, hover_color=HOVER_COLOR, command=self.place_modulo)
+                                 width=button_width, height=button_height, hover_color=HOVER_COLOR,
+                                 command=self.place_modulo)
         moduloButton.grid(row=4, column=0, sticky="nsew", padx=2, pady=2)
         self.buttonFrame.grid_rowconfigure(4, weight=1)
         self.buttonFrame.grid_columnconfigure(0, weight=1)
