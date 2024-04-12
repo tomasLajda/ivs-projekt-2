@@ -358,11 +358,11 @@ class App(CTk):
             operators = ['+', '-', '*', '/', '%']
             operatorCount = 0
 
-            for char in self.totalExpression:
-                if char in operators:
+            for i, char in enumerate(self.totalExpression):
+                if char in operators and i != 0:  # Skip counting if operator is at index 0
                     operatorCount += 1
-            print("Count of the operators:", operatorCount)
-            print("Total expression: " + self.totalExpression)
+            # print("Count of the operators:", operatorCount)
+            # print("Total expression: " + self.totalExpression)
             return operatorCount == 2
         return False
 
