@@ -236,7 +236,7 @@ class App(CTk):
         @param operator: The operator to append to the current expression
         """
         self.update_current_label()
-        # Prevent operator as the first character
+        # Prevent operator as the first character except '-'
         if not self.totalExpression and not self.currentExpression:
             if operator == '-':
                 self.currentExpression = operator
@@ -245,7 +245,7 @@ class App(CTk):
             else:
                 return
 
-        if (self.totalExpression and self.totalExpression[-1] in "+*/" and not self.currentExpression and
+        if (self.totalExpression and self.totalExpression[-1] in "+-*/" and not self.currentExpression and
                 len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
@@ -324,7 +324,11 @@ class App(CTk):
         elif separator == '*':
             result = mathlib.mul(leftSide_float, rightSide_float)
         elif separator == '/':
-            result = mathlib.div(leftSide_float, rightSide_float)
+            if leftSide_float % rightSide_float == 0:
+                result = mathlib.div(leftSide_float, rightSide_float)
+                result = int(result)
+            else:
+                result = mathlib.div(leftSide_float, rightSide_float)
         else:
             return
 
@@ -337,8 +341,7 @@ class App(CTk):
         self.update_total_label()
 
     def equals(self):
-        # TODO: IMPLEMENT
-        # self.totalExpression = self.totalExpression[:-1]
+        # TODO: IMPLEMENT EVALUATION WHEN THE USER PRESSES = AND THERE IS AN OPERAND BOTH IN THE TOTAL AND CURRENT EXP
         self.evaluate()
 
     def create_equals_button(self):
@@ -609,7 +612,6 @@ class App(CTk):
             self.toplevel_window.focus()
 
     def bind_keys(self):
-        # TODO: MISSING KEYS
         """
         @brief Binds keyboard keys to calculator operations and digits
         @param self: Instance of the class
