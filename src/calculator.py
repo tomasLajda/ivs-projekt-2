@@ -245,7 +245,7 @@ class App(CTk):
             else:
                 return
 
-        if (self.totalExpression and self.totalExpression[-1] in "+-*/" and not self.currentExpression and
+        if (self.totalExpression and self.totalExpression[-1] in "+-*/%" and not self.currentExpression and
                 len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
@@ -284,7 +284,8 @@ class App(CTk):
 
         # Find the index of the second last operator (separator)
         separatorIndex = max(self.totalExpression.rfind('+'), self.totalExpression.rfind('-'),
-                             self.totalExpression.rfind('*'), self.totalExpression.rfind('/'))
+                             self.totalExpression.rfind('*'), self.totalExpression.rfind('/'),
+                             self.totalExpression.rfind('%'))
 
         # Split the expression using the separator
         leftSide = self.totalExpression[:separatorIndex]
@@ -329,6 +330,8 @@ class App(CTk):
                 result = int(result)
             else:
                 result = mathlib.div(leftSide_float, rightSide_float)
+        elif separator == '%':
+            result = mathlib.mod(leftSide_float, rightSide_float)
         else:
             return
 
@@ -561,9 +564,9 @@ class App(CTk):
         self.buttonFrame.grid_rowconfigure(3, weight=1)
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
-    def modulo(self):
+    def place_modulo(self):
         # TODO: IMPLEMENT
-        pass
+        self.show_operators('%')
 
     def create_modulo_button(self):
         """
@@ -574,7 +577,7 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         moduloButton = CTkButton(self.buttonFrame, text="mod", border_width=0, fg_color=COLOR_REST,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=button_width, height=button_height, hover_color=HOVER_COLOR)
+                                 width=button_width, height=button_height, hover_color=HOVER_COLOR, command=self.place_modulo)
         moduloButton.grid(row=4, column=0, sticky="nsew", padx=2, pady=2)
         self.buttonFrame.grid_rowconfigure(4, weight=1)
         self.buttonFrame.grid_columnconfigure(0, weight=1)
