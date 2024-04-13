@@ -8,6 +8,7 @@
 @date - March 19, 2024
 """
 
+import mathlib
 import platform
 from help_menu import ToplevelWindow
 from PIL import Image, ImageTk
@@ -55,6 +56,7 @@ class App(CTk):
 
     def __init__(self):
         super().__init__()
+        self.numbers = None
         self.settingsImagePath = None
         self.currentLabel = None
         self.totalLabel = None
@@ -64,10 +66,7 @@ class App(CTk):
         self.title("Calcu-lajda")
         self.resizable(False, False)
 
-        if platform == "Linux":
-            self.resizable(width=False, height=False)
-
-        self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "Calculator_30001 (1).png"))
+        self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "Calculator_30001 (1)-1.png"))
         self.wm_iconbitmap()
         self.iconphoto(False, self.iconpath)
 
@@ -109,24 +108,15 @@ class App(CTk):
         @return: String representing the window geometry
         """
         os_name = platform.system()
+        screenWidth = self.winfo_screenwidth()
+        screenHeight = self.winfo_screenheight()
 
-        if os_name == 'Windows':
-            screenWidth = self.winfo_screenwidth()
-            screenHeight = self.winfo_screenheight()
-            x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
-            y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
-            return f"{width}x{height}+{x}+{y}"
-
-        elif os_name == 'Linux':
-            screenWidth = self.winfo_screenwidth()
-            screenHeight = self.winfo_screenheight()
+        if os_name == 'Linux':
             x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
             y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
             return f"{width + 75}x{height + 80}+{x}+{y}"
 
         else:
-            screenWidth = self.winfo_screenwidth()
-            screenHeight = self.winfo_screenheight()
             x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
             y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
             return f"{width}x{height}+{x}+{y}"
@@ -144,12 +134,16 @@ class App(CTk):
         self.grid_columnconfigure(0, weight=1)
 
         self.totalLabel = CTkLabel(self.displayFrame, text=self.totalExpression, anchor="e", padx=15, pady=20,
-                                   font=(SMALL, 25), text_color="white")
-        self.totalLabel.pack(side="top", expand=True, fill="both")
+                                   font=(SMALL, 22), text_color="white")
+        self.totalLabel.grid(row=0, column=0, sticky="nsew")
 
         self.currentLabel = CTkLabel(self.displayFrame, text=self.currentExpression, anchor="e", padx=15, pady=20,
                                      font=(LARGE, 50), text_color="white")
-        self.currentLabel.pack(side="top", expand=True, fill="both")
+        self.currentLabel.grid(row=1, column=0, sticky="nsew")
+
+        self.displayFrame.grid_rowconfigure(0, weight=1)
+        self.displayFrame.grid_rowconfigure(1, weight=1)
+        self.displayFrame.grid_columnconfigure(0, weight=1)
 
     def update_total_label(self):
         """
@@ -160,14 +154,14 @@ class App(CTk):
 
         for operator, symbol in self.operations.items():
             expression = expression.replace(operator, f'{symbol}')
-        self.totalLabel.configure(text=expression[:25])
+        self.totalLabel.configure(text=expression[:30])
 
     def update_current_label(self):
         """
         @brief Updates the current expression label by truncating if necessary
         @param self: Instance of the class
         """
-        if self.currentExpression.startswith("0"):
+        if self.currentExpression.startswith("0") and not self.currentExpression.startswith("0."):
             self.currentExpression = self.currentExpression[1:]
 
         if len(self.currentExpression) > 14:
@@ -212,24 +206,8 @@ class App(CTk):
                                width=button_width, height=button_height, hover_color=GRAY,
                                command=lambda x=digit: self.show_numbers(x))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
-            self.buttonFrame.grid_rowconfigure(row, weight=1)  # Allow row to expand
-            self.buttonFrame.grid_columnconfigure(column, weight=1)  # Allow column to expand
-
-    def add(self):
-        # TODO: IMPLEMENT
-        pass
-
-    def sub(self):
-        # TODO: IMPLEMENT
-        pass
-
-    def mul(self):
-        # TODO: IMPLEMENT
-        pass
-
-    def div(self):
-        # TODO: IMPLEMENT
-        pass
+            self.buttonFrame.grid_rowconfigure(row, weight=1)
+            self.buttonFrame.grid_columnconfigure(column, weight=1)
 
     def show_operators(self, operator):
         """
@@ -237,9 +215,18 @@ class App(CTk):
         @param self: Instance of the class
         @param operator: The operator to append to the current expression
         """
-        # TODO NEEDS FIXES WITH FIRST CHAR AS AN OPERATOR
+        self.update_current_label()
 
-        if (self.totalExpression and self.totalExpression[-1] in "+-*/" and not self.currentExpression and
+        # Prevent operator as the first character except '-'
+        if not self.totalExpression and not self.currentExpression:
+            if operator == '-':
+                self.currentExpression = operator
+                self.update_current_label()
+                return
+            else:
+                return
+
+        if (self.totalExpression and self.totalExpression[-1] in "+-*/%" and not self.currentExpression and
                 len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
@@ -248,6 +235,11 @@ class App(CTk):
         self.currentExpression = ''
         self.update_total_label()
         self.update_current_label()
+
+        if self.signal():
+            self.evaluate()
+        else:
+            pass
 
     def create_operator_buttons(self):
         """
@@ -264,13 +256,83 @@ class App(CTk):
                                width=button_width, height=button_height, hover_color=HOVER_OPERATOR,
                                command=lambda op=operator: self.show_operators(op))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
-            self.buttonFrame.grid_rowconfigure(row, weight=1)  # Allow row to expand
-            self.buttonFrame.grid_columnconfigure(column, weight=1)  # Allow column to expand
+            self.buttonFrame.grid_rowconfigure(row, weight=1)
+            self.buttonFrame.grid_columnconfigure(column, weight=1)
             row += 1
 
+    def parsing(self):
+        lastOperator = ""
+        if len(self.totalExpression) >= 3:
+            lastOperator = self.totalExpression[-1]
+            # print("\nPosledny operator: " + lastOperator)
+
+        self.totalExpression = self.totalExpression[:-1]
+        # print("Cely vyraz: " + self.totalExpression)
+
+        # Find the index of the second last operator (separator)
+        separatorIndex = max(self.totalExpression.rfind('+'), self.totalExpression.rfind('-'),
+                             self.totalExpression.rfind('*'), self.totalExpression.rfind('/'),
+                             self.totalExpression.rfind('%'))
+
+        # Split the expression using the separator
+        leftSide = self.totalExpression[:separatorIndex]
+        rightSide = self.totalExpression[separatorIndex + 1:]
+
+        # Save the separator
+        separator = self.totalExpression[separatorIndex]
+
+        # print("Left side: " + leftSide)
+        # print("Right side: " + rightSide)
+        # print("Used operator: " + separator)
+
+        return leftSide, separator, rightSide, lastOperator
+
+    def evaluate(self):
+        """
+        @brief Evaluate the expression
+        @param self: Instance of the class
+        """
+        components = self.parsing()
+        leftSide, separator, rightSide, lastOperator = components
+
+        if '.' in leftSide:
+            leftSide_float = float(leftSide)
+        else:
+            leftSide_float = int(leftSide)
+
+        if '.' in rightSide:
+            rightSide_float = float(rightSide)
+        else:
+            rightSide_float = int(rightSide)
+
+        if separator == '+':
+            result = mathlib.add(leftSide_float, rightSide_float)
+        elif separator == '-':
+            result = mathlib.sub(leftSide_float, rightSide_float)
+        elif separator == '*':
+            result = mathlib.mul(leftSide_float, rightSide_float)
+        elif separator == '/':
+            if leftSide_float % rightSide_float == 0:
+                result = mathlib.div(leftSide_float, rightSide_float)
+                result = int(result)
+            else:
+                result = mathlib.div(leftSide_float, rightSide_float)
+        elif separator == '%':
+            result = mathlib.mod(leftSide_float, rightSide_float)
+        else:
+            return
+
+        # Update the current expression with the result
+        self.currentExpression = str(result)
+        self.update_current_label()
+
+        # Update the total expression with the new result and the operator
+        self.totalExpression = str(result) + lastOperator
+        self.update_total_label()
+
     def equals(self):
-        # TODO: IMPLEMENT
-        pass
+        # TODO: IMPLEMENT EVALUATION WHEN THE USER PRESSES = AND THERE IS AN OPERAND BOTH IN THE TOTAL AND CURRENT EXP
+        self.evaluate()
 
     def create_equals_button(self):
         """
@@ -280,10 +342,29 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         equalsButton = CTkButton(self.buttonFrame, text="=", border_width=0, fg_color=ORANGE,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=button_width, height=button_height, hover_color=HOVER_OPERATOR)
+                                 width=button_width, height=button_height, hover_color=HOVER_OPERATOR,
+                                 command=self.equals)
         equalsButton.grid(row=4, column=3, sticky="nsew", padx=2, pady=2)
-        self.buttonFrame.grid_rowconfigure(4, weight=1)  # Allow row to expand
-        self.buttonFrame.grid_columnconfigure(3, weight=1)  # Allow column to expand
+        self.buttonFrame.grid_rowconfigure(4, weight=1)
+        self.buttonFrame.grid_columnconfigure(3, weight=1)
+
+    def signal(self):
+        """
+        @brief Handles signal when the total expression has two operators
+        @param self: Instance of the class
+        @return: True if the total expression has two operators, False otherwise
+        """
+        if self.totalExpression and len(self.totalExpression) >= 2:
+            operators = ['+', '-', '*', '/', '%']
+            operatorCount = 0
+
+            for i, char in enumerate(self.totalExpression):
+                if char in operators and i != 0:  # Skip counting if operator is at index 0
+                    operatorCount += 1
+            # print("Count of the operators:", operatorCount)
+            # print("Total expression: " + self.totalExpression)
+            return operatorCount == 2
+        return False
 
     def decimal(self):
         """
@@ -291,10 +372,11 @@ class App(CTk):
         @param self: Instance of the class
         """
 
-        if any(char.isdigit() for char in self.currentExpression):
-            if not self.currentExpression or '.' not in self.currentExpression:
-                self.currentExpression += '.'
-                self.update_current_label()
+        if not self.currentExpression:
+            self.currentExpression += '0.'
+        elif '.' not in self.currentExpression:
+            self.currentExpression += '.'
+        self.update_current_label()
 
     def create_decimal_button(self):
         """
@@ -307,8 +389,8 @@ class App(CTk):
                                   width=button_width, height=button_height, hover_color=GRAY,
                                   command=self.decimal)
         decimalButton.grid(row=4, column=1, sticky="nsew", padx=2, pady=2)
-        self.buttonFrame.grid_rowconfigure(4, weight=1)  # Allow row to expand
-        self.buttonFrame.grid_columnconfigure(1, weight=1)  # Allow column to expand
+        self.buttonFrame.grid_rowconfigure(4, weight=1)
+        self.buttonFrame.grid_columnconfigure(1, weight=1)
 
     def clear(self):
         """
@@ -335,8 +417,8 @@ class App(CTk):
                                 corner_radius=10, font=(LARGE, 25), width=button_width, height=button_height,
                                 hover_color=HOVER_COLOR, command=self.clear)
         cleanButton.grid(row=0, column=3, sticky="nsew", padx=2, pady=2)
-        self.buttonFrame.grid_rowconfigure(0, weight=1)  # Allow row to expand
-        self.buttonFrame.grid_columnconfigure(3, weight=1)  # Allow column to expand
+        self.buttonFrame.grid_rowconfigure(0, weight=1)
+        self.buttonFrame.grid_columnconfigure(3, weight=1)
 
     def delete(self):
         """
@@ -391,10 +473,7 @@ class App(CTk):
                                command=lambda b=bracket: self.show_brackets(b))
             button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
             column += 1
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(row, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(column - 1, weight=1)
 
     def exponentiation(self):
@@ -412,13 +491,8 @@ class App(CTk):
                                          corner_radius=10, font=(LARGE, 25),
                                          width=button_width, height=button_height, hover_color=HOVER_COLOR)
         exponentiationButton.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(0, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
-
-    # Similarly adjust other methods
 
     def root(self):
         # TODO: IMPLEMENT
@@ -435,15 +509,20 @@ class App(CTk):
                                corner_radius=10, font=(LARGE, 25),
                                width=button_width, height=button_height, hover_color=HOVER_COLOR)
         rootButton.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(1, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def factorial(self):
+        """
+        @brief Computes the factorial of the current expression
+        @param self: Instance of the class
+        """
         # TODO: IMPLEMENT
-        pass
+        result = mathlib.fac(int(self.currentExpression))
+        self.totalExpression = str(self.currentExpression) + '!'
+        self.update_total_label()
+        self.currentExpression = str(result)
+        self.update_current_label()
 
     def create_factorial_button(self):
         """
@@ -454,17 +533,25 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         factorialButton = CTkButton(self.buttonFrame, text="x!", border_width=0, fg_color=COLOR_REST,
                                     corner_radius=10, font=(LARGE, 25),
-                                    width=button_width, height=button_height, hover_color=HOVER_COLOR)
+                                    width=button_width, height=button_height, hover_color=HOVER_COLOR,
+                                    command=self.factorial)
         factorialButton.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(2, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def abs(self):
+        """
+        @brief Computes the absolute value of the current expression
+        @param self: Instance of the class
+        """
         # TODO: IMPLEMENT
-        pass
+        if '.' in self.currentExpression:
+            result = mathlib.abs(float(self.currentExpression))
+        else:
+            result = mathlib.abs(int(self.currentExpression))
+
+        self.currentExpression = str(result)
+        self.update_current_label()
 
     def create_abs_button(self):
         """
@@ -475,17 +562,14 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         absButton = CTkButton(self.buttonFrame, text="|x|", border_width=0, fg_color=COLOR_REST,
                               corner_radius=10, font=(LARGE, 25),
-                              width=button_width, height=button_height, hover_color=HOVER_COLOR)
+                              width=button_width, height=button_height, hover_color=HOVER_COLOR, command=self.abs)
         absButton.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(3, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
-    def modulo(self):
+    def place_modulo(self):
         # TODO: IMPLEMENT
-        pass
+        self.show_operators('%')
 
     def create_modulo_button(self):
         """
@@ -496,12 +580,10 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         moduloButton = CTkButton(self.buttonFrame, text="mod", border_width=0, fg_color=COLOR_REST,
                                  corner_radius=10, font=(LARGE, 25),
-                                 width=button_width, height=button_height, hover_color=HOVER_COLOR)
+                                 width=button_width, height=button_height, hover_color=HOVER_COLOR,
+                                 command=self.place_modulo)
         moduloButton.grid(row=4, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Allow row to expand
         self.buttonFrame.grid_rowconfigure(4, weight=1)
-        # Allow column to expand
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def create_settings_button(self):
@@ -537,7 +619,6 @@ class App(CTk):
             self.toplevel_window.focus()
 
     def bind_keys(self):
-        # TODO: MISSING KEYS
         """
         @brief Binds keyboard keys to calculator operations and digits
         @param self: Instance of the class
@@ -556,11 +637,6 @@ class App(CTk):
         self.bind("<c>", lambda event: self.clear())
         self.bind(".", lambda event: self.decimal())
         self.bind("=", lambda event: self.equals())
-
-        # self.bind("<^>", lambda event: self.exponentiation())
-        # self.bind("<r>", lambda event: self.root())
-        # self.bind("<!>", lambda event: self.factorial())
-        # self.bind("<%>", lambda event: self.modulo())
 
     def run(self):
         """
@@ -591,3 +667,5 @@ class App(CTk):
 if __name__ == "__main__":
     app = App()
     app.run()
+
+# END OF calculator.py file

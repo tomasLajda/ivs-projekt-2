@@ -1,3 +1,13 @@
+"""
+@file help_menu.py
+@brief File containing the help menu
+
+@author
+- Martin Valapka (xvalapm00)
+
+@date - April 3, 2024
+"""
+
 from PIL import Image, ImageTk
 from customtkinter import *
 import platform
@@ -16,15 +26,26 @@ HOVER_OPERATOR = "#FF8409"
 
 class ToplevelWindow(CTkToplevel):
     """
-    @brief Initialization of the top-level window
+    @brief Top-level window for displaying help information
 
-    @param self: Instance of the class
     @param root: The parent widget
-    @param *args: Variable length argument list
-    @param **kwargs: Arbitrary keyword arguments
+
+    Attributes:
+        help_path (str): The path to the help image
     """
 
     def __init__(self, root, *args, **kwargs):
+        """
+        @brief Initializes the top-level window.
+
+        This method initializes the top-level window and configures its appearance based on the platform
+
+        @param self: Instance of the class
+        @param root: The parent widget
+        @param *args: Variable length argument list
+        @param **kwargs: Arbitrary keyword arguments
+        """
+
         # TODO: FINISH, FIX THE WEIRD BORDER EFFECT
         super().__init__(*args, **kwargs)
 
@@ -56,6 +77,17 @@ class ToplevelWindow(CTkToplevel):
         frame.grid_columnconfigure(0, weight=1)
 
         def add_image_and_label(frame_use, row, image_path, text):
+            """
+            @brief Adds an image and label to a given frame.
+
+            This method adds an image and a corresponding label to a specified frame
+
+            @param frame_use: The frame to which the image and label will be added
+            @param row: The row in which the image and label will be placed
+            @param image_path: The path to the image file
+            @param text: The text for the label
+            """
+
             image = CTkImage(Image.open(image_path), size=(45, 35))
             label_image = CTkLabel(frame_use, image=image, text="")
             label_image.grid(row=row, column=0, sticky="w", padx=10, pady=10)
@@ -64,6 +96,14 @@ class ToplevelWindow(CTkToplevel):
             label_text.grid(row=row, column=1, sticky="w", pady=10, padx=(0, 10))
 
             def resize_wraplength(event):
+                """
+                @brief Resizes the wrap length of the label text based on the event width
+
+                This function adjusts the wrap length of the label text based on the width of the event
+
+                @param event: Event(resizing) triggering the resizing
+                """
+
                 if platform.system() == 'Linux':
                     label_text.configure(wraplength=event.width - 70)
                 else:
@@ -132,5 +172,6 @@ class ToplevelWindow(CTkToplevel):
                                  "2. Select the Modulo buttton or '%'\n"
                                  "3. Choose the divisor")
 
+        # Fixes a bug in the custom tkinter library - places the icon again after 200ms
         self.wm_iconbitmap()
         self.after(200, lambda: self.iconphoto(False, self.help_path))
