@@ -1,5 +1,5 @@
 """
-@file tests.py
+@file mathlib_tests.py
 @brief File containing math library functionality tests.
 
 @author
@@ -12,6 +12,7 @@ import mathlib
 
 
 # ADDITION TESTS START
+
 def test_addition():
     assert mathlib.add(1, 2) == 3
 
@@ -52,7 +53,7 @@ def test_addition_small():
 def test_addition_large():
     assert mathlib.add(1_000, 2_000) == 3_000
     assert mathlib.add(1_000_000, 2_000_000) == 3_000_000
-    assert mathlib.add(1_000_000_000_000, 2_000_000_000_000) == 3_000_000_000_000  # 1+e12 + 2+e12 = 3+e12
+    assert mathlib.add(1_000_000_000_000, 2_000_000_000_000) == 3_000_000_000_000  # 1e12 + 2e12 = 3e12
 
 
 def test_addition_small_negative():
@@ -64,11 +65,12 @@ def test_addition_small_negative():
 def test_addition_large_negative():
     assert mathlib.add(-1_000, -2_000) == -3_000
     assert mathlib.add(-1_000_000, -2_000_000) == -3_000_000
-    assert mathlib.add(-1_000_000_000_000, -2_000_000_000_000) == -3_000_000_000_000  # -1+e12 + -2+e12 = -3+e12
+    assert mathlib.add(-1_000_000_000_000, -2_000_000_000_000) == -3_000_000_000_000  # -1e12 + -2e12 = -3e12
 
 
 # ADDITION TESTS END
 # SUBTRACTION TESTS START
+
 def test_subtraction():
     assert mathlib.sub(1, 1) == 0
 
@@ -112,7 +114,7 @@ def test_subtraction_small():
 def test_subtraction_large():
     assert mathlib.sub(1_000, 2_000) == -1_000
     assert mathlib.sub(1_000_000, 2_000_000) == -1_000_000
-    assert mathlib.sub(1_000_000_000_000, 2_000_000_000_000) == -1_000_000_000_000  # 1+e12 - 2+e12 = -1+e12
+    assert mathlib.sub(1_000_000_000_000, 2_000_000_000_000) == -1_000_000_000_000  # 1e12 - 2e12 = -1e12
 
 
 def test_subtraction_small_negative():
@@ -124,7 +126,7 @@ def test_subtraction_small_negative():
 def test_subtraction_large_negative():
     assert mathlib.sub(-1_000, -2_000) == 1_000
     assert mathlib.sub(-1_000_000, -2_000_000) == 1_000_000
-    assert mathlib.sub(-1_000_000_000_000, -2_000_000_000_000) == 1_000_000_000_000  # -1+e12 - -2+e12 = 1+e12
+    assert mathlib.sub(-1_000_000_000_000, -2_000_000_000_000) == 1_000_000_000_000  # -1e12 - -2e12 = 1e12
 
 
 # SUBTRACTION TESTS END
@@ -159,8 +161,8 @@ def test_multiplication_small():
 
 def test_multiplication_large():
     assert mathlib.mul(1_000_000_000_000,
-                       2_000_000_000_000) == 2_000_000_000_000_000_000_000_000  # 1e+12 * 2e+12 = 2e+24
-    assert mathlib.mul(1_000_000_000_000, 2) == 2_000_000_000_000  # 1e+12 * 2 = 2e+12
+                       2_000_000_000_000) == 2_000_000_000_000_000_000_000_000  # 1e12 * 2e12 = 2e24
+    assert mathlib.mul(1_000_000_000_000, 2) == 2_000_000_000_000  # 1e12 * 2 = 2e12
 
 
 # MULTIPLICATION TESTS END
@@ -177,38 +179,65 @@ def test_division_zero():
 
 def test_division_negative():
     assert mathlib.div(2, -1) == -2
-    assert mathlib.div(-2, 1) == -1
-    assert mathlib.div(-2, -1) == 1
+    assert mathlib.div(-2, 1) == -2
+    assert mathlib.div(-2, -1) == 2
 
 
 def test_division_float():
     assert mathlib.div(1, 2) == 0.5
     assert mathlib.div(1, 100) == 0.01
-    assert mathlib.div(3, 90) == 0.05
 
 
 def test_division_periodic():
-    assert mathlib.div(1, 3) == pytest.approx(0.3333, rel=1e-4)
-    assert mathlib.div(2, 7) == pytest.approx(0.2857, rel=1e-4)
-    assert mathlib.div(1, 6) == pytest.approx(0.1667, rel=1e-4)
-    # 1e-4 is scientific notation for 0.0001.
-    # It represents a relative tolerance of 0.01%
-    # (or 0.0001 as a decimal) of the expected value.
-
+    assert mathlib.div(1, 3) == pytest.approx(0.3333333333333333, rel=1e-4)
+    assert mathlib.div(2, 7) == pytest.approx(0.2857142857142857, rel=1e-4)
+    assert mathlib.div(1, 6) == pytest.approx(0.16666666666666666, rel=1e-4)
 
 def test_division_small():
     assert mathlib.div(0.000_000_000_1, 0.000_000_000_2) == 0.5  # 1e-10 / 2e-10 = 0.5
-    assert mathlib.div(0.000_000_000_1, 2) == 0.000_000_000_2  # 1e-10 / 2 = 5e-10
-    assert mathlib.div(2, 0.000_000_000_1) == 20_000_000_000  # 2 / e-10 = 2e+11
+    assert mathlib.div(0.000_000_000_1, 2) == 0.000_000_000_05  # 1e-10 / 2 = 5e-10
+    assert mathlib.div(2, 0.000_000_000_1) == 20_000_000_000  # 2 / e-10 = 2e11
 
 
 def test_division_large():
-    assert mathlib.div(1_000_000_000, 2_000_000_000) == 0.5  # 1+e10 / 2+e10 = 0.5
-    assert mathlib.div(1_000_000_000, 2) == 500_000_000  # 1+e10 / 2 = 5+e9
-    assert mathlib.div(2, 1_000_000_000) == 0.000_000_002  # 1+e10 / 2 = 2e-9
-
+    assert mathlib.div(1_000_000_000, 2_000_000_000) == 0.5  # 1e10 / 2e10 = 0.5
+    assert mathlib.div(1_000_000_000, 2) == 500_000_000  # 1e10 / 2 = 5e9
+    assert mathlib.div(2, 1_000_000_000) == 0.000_000_002  # 1e10 / 2 = 2e-9
 
 # DIVISION TESTS END
+# MODULUS TESTS START
+
+def test_modulus():
+    assert mathlib.mod(4, 2) == 0
+    assert mathlib.mod(5, 2) == 1
+    assert mathlib.mod(2, 5) == 2
+
+
+def test_modulus_zero():
+    with pytest.raises(ValueError):
+        mathlib.mod(4, 0)
+
+
+def test_modulus_negative():
+    assert mathlib.mod(-11, 7) == 4
+    assert mathlib.mod(-11, -7) == -4
+    assert mathlib.mod(11, -7) == -4
+
+
+def test_modulus_float():
+    assert mathlib.mod(5.5, 5) == 0.5
+    assert mathlib.mod(3.33, 1.11) == 0
+    assert mathlib.mod(5, 5.5) == 5
+
+
+def test_modulus_small():
+    assert mathlib.mod(0.000_000_000_1, 0.000_000_000_2) == 0.000_000_000_1  # 1e-10 % 2e-10 = 1e-10
+
+def test_modulus_large():
+    assert mathlib.mod(1_000_000_000, 2_000_000_000) == 1_000_000_000  # 1e10 % 2e10 = 1e10
+
+
+# MODULUS TESTS END
 # ABSOLUTE VALUE TESTS START
 
 def test_absolute_value():
@@ -227,9 +256,8 @@ def test_absolute_value_small():
 
 
 def test_absolute_value_large():
-    assert mathlib.abs(1_000_000_000) == 1_000_000_000  # abs(1+e10) = 1+e10
-    assert mathlib.abs(-1_000_000_000) == 1_000_000_000  # abs(-1+e10) = 1+e10
-
+    assert mathlib.abs(1_000_000_000) == 1_000_000_000  # abs(1e10) = 1e10
+    assert mathlib.abs(-1_000_000_000) == 1_000_000_000  # abs(-1e10) = 1e10
 
 # ABSOLUTE VALUE TESTS END
 # FACTORIAL TESTS START
@@ -281,10 +309,8 @@ def test_factorial_negative():
     with pytest.raises(ValueError):
         mathlib.fac(-10)
 
-
 # FACTORIAL TESTS END
 # POW TESTS START
-
 
 def test_pow_base_zero():
     assert mathlib.pow(0, 1_000_000_000) == 0
@@ -315,22 +341,21 @@ def test_pow_of_negative_base():
 
 
 def test_pow_of_large_base_and_index():
-    assert mathlib.pow(1_000, 1_000) == 1.0e+3000
+    assert mathlib.pow(1_000, 1_000) == 1e3000
     assert mathlib.pow(10, 10) == 10_000_000_000
 
 
 def test_pow_decimal_numbers():
     assert mathlib.pow(2.5, 2) == pytest.approx(6.25, rel=1e-3)  # 2.5^2 ≈ 6.25 (approx)
     assert mathlib.pow(1.5, 3) == pytest.approx(3.375, rel=1e-3)  # 1.5^3 ≈ 3.375 (approx)
-    assert mathlib.pow(3.33, 2) == pytest.approx(11.088_9, rel=1e-3)  # 3.33^2 = 11.0889 (approx)
-    assert mathlib.pow(10.5, 3) == pytest.approx(1_157.625, rel=1e-3)  # 10.5^3 ≈ 1157.625 (approx)
+    assert mathlib.pow(3.33, 2) == pytest.approx(11.0889, rel=1e-3)  # 3.33^2 = 11.0889 (approx)
+    assert mathlib.pow(10.5, 3) == pytest.approx(1157.625, rel=1e-3)  # 10.5^3 ≈ 1157.625 (approx)
 
 
 def test_pow_large_decimal_numbers():
-    assert mathlib.pow(1.000_1, 1000) == pytest.approx(1.105_165_392_6, rel=1e-3)  # 1.0001^1000 ≈ 1.105 (approx)
-    assert mathlib.pow(1.000_01, 10_000) == pytest.approx(1.105_170_365_4, rel=1e-3)  # 1.00001^10000 ≈ 1.105 (approx)
-    assert mathlib.pow(1.000_001, 1_000_000) == pytest.approx(2.718_280_469_0,
-                                                              rel=1e-3)  # 1.000001^1000000 ≈ 2.718 (approx)
+    assert mathlib.pow(1.0001, 1000) == pytest.approx(1.1051709180756477, rel=1e-4)
+    assert mathlib.pow(1.00001, 10000) == pytest.approx(1.1051709180756477, rel=1e-4)
+    assert mathlib.pow(1.000001, 1000000) == pytest.approx(2.7182804690957534, rel=1e-4)
 
 
 def test_pow_decimal_index():
@@ -342,17 +367,16 @@ def test_pow_negative_index_raises_error():
     with pytest.raises(TypeError):
         mathlib.pow(2, -2)
 
-
 # POW TESTS END
-# root TESTS START
+# ROOT TESTS START
 
-def test_root_integer_root(math):
+def test_root_integer_root():
     assert mathlib.root(4, 2) == 2
     assert mathlib.root(9, 2) == 3
     assert mathlib.root(16, 2) == 4
 
 
-def test_root_negative_number_even_root(math):
+def test_root_negative_number_even_root():
     with pytest.raises(ValueError):
         mathlib.root(-4, 2)
     with pytest.raises(ValueError):
@@ -368,14 +392,13 @@ def test_root_negative_number_decimal_root():
 
 
 def test_root_large_number():
-    assert mathlib.root(10_000_000, 2) == pytest.approx(3_162.277_660_168_3,
-                                                       rel=1e-3)  # root(10_000_000, 2) ≈ 3_162.277(approx)
-    assert mathlib.root(1_000_000_000, 3) == pytest.approx(999.999_999_999_9,
-                                                          rel=1e-3)  # root(1_000_000_000, 3) ≈ 999.999 (approx)
+    assert mathlib.root(10000000, 2) == pytest.approx(3162.2776601683795, rel=1e-4)
+    assert mathlib.root(1000000000, 3) == pytest.approx(1000.0, rel=1e-4)
 
 
 def test_root_small_number():
-    assert mathlib.root(0.000_1, 2) == pytest.approx(0.01, rel=1e-3)  # root(0.0001, 2) ≈ 0.01 (approx)
-    assert mathlib.root(0.002, 3) == pytest.approx(0.125_992_104_9, rel=1e-3)  # root(0.001, 3) ≈ 0.125 (approx)
+    assert mathlib.root(0.0001, 2) == pytest.approx(0.01, rel=1e-4)
+    assert mathlib.root(0.002, 3) == pytest.approx(0.1259921052362699, rel=1e-4)
+# ROOT TESTS END
 
-# root TESTS END
+# End of matlib_tests.py
