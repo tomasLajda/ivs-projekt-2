@@ -72,6 +72,7 @@ class App(CTk):
 
         self.totalExpression = ""
         self.currentExpression = "0"
+        self.evaluated = False
 
         self.digits = {
             7: (1, 1),
@@ -191,7 +192,12 @@ class App(CTk):
         @param value: The value to append to the current expression
         """
 
-        self.currentExpression += str(value)
+        if self.evaluated:
+            self.currentExpression = ''
+            self.currentExpression += str(value)
+            self.evaluated = False
+        else:
+            self.currentExpression += str(value)
         self.update_current_label()
 
     def create_digit_buttons(self):
@@ -291,6 +297,7 @@ class App(CTk):
         """
         @brief Evaluate the expression
         @param self: Instance of the class
+        @return: True if the result is successfully evaluated and cleaned, False otherwise
         """
         components = self.parsing()
         leftSide, separator, rightSide, lastOperator = components
@@ -320,7 +327,7 @@ class App(CTk):
         elif separator == '%':
             result = mathlib.mod(leftSide_float, rightSide_float)
         else:
-            return
+            return False
 
         # Update the current expression with the result
         self.currentExpression = str(result)
@@ -329,10 +336,56 @@ class App(CTk):
         # Update the total expression with the new result and the operator
         self.totalExpression = str(result) + lastOperator
         self.update_total_label()
+        self.evaluated = True
+        return self.evaluated
 
     def equals(self):
-        # TODO: IMPLEMENT EVALUATION WHEN THE USER PRESSES = AND THERE IS AN OPERAND BOTH IN THE TOTAL AND CURRENT EXP
-        self.evaluate()
+        """
+        @brief Calculates the result of the expression when the equals button is pressed
+        @param self: Instance of the class
+        @return True if the calculation is successful, False otherwise.
+        """
+
+        rightSide = self.totalExpression[:-1]
+        operator = self.totalExpression[-1]
+        leftSide = self.currentExpression
+
+        if '.' in leftSide:
+            leftSide_float = float(leftSide)
+        else:
+            leftSide_float = int(leftSide)
+
+        if '.' in rightSide:
+            rightSide_float = float(rightSide)
+        else:
+            rightSide_float = int(rightSide)
+
+        if operator == '+':
+            result = mathlib.add(leftSide_float, rightSide_float)
+        elif operator == '-':
+            result = mathlib.sub(leftSide_float, rightSide_float)
+        elif operator == '*':
+            result = mathlib.mul(leftSide_float, rightSide_float)
+        elif operator == '/':
+            if leftSide_float % rightSide_float == 0:
+                result = mathlib.div(leftSide_float, rightSide_float)
+                result = int(result)
+            else:
+                result = mathlib.div(leftSide_float, rightSide_float)
+        elif operator == '%':
+            result = mathlib.mod(leftSide_float, rightSide_float)
+        else:
+            return False
+
+        # Update the current expression with the result
+        self.currentExpression = str(result)
+        self.update_current_label()
+
+        # Update the total expression with the new result and the operator
+        self.totalExpression = ""
+        self.update_total_label()
+        self.evaluated = True
+        return self.evaluated
 
     def create_equals_button(self):
         """
@@ -568,7 +621,10 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def place_modulo(self):
-        # TODO: IMPLEMENT
+        """
+        @brief Places the modulo operator in the current expression and updates the labels
+        @param self: Instance of the class
+        """
         self.show_operators('%')
 
     def create_modulo_button(self):
