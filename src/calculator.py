@@ -232,7 +232,7 @@ class App(CTk):
             else:
                 return
 
-        if (self.totalExpression and self.totalExpression[-1] in "+-*/%" and not self.currentExpression and
+        if (self.totalExpression and self.totalExpression[-1] in "+-*/%^" and not self.currentExpression and
                 len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
@@ -278,7 +278,7 @@ class App(CTk):
         # Find the index of the second last operator (separator)
         separatorIndex = max(self.totalExpression.rfind('+'), self.totalExpression.rfind('-'),
                              self.totalExpression.rfind('*'), self.totalExpression.rfind('/'),
-                             self.totalExpression.rfind('%'))
+                             self.totalExpression.rfind('%'), self.totalExpression.rfind('^'))
 
         # Split the expression using the separator
         leftSide = self.totalExpression[:separatorIndex]
@@ -326,6 +326,8 @@ class App(CTk):
                 result = mathlib.div(leftSide_float, rightSide_float)
         elif separator == '%':
             result = mathlib.mod(leftSide_float, rightSide_float)
+        elif separator == '^':
+            result = mathlib.pow(leftSide_float, rightSide_float)
         else:
             return False
 
@@ -346,9 +348,9 @@ class App(CTk):
         @return True if the calculation is successful, False otherwise.
         """
 
-        rightSide = self.totalExpression[:-1]
+        leftSide = self.totalExpression[:-1]
         operator = self.totalExpression[-1]
-        leftSide = self.currentExpression
+        rightSide = self.currentExpression
 
         if '.' in leftSide:
             leftSide_float = float(leftSide)
@@ -374,6 +376,8 @@ class App(CTk):
                 result = mathlib.div(leftSide_float, rightSide_float)
         elif operator == '%':
             result = mathlib.mod(leftSide_float, rightSide_float)
+        elif operator == '^':
+            result = mathlib.pow(leftSide_float, rightSide_float)
         else:
             return False
 
@@ -530,8 +534,8 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(column - 1, weight=1)
 
     def exponentiation(self):
-        # TODO: IMPLEMENT
-        pass
+        # TODO: NEEDS FIXES
+        self.show_operators('^')
 
     def create_exponentiation_button(self):
         """
@@ -542,7 +546,8 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         exponentiationButton = CTkButton(self.buttonFrame, text="x\u207F", border_width=0, fg_color=COLOR_REST,
                                          corner_radius=10, font=(LARGE, 25),
-                                         width=button_width, height=button_height, hover_color=HOVER_COLOR)
+                                         width=button_width, height=button_height, hover_color=HOVER_COLOR,
+                                         command=self.exponentiation)
         exponentiationButton.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
         self.buttonFrame.grid_rowconfigure(0, weight=1)
         self.buttonFrame.grid_columnconfigure(0, weight=1)
@@ -570,10 +575,7 @@ class App(CTk):
         @brief Computes the factorial of the current expression
         @param self: Instance of the class
         """
-        # TODO: IMPLEMENT
         result = mathlib.fac(int(self.currentExpression))
-        self.totalExpression = str(self.currentExpression) + '!'
-        self.update_total_label()
         self.currentExpression = str(result)
         self.update_current_label()
 
@@ -597,7 +599,6 @@ class App(CTk):
         @brief Computes the absolute value of the current expression
         @param self: Instance of the class
         """
-        # TODO: IMPLEMENT
         if '.' in self.currentExpression:
             result = mathlib.abs(float(self.currentExpression))
         else:
