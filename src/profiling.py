@@ -1,3 +1,12 @@
+"""
+@file profiling.py
+@brief File containing profiling.
+
+@author
+- Tomáš Lajda (xlajdat00)
+@date April 11, 2024
+"""
+
 import sys
 import mathlib
 
