@@ -73,17 +73,15 @@ test_prof:
 	pytest profiling_tests.py
 
 doc: Doxyfile
-	rm -rf doc
-	mkdir doc
-	doxygen $<
-	mv html doc
-	rm -rf latex
+	rm -rf ../doc
+	doxygen Doxyfile
 
 setup:
 	@echo "Setting up the project..."
 	sudo apt-get install python3-pip
 	sudo apt-get install python3-tk
 	sudo apt-get install tk-dev
+	sudo apt-get install doxygen
 	pip3 install -r requirements.txt
 
 # Setup the installation zip file and clean after itself
