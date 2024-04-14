@@ -7,7 +7,7 @@
 
 @date - March 19, 2024
 """
-
+from tkinter import HORIZONTAL, Scrollbar, Canvas
 import mathlib
 import platform
 from help_menu import ToplevelWindow
@@ -294,6 +294,7 @@ class App(CTk):
         return leftSide, separator, rightSide, lastOperator
 
     def evaluate(self):
+        # TODO: FIX WITH ^
         """
         @brief Evaluate the expression
         @param self: Instance of the class
@@ -331,8 +332,14 @@ class App(CTk):
         else:
             return False
 
+        # Convert the result to a float string if it's in scientific notation
+        if -1e14 < result < 1e14:
+            result_str = str(result)
+        else:
+            result_str = "{:.5e}".format(result)
+
         # Update the current expression with the result
-        self.currentExpression = str(result)
+        self.currentExpression = result_str
         self.update_current_label()
 
         # Update the total expression with the new result and the operator
@@ -381,8 +388,14 @@ class App(CTk):
         else:
             return False
 
+        # Check if the result is within a certain range to avoid scientific notation
+        if -1e14 < result < 1e14:
+            result_str = str(result)
+        else:
+            result_str = "{:.5e}".format(result)
+
         # Update the current expression with the result
-        self.currentExpression = str(result)
+        self.currentExpression = result_str
         self.update_current_label()
 
         # Update the total expression with the new result and the operator
@@ -534,7 +547,6 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(column - 1, weight=1)
 
     def exponentiation(self):
-        # TODO: NEEDS FIXES
         self.show_operators('^')
 
     def create_exponentiation_button(self):
@@ -553,8 +565,11 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def root(self):
-        # TODO: IMPLEMENT
-        pass
+        if '√' not in self.currentExpression:
+            self.currentExpression += '√'
+        else:
+            pass
+        self.update_current_label()
 
     def create_root_button(self):
         """
@@ -565,7 +580,7 @@ class App(CTk):
         button_width, button_height = adjust_button_size(75, 45)
         rootButton = CTkButton(self.buttonFrame, text="ⁿ√x", border_width=0, fg_color=COLOR_REST,
                                corner_radius=10, font=(LARGE, 25),
-                               width=button_width, height=button_height, hover_color=HOVER_COLOR)
+                               width=button_width, height=button_height, hover_color=HOVER_COLOR, command=self.root)
         rootButton.grid(row=1, column=0, sticky="nsew", padx=2, pady=2)
         self.buttonFrame.grid_rowconfigure(1, weight=1)
         self.buttonFrame.grid_columnconfigure(0, weight=1)
