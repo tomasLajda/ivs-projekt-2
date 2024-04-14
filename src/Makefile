@@ -6,7 +6,7 @@
 # @todo  Bude-li to možné, Makefile nebude obsahovat jméno ani jednoho ze zdrojových souborů.
 ##
 
-.PHONY: all pack clean run profile help setup test test_lib test_prof doc install
+.PHONY: all pack clean run profile help setup test doc install
 DIR = ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 
 # Start the program
@@ -66,15 +66,7 @@ help:
 
 test:
 	@echo "Running all tests..."
-	pytest *_tests.py
-
-test_lib:
-	@echo "Running math library tests..."
-	pytest mathlib_tests.py
-
-test_prof:
-	@echo "Running profiling tests..."
-	pytest profiling_tests.py
+	pytest tests.py
 
 doc: Doxyfile
 	rm -rf ../doc
