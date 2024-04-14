@@ -72,5 +72,5 @@ def standard_deviation(numbers):
 
   return mathlib.root(result, 2)
 
-# numbers = seperate_numbers_from_std()
-# print(standard_deviation(numbers))
+numbers = seperate_numbers_from_std()
+print(standard_deviation(numbers))
