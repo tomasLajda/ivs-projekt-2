@@ -231,7 +231,13 @@ class App(CTk):
             else:
                 return
 
-        if (self.totalExpression and self.totalExpression[-1] in "+-*/%^√" and not self.currentExpression and
+        if self.root and not self.currentExpression[-1].isdigit():
+            self.currentExpression += '0'
+
+        if self.exponentiation and not self.currentExpression[-1].isdigit():
+            self.currentExpression += '0'
+
+        if (self.totalExpression and self.totalExpression[-1] in "+-*/%" and not self.currentExpression and
                 len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
@@ -272,32 +278,21 @@ class App(CTk):
         lastOperator = ""
         if len(self.totalExpression) >= 3:
             lastOperator = self.totalExpression[-1]
-            # print("\nPosledny operator: " + lastOperator)
 
         self.totalExpression = self.totalExpression[:-1]
-        # print("Cely vyraz: " + self.totalExpression)
+        operators = {'+', '-', '*', '/', '%'}
 
-        # Find the index of the second last operator (separator)
-        separatorIndex = max(self.totalExpression.rfind('+'), self.totalExpression.rfind('-'),
-                             self.totalExpression.rfind('*'), self.totalExpression.rfind('/'),
-                             self.totalExpression.rfind('%'), self.totalExpression.rfind('^'),
-                             self.totalExpression.rfind('√'))
+        # Find the index of the operator with the highest precedence
+        separatorIndex = max((self.totalExpression.rfind(op), op) for op in operators)[0]
 
         # Split the expression using the separator
         leftSide = self.totalExpression[:separatorIndex]
         rightSide = self.totalExpression[separatorIndex + 1:]
-
-        # Save the separator
         separator = self.totalExpression[separatorIndex]
-
-        # print("Left side: " + leftSide)
-        # print("Right side: " + rightSide)
-        # print("Used operator: " + separator)
 
         return leftSide, separator, rightSide, lastOperator
 
     def evaluate(self):
-        # TODO: FIX WITH ^ AND √
         """
         @brief Evaluate the expression
         @param self: Instance of the class
@@ -305,38 +300,63 @@ class App(CTk):
         """
         components = self.parsing()
         leftSide, separator, rightSide, lastOperator = components
+        result = 0
 
+        # Handle exponentiation first
+        if '^' in leftSide or '^' in rightSide:
+            if '^' in leftSide:
+                expLeft = leftSide.split('^')[0]
+                expRight = leftSide.split('^')[1]
+                leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
+            else:
+                expLeft = rightSide.split('^')[0]
+                expRight = rightSide.split('^')[1]
+                rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
+
+        # Then handle square root
+        if '√' in leftSide or '√' in rightSide:
+            if '√' in leftSide:
+                rootRight = leftSide.split('√')[0]
+                rootLeft = leftSide.split('√')[1]
+                leftSide = str(mathlib.root(int(rootLeft), int(rootRight)))
+                if '.' in leftSide:
+                    leftSide_float = float(leftSide)
+                    if round(leftSide_float * 10 ** 5) % 10 == 0:
+                        leftSide = str(round(leftSide_float))
+            else:
+                rootRight = rightSide.split('√')[0]
+                rootLeft = rightSide.split('√')[1]
+                rightSide = str(mathlib.root(int(rootLeft), int(rootRight)))
+                if '.' in rightSide:
+                    rightSide_float = float(rightSide)
+                    if round(rightSide_float * 10 ** 5) % 10 == 0:
+                        rightSide = str(round(rightSide_float))
+
+        # Convert to float or int as necessary
         if '.' in leftSide:
             leftSide_float = float(leftSide)
         else:
             leftSide_float = int(leftSide)
-
         if '.' in rightSide:
             rightSide_float = float(rightSide)
         else:
             rightSide_float = int(rightSide)
 
+        # Perform the remaining operations
         if separator == '+':
-            result = mathlib.add(leftSide_float, rightSide_float)
+            result += mathlib.add(leftSide_float, rightSide_float)
         elif separator == '-':
-            result = mathlib.sub(leftSide_float, rightSide_float)
+            result += mathlib.sub(leftSide_float, rightSide_float)
         elif separator == '*':
-            result = mathlib.mul(leftSide_float, rightSide_float)
+            result += mathlib.mul(leftSide_float, rightSide_float)
         elif separator == '/':
             if leftSide_float % rightSide_float == 0:
-                result = mathlib.div(leftSide_float, rightSide_float)
-                result = int(result)
+                result += mathlib.div(leftSide_float, rightSide_float)
+                result += int(result)
             else:
-                result = mathlib.div(leftSide_float, rightSide_float)
+                result += mathlib.div(leftSide_float, rightSide_float)
         elif separator == '%':
-            result = mathlib.mod(leftSide_float, rightSide_float)
-        elif separator == '^':
-            result = mathlib.pow(leftSide_float, rightSide_float)
-        elif separator == '√':
-            result = mathlib.root(rightSide_float, leftSide_float)
-            # Check if the result has 5 zeros after the decimal point
-            if round(result * 10 ** 5) % 10 == 0:
-                result = round(result)
+            result += mathlib.mod(leftSide_float, rightSide_float)
         else:
             return False
 
@@ -358,6 +378,8 @@ class App(CTk):
 
     def equals(self):
         # TODO: FIX WITH ^ AND √
+        # if round(result * 10 ** 5) % 10 == 0:
+        #     result = round(result)
         """
         @brief Calculates the result of the expression when the equals button is pressed
         @param self: Instance of the class
@@ -392,13 +414,6 @@ class App(CTk):
                 result = mathlib.div(leftSide_float, rightSide_float)
         elif operator == '%':
             result = mathlib.mod(leftSide_float, rightSide_float)
-        elif operator == '^':
-            result = mathlib.pow(leftSide_float, rightSide_float)
-        elif operator == '√':
-            result = mathlib.root(rightSide_float, leftSide_float)
-            # Check if the result has 5 zeros after the decimal point
-            if round(result * 10 ** 5) % 10 == 0:
-                result = round(result)
         else:
             return False
 
@@ -538,9 +553,7 @@ class App(CTk):
         @param self: Instance of the class
         @param bracket: The bracket symbol to be added
         """
-
-        self.currentExpression += self.brackets[bracket]
-        self.update_current_label()
+        pass
 
     def create_bracket_buttons(self):
         """
@@ -561,7 +574,12 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(column - 1, weight=1)
 
     def exponentiation(self):
-        self.show_operators('^')
+        # TODO IMPLEMENT
+
+        if '^' not in self.currentExpression and self.currentExpression:
+            self.currentExpression += '^'
+            self.update_current_label()
+        return True
 
     def create_exponentiation_button(self):
         """
@@ -579,7 +597,11 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def root(self):
-        self.show_operators('√')
+        # TODO IMPLEMENT
+        if '√' not in self.currentExpression and self.currentExpression:
+            self.currentExpression += '√'
+        self.update_current_label()
+        return True
 
     def create_root_button(self):
         """
