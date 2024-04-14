@@ -30,7 +30,7 @@ def seperate_numbers_from_std():
       numbers.append(num)
     except ValueError:
       print(f"Error: '{numberString}' isn't a number.")
-      sys.exit()
+      sys.exit(1)
 
   return numbers
 
@@ -68,9 +68,15 @@ def standard_deviation(numbers):
 
   sum = mathlib.sub(sum, mean)
 
-  result = mathlib.mul(sum, mathlib.div(1, mathlib.sub(len(numbers), 1)))
+  result = mathlib.root(mathlib.mul(sum, mathlib.div(1, mathlib.sub(len(numbers), 1))), 2)
 
-  return mathlib.root(result, 2)
+  return result
 
 numbers = seperate_numbers_from_std()
-print(standard_deviation(numbers))
+
+try:
+  std = standard_deviation(numbers)
+  print(std)
+except:
+  print("Error: Standard deviation couldn't be calculated.")
+  sys.exit(1)
