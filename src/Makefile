@@ -54,8 +54,6 @@ help:
 	@echo "make pack - Packs the project for submission. (Local directory: $(DIR))"
 	@echo "make clean - Deletes all files that should not be submitted."
 	@echo "make test - Runs all tests."
-	@echo "make test_lib - Runs the tests for the math library."
-	@echo "make test_prof - Runs the tests for the profiling function."
 	@echo "make doc - Generates project documentation."
 	@echo "make run - Runs calculator program."
 	@echo "make profile - Compiles the standard deviation calculation program for profiling."
