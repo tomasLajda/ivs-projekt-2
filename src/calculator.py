@@ -231,7 +231,7 @@ class App(CTk):
             else:
                 return
 
-        if (self.totalExpression and self.totalExpression[-1] in "+-*/%^" and not self.currentExpression and
+        if (self.totalExpression and self.totalExpression[-1] in "+-*/%^√" and not self.currentExpression and
                 len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
@@ -280,7 +280,8 @@ class App(CTk):
         # Find the index of the second last operator (separator)
         separatorIndex = max(self.totalExpression.rfind('+'), self.totalExpression.rfind('-'),
                              self.totalExpression.rfind('*'), self.totalExpression.rfind('/'),
-                             self.totalExpression.rfind('%'), self.totalExpression.rfind('^'))
+                             self.totalExpression.rfind('%'), self.totalExpression.rfind('^'),
+                             self.totalExpression.rfind('√'))
 
         # Split the expression using the separator
         leftSide = self.totalExpression[:separatorIndex]
@@ -296,7 +297,7 @@ class App(CTk):
         return leftSide, separator, rightSide, lastOperator
 
     def evaluate(self):
-        # TODO: FIX WITH ^
+        # TODO: FIX WITH ^ AND √
         """
         @brief Evaluate the expression
         @param self: Instance of the class
@@ -331,6 +332,11 @@ class App(CTk):
             result = mathlib.mod(leftSide_float, rightSide_float)
         elif separator == '^':
             result = mathlib.pow(leftSide_float, rightSide_float)
+        elif separator == '√':
+            result = mathlib.root(rightSide_float, leftSide_float)
+            # Check if the result has 5 zeros after the decimal point
+            if round(result * 10 ** 5) % 10 == 0:
+                result = round(result)
         else:
             return False
 
@@ -351,6 +357,7 @@ class App(CTk):
         return self.evaluated
 
     def equals(self):
+        # TODO: FIX WITH ^ AND √
         """
         @brief Calculates the result of the expression when the equals button is pressed
         @param self: Instance of the class
@@ -387,6 +394,11 @@ class App(CTk):
             result = mathlib.mod(leftSide_float, rightSide_float)
         elif operator == '^':
             result = mathlib.pow(leftSide_float, rightSide_float)
+        elif operator == '√':
+            result = mathlib.root(rightSide_float, leftSide_float)
+            # Check if the result has 5 zeros after the decimal point
+            if round(result * 10 ** 5) % 10 == 0:
+                result = round(result)
         else:
             return False
 
@@ -567,11 +579,7 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def root(self):
-        if '√' not in self.currentExpression:
-            self.currentExpression += '√'
-        else:
-            pass
-        self.update_current_label()
+        self.show_operators('√')
 
     def create_root_button(self):
         """
