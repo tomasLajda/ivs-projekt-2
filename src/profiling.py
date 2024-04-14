@@ -60,14 +60,17 @@ def standard_deviation(numbers):
     return 0
   
   mean = arithmetic_mean(numbers)
+  mean = mathlib.mul(mathlib.pow(mean, 2), len(numbers))
 
   sum = 0
   for number in numbers:
-    sum = mathlib.add(sum, mathlib.pow(mathlib.sub(number, mean), 2))
+    sum = mathlib.add(sum, mathlib.pow(number, 2))
+
+  sum = mathlib.sub(sum, mean)
 
   result = mathlib.mul(sum, mathlib.div(1, mathlib.sub(len(numbers), 1)))
 
   return mathlib.root(result, 2)
 
-numbers = seperate_numbers_from_std()
-print(standard_deviation(numbers))
+# numbers = seperate_numbers_from_std()
+# print(standard_deviation(numbers))

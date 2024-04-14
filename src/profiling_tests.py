@@ -10,11 +10,8 @@
 import pytest
 import profiling
 
-def approx(value, rel=1e-1):
-    return pytest.approx(value, rel=rel)
-
 # Define a custom approx function to use a relative tolerance
-def approx(value, rel=1e-1):
+def approx(value, rel=1e-4):
     return pytest.approx(value, rel=rel)
 
 def test_basic_profiling():
