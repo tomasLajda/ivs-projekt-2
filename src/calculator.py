@@ -7,7 +7,6 @@
 
 @date - March 19, 2024
 """
-from tkinter import HORIZONTAL, Scrollbar, Canvas
 import mathlib
 import platform
 from help_menu import ToplevelWindow
@@ -236,7 +235,10 @@ class App(CTk):
                 len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
-            self.totalExpression += self.currentExpression + operator
+            if 'e' in self.currentExpression:
+                self.totalExpression += str(float(self.currentExpression)) + operator
+            else:
+                self.totalExpression += self.currentExpression + operator
 
         self.currentExpression = ''
         self.update_total_label()
