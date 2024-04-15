@@ -170,6 +170,7 @@ class App(CTk):
         # If currentExpression is empty or "0", display "0"
         if not self.currentExpression or self.currentExpression == "0":
             self.currentLabel.configure(text="0")
+            self.currentExpression = '0'
         else:
             self.currentLabel.configure(text=self.currentExpression)
 
@@ -183,6 +184,13 @@ class App(CTk):
         self.buttonFrame.grid(row=1, column=0, sticky="nsew")
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
+
+    def error(self):
+        self.clear()
+        self.currentExpression = "Error -> Help"
+        boolError = True
+        return boolError
+        pass
 
     def show_numbers(self, value):
         """
@@ -230,6 +238,15 @@ class App(CTk):
                 return
             else:
                 return
+
+        if self.decimal and not self.currentExpression[-1].isdigit():
+            self.currentExpression = self.currentExpression[:-1]
+
+        if self.decimal:
+            # Check if there are only zeros behind the decimal point
+            if all(char == '0' for char in self.currentExpression[self.currentExpression.index('.') + 1:]):
+                rounded_num = round(float(self.currentExpression))
+                self.currentExpression = str(rounded_num)
 
         if self.root and not self.currentExpression[-1].isdigit():
             if operator == '-':
@@ -387,8 +404,6 @@ class App(CTk):
         return self.evaluated
 
     def equals(self):
-        # if round(result * 10 ** 5) % 10 == 0:
-        #     result = round(result)
         """
         @brief Calculates the result of the expression when the equals button is pressed
         @param self: Instance of the class
@@ -501,6 +516,7 @@ class App(CTk):
         return False
 
     def decimal(self):
+        # TODO: 3. can get evaluated - add zero
         """
         @brief Adds a decimal point to the current expression
         @param self: Instance of the class
@@ -511,6 +527,7 @@ class App(CTk):
         elif '.' not in self.currentExpression:
             self.currentExpression += '.'
         self.update_current_label()
+        return True
 
     def create_decimal_button(self):
         """
