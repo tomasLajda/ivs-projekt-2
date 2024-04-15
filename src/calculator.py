@@ -377,7 +377,6 @@ class App(CTk):
         return self.evaluated
 
     def equals(self):
-        # TODO: FIX WITH ^ AND √
         # if round(result * 10 ** 5) % 10 == 0:
         #     result = round(result)
         """
@@ -389,6 +388,34 @@ class App(CTk):
         leftSide = self.totalExpression[:-1]
         operator = self.totalExpression[-1]
         rightSide = self.currentExpression
+
+        if '^' in leftSide or '^' in rightSide:
+            if '^' in leftSide:
+                expLeft = leftSide.split('^')[0]
+                expRight = leftSide.split('^')[1]
+                leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
+            else:
+                expLeft = rightSide.split('^')[0]
+                expRight = rightSide.split('^')[1]
+                rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
+
+        if '√' in leftSide or '√' in rightSide:
+            if '√' in leftSide:
+                rootLeft = leftSide.split('√')[0]
+                rootRight = leftSide.split('√')[1]
+                leftSide = str(mathlib.root(int(rootRight), int(rootLeft)))
+                if '.' in leftSide:
+                    leftSide_float = float(leftSide)
+                    if round(leftSide_float * 10 ** 5) % 10 == 0:
+                        leftSide = str(round(leftSide_float))
+            else:
+                rootLeft = rightSide.split('√')[0]
+                rootRight = rightSide.split('√')[1]
+                rightSide = str(mathlib.root(int(rootRight), int(rootLeft)))
+                if '.' in rightSide:
+                    rightSide_float = float(rightSide)
+                    if round(rightSide_float * 10 ** 5) % 10 == 0:
+                        rightSide = str(round(rightSide_float))
 
         if '.' in leftSide:
             leftSide_float = float(leftSide)
@@ -574,7 +601,11 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(column - 1, weight=1)
 
     def exponentiation(self):
-        # TODO IMPLEMENT
+        """
+        @brief Adds an exponentiation operator to the current expression if it does not already contain one
+        @param self: Instance of the class
+        @return: True if the operation is located in the expression, False otherwise
+        """
 
         if '^' not in self.currentExpression and self.currentExpression:
             self.currentExpression += '^'
@@ -597,7 +628,12 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def root(self):
-        # TODO IMPLEMENT
+        """
+        @brief Adds a root operator to the current expression if it does not already contain one
+        @param self: Instance of the class
+        @return: True if the operation is located in the expression, False otherwise
+        """
+
         if '√' not in self.currentExpression and self.currentExpression:
             self.currentExpression += '√'
         self.update_current_label()
