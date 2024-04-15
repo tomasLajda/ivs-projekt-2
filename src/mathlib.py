@@ -139,6 +139,9 @@ def pow(base: int, exponent: int) -> int:
     if not isinstance(exponent, int):
         raise ValueError("Exponent must be an integer.")
     
+    if not isinstance(base, int):
+        raise ValueError("Base must be an integer.")
+    
     if exponent < 0:
         raise ValueError("Exponent must be non-negative.")
     
