@@ -232,10 +232,20 @@ class App(CTk):
                 return
 
         if self.root and not self.currentExpression[-1].isdigit():
-            self.currentExpression += '0'
+            if operator == '-':
+                self.currentExpression += operator
+                self.update_current_label()
+                return
+            else:
+                self.currentExpression += '0'
 
         if self.exponentiation and not self.currentExpression[-1].isdigit():
-            self.currentExpression += '0'
+            if operator == '-':
+                self.currentExpression += operator
+                self.update_current_label()
+                return
+            else:
+                self.currentExpression += '0'
 
         if (self.totalExpression and self.totalExpression[-1] in "+-*/%" and not self.currentExpression and
                 len(self.totalExpression) != 0):
@@ -485,10 +495,8 @@ class App(CTk):
             operatorCount = 0
 
             for i, char in enumerate(self.totalExpression):
-                if char in operators and i != 0:  # Skip counting if operator is at index 0
+                if char in operators and i != 0 and self.totalExpression[i - 1] not in ['^', '√']:
                     operatorCount += 1
-            # print("Count of the operators:", operatorCount)
-            # print("Total expression: " + self.totalExpression)
             return operatorCount == 2
         return False
 
