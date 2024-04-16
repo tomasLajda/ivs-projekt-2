@@ -16,10 +16,4 @@ rm /usr/local/bin/kalkulajda_p
 # Remove the Pictures directory from /usr/bin
 rm -r /usr/bin/Pictures
 
-# Uninstall the dependencies
-sudo apt-get remove python3-pip
-sudo apt-get remove python3-tk
-sudo apt-get remove tk-dev
-pip3 uninstall -r requirements.txt
-
 echo "Uninstallation completed."
