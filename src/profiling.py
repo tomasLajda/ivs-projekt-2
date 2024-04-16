@@ -26,7 +26,7 @@ def seperate_numbers_from_std():
 
   for numberString in numbersString:
     try:
-      num = int(numberString)
+      num = float(numberString)
       numbers.append(num)
     except ValueError:
       print(f"Error: '{numberString}' isn't a number.")
