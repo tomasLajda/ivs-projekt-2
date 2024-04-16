@@ -47,15 +47,14 @@ profile_stats: profiling.py print_profiling_stats.py
 
 help:
 	@echo "Makefile options:"
-	@echo "make all - Compiles the project, including the profiling program."
+	@echo "make all - Downloads all dependencies and sets up the project."
 	@echo "make pack - Packs the project for submission. (Local directory: $(DIR))"
 	@echo "make clean - Deletes all files that should not be submitted."
 	@echo "make test - Runs all tests."
 	@echo "make doc - Generates project documentation."
 	@echo "make run - Runs calculator program."
-	@echo "make profile - Compiles the standard deviation calculation program for profiling."
-	@echo "make setup - Sets up the necessary dependencies for the project."
-	@echo "make setup_tests - Sets up the necessary dependencies for the project tests."
+	@echo "make profile - Runs the standard deviation calculation program for profiling."
+	@echo "make setup - Downloads all dependencies and sets up the project."
 	@echo "make install - Sets up installation zip package."
 	@echo "If make is run without specifying a target, make all is executed."
 
