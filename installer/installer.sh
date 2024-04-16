@@ -16,8 +16,8 @@ Section: base
 Priority: optional
 Architecture: all
 Depends: python3
-Maintainer: matus.csirik@gmail.com
-Description: Basic calculator." > Kalkulajda/DEBIAN/control
+Maintainer: Matúš Csirik <matus.csirik@gmail.com>
+Description: Basic calculator." > Kaxlkulajda/DEBIAN/control
 
 cp -r Pictures /usr/local/bin
 
