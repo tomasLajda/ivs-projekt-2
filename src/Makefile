@@ -82,6 +82,7 @@ setup:
 install: setup calculator.py help_menu.py mathlib.py profiling.py
     ifeq ($(shell id -u), 0)
 		@echo "Setting up the installer..."
+		# TODO: add all pictures to the installer
 		pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1)-1.png':Pictures calculator.py mathlib.py help_menu.py
 		pyinstaller --onefile profiling.py mathlib.py
 		mv dist/calculator ../installer
