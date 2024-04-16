@@ -26,8 +26,9 @@ if [ -d "Pictures" ]; then
     sudo rm -r Pictures
 fi
 
+rm Kalkulajda.deb
 rm installer.sh
-rm uninstaller.sh
+rm uninstall.sh
 rm requirements.txt
 rm calculator
 rm profiling
