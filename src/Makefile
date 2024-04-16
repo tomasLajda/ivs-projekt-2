@@ -76,6 +76,7 @@ setup:
 	sudo apt-get install python3-tk
 	sudo apt-get install tk-dev
 	sudo apt-get install doxygen
+	sudo apt-get install graphviz
 	pip3 install -r requirements.txt
 
 # Setup the installation zip file and clean after itself
