@@ -77,6 +77,6 @@ numbers = seperate_numbers_from_std()
 try:
   std = standard_deviation(numbers)
   print(std)
-except:
-  print("Error: Standard deviation couldn't be calculated.")
+except ValueError as error:
+  print(error)
   sys.exit(1)
