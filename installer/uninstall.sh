@@ -28,6 +28,7 @@ fi
 
 rm installer.sh
 rm uninstaller.sh
+rm requirements.txt
 rm calculator
 rm profiling
 
