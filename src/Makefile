@@ -33,7 +33,7 @@ run: calculator.py
 	@echo "Running the calculator..."
 	python3 $<
 
-profile: profiling.py
+profile: setup profiling.py
 	@echo "Running the profiling script..."
 	python3 profiling.py
 
