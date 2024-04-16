@@ -26,4 +26,10 @@ if [ -d "Pictures" ]; then
     sudo rm -r Pictures
 fi
 
+rm installer.sh
+rm uninstaller.sh
+rm requirements.txt
+rm calculator
+rm profiling
+
 echo "Uninstallation completed."
