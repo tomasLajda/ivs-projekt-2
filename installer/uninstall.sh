@@ -10,11 +10,15 @@ fi
 sudo dpkg -r Kalkulajda
 
 # Remove the symbolic links
-rm Kalkulajda/usr/local/bin/kalkulajda
-rm Kalkulajda/usr/local/bin/kalkulajda_p
+sudo rm /usr/local/bin/kalkulajda
+sudo rm /usr/local/bin/kalkulajda_p
+
+# Remove the kalkulajda.sh script and the calculator binary from /usr/bin
+sudo rm /usr/bin/kalkulajda.sh
+sudo rm /usr/bin/calculator
 
 # Remove the Pictures directory from /usr/bin
-rm -r Kalkulajda/usr/bin/Pictures
+sudo rm -r /usr/bin/Pictures
 
 # Remove the Kalkulajda directory if it exists
 if [ -d "Kalkulajda" ]; then
