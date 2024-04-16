@@ -42,11 +42,11 @@ chmod +x Kalkulajda/usr/bin/profiling
 ln -sf /usr/bin/kalkulajda.sh Kalkulajda/usr/local/bin/kalkulajda
 ln -sf /usr/bin/profiling Kalkulajda/usr/local/bin/kalkulajda_p
 
-sudo apt-get -y update
-sudo apt-get -y install python3-pip
-sudo apt-get -y install python3-tk
-sudo apt-get -y install tk-dev
+apt-get -y update
+apt-get -y install python3-pip
+apt-get -y install python3-tk
+apt-get -y install tk-dev
 pip3 install -r requirements.txt
 
 dpkg-deb --build Kalkulajda
-sudo dpkg -i Kalkulajda.deb
+dpkg -i Kalkulajda.deb
