@@ -50,3 +50,7 @@ pip3 install -r requirements.txt
 
 dpkg-deb --build Kalkulajda
 dpkg -i Kalkulajda.deb
+
+# Clean up the Kalkulajda directory and the Kalkulajda.deb file
+rm -r Kalkulajda
+rm Kalkulajda.deb
