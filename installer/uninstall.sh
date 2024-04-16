@@ -16,4 +16,14 @@ rm Kalkulajda/usr/local/bin/kalkulajda_p
 # Remove the Pictures directory from /usr/bin
 rm -r Kalkulajda/usr/bin/Pictures
 
+# Remove the Kalkulajda directory if it exists
+if [ -d "Kalkulajda" ]; then
+    sudo rm -r Kalkulajda
+fi
+
+# Remove the Pictures directory if it exists
+if [ -d "Pictures" ]; then
+    sudo rm -r Pictures
+fi
+
 echo "Uninstallation completed."
