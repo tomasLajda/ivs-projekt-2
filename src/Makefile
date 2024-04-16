@@ -8,8 +8,7 @@
 DIR = ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 
 # Start the program
-all: setup run profile
-	@echo "Starting the program..."
+all: setup
 
 pack: clean install doc
 	@echo "Packing the project..."
