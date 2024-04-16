@@ -10,10 +10,10 @@ fi
 sudo dpkg -r Kalkulajda
 
 # Remove the symbolic links
-rm /usr/local/bin/kalkulajda
-rm /usr/local/bin/kalkulajda_p
+rm Kalkulajda/usr/local/bin/kalkulajda
+rm Kalkulajda/usr/local/bin/kalkulajda_p
 
 # Remove the Pictures directory from /usr/bin
-rm -r /usr/bin/Pictures
+rm -r Kalkulajda/usr/bin/Pictures
 
 echo "Uninstallation completed."
