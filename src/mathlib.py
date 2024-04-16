@@ -4,101 +4,103 @@
 
 @author
 - Vojtěch Gajdušek (xgajduv00)
-- Martin Valapka (xvalapm00)
-@date March 23, 2024
+@date April 11, 2024
 """
+
+from decimal import Decimal, getcontext
 
 def add(num1, num2):
     """
-    Function to add two numbers.
+    @brief Function to add two numbers.
     
-    Parameters:
-    num1: First number.
-    num2: Second number.
+    @param num1: First number.
+    @param num2: Second number.
     
-    Returns:
-    Sum of numbers num1 and num2.
+    @return Sum of numbers num1 and num2.
     """
-    return num1 + num2
+    result = num1 + num2
+    return round(result, 10)
 
 def sub(num1, num2):
     """
-    Function to subtract two numbers.
-
-    Parameters:
-    num1: First number.
-    num2: Second number.
+    @brief Function to subtract two numbers.
     
-    Returns:
-    Difference of numbers num1 and num2 (num1 - num2).
+    @param num1: First number.
+    @param num2: Second number.
+    
+    @return Difference of numbers num1 and num2 (num1 - num2).
     """
-    return num1 - num2
+    result = num1 - num2
+    return round(result, 10)
 
 def mul(num1, num2):
     """
-    Function to multiply two numbers.
+    @brief Function to multiply two numbers.
     
-    Parameters:
-    num1: First number.
-    num2: Second number.
+    @param num1: First number.
+    @param num2: Second number.
     
-    Returns:
-    Product of num1 and num2 (num1 * num2).
+    @return Product of num1 and num2 (num1 * num2).
     """
-    return num1 * num2
+    getcontext().prec = 28
+    num1_dec = Decimal(str(num1))
+    num2_dec = Decimal(str(num2))
+    result = num1_dec * num2_dec
+    if isinstance(num1, int) and isinstance(num2, int):
+        return int(result)
+    else:
+        return float(result)
 
-def div(dividend, divisor, precision=10):
+def div(dividend, divisor):
     """
-    Function to divide two numbers.
+    @brief Function to divide two numbers.
     
-    Parameters:
-    dividend (float): The number to be divided (numerator).
-    divisor (float): The number by which the dividend is divided (denominator).
-    precision (int): Number of decimal places for rounding. Defaults to 10.
+    @param dividend: The number to be divided (numerator).
+    @param divisor: The number by which the dividend is divided (denominator).
     
-    Returns:
-    float: The quotient of dividend divided by divisor.
+    @return The quotient of dividend divided by divisor.
     
-    Raises:
-    ValueError: If the divisor is zero.
+    @exception ValueError: If the divisor is zero.
     """
     if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
     
-    quotient = dividend // divisor
-    remainder = dividend % divisor
-    
-    result = quotient + (remainder / divisor)
-    
-    return round(result, precision)
+    dividend_dec = Decimal(str(dividend))
+    divisor_dec = Decimal(str(divisor))
+    result = dividend_dec / divisor_dec
+    if isinstance(dividend, int) and isinstance(divisor, int) and result % 1 == 0:
+        return int(result)
+    else:
+        return float(result)
 
 def mod(dividend, divisor):
     """
-    Function to compute the modulo operation.
+    @brief Function to compute the modulo operation.
     
-    Parameters:
-    dividend: The number to be divided.
-    divisor: The number by which the dividend is divided.
+    @param dividend: The number to be divided.
+    @param divisor: The number by which the dividend is divided.
     
-    Returns:
-    The remainder after dividing dividend by divisor.
-    
-    Raises:
-    ValueError: If the divisor is zero.
+    @return The remainder after dividing dividend by divisor.
+
+    @exception ValueError: If the divisor is zero.
     """
     if divisor == 0:
         raise ValueError("Division by zero is not allowed.")
-    return dividend % divisor
+    dividend_decimal = Decimal(str(abs(dividend)))
+    divisor_decimal = Decimal(str(abs(divisor)))
+
+    remainder = dividend_decimal % divisor_decimal
+    if divisor < 0:
+        remainder = -remainder
+    return float(remainder)
 
 def abs(num):
     """
-    Function to calculate the absolute value of a number.
+    @brief Function to calculate the absolute value of a number.
     
-    Parameters:
-    num: The input number.
+    @param num: The input number.
     
-    Returns:
-    The absolute value of the input number.
+    @return The absolute value of the input number.
     """
     if num < 0:
         return -num
@@ -107,16 +109,13 @@ def abs(num):
 
 def fac(n: int) -> int:
     """
-    Function to compute the factorial of a non-negative integer.
+    @brief Function to compute the factorial of a non-negative integer.
     
-    Parameters:
-    n (int): The non-negative integer.
+    @param n: The non-negative integer.
     
-    Returns:
-    int: The factorial of the input integer.
-    
-    Raises:
-    ValueError: If the input is negative.
+    @return The factorial of the input integer.
+
+    @exception ValueError: If the input is negative.
     """
     if n < 0:
         raise ValueError("Factorial is not defined for negative numbers.")
@@ -129,37 +128,38 @@ def fac(n: int) -> int:
 
 def pow(base: int, exponent: int) -> int:
     """
-    Function to compute the power of a number.
+    @brief Function to compute the power of a number.
     
-    Parameters:
-    base (int): The base number.
-    exponent (int): The exponent.
+    @param base: The base number.
+    @param exponent: The exponent.
     
-    Returns:
-    int: The result of raising base to the power of exponent.
+    @return The result of raising base to the power of exponent.
     """
+    
+    if not isinstance(exponent, int):
+        raise ValueError("Exponent must be an integer.")
+    
     if exponent < 0:
         raise ValueError("Exponent must be non-negative.")
     
     if base == 0 and exponent == 0:
         raise ValueError("0^0 is undefined.")
-    
-    result = 1
-    for _ in range(exponent):
-        result *= base
-    return result
 
-def root(number: float, n: int, precision: float = 0.0001) -> float:
+    result = base ** exponent
+
+    if result >= 1e100:
+        return float('inf')
+    else:
+        return result
+
+def root(number: float, n: int) -> float:
     """
-    Function to compute the nth root of a number using Newton's method.
+    @brief Function to compute the nth root of a number using Newton's method.
     
-    Parameters:
-    number (float): The number whose root is to be calculated.
-    n (int): The root to be calculated (e.g., 2 for square root).
-    precision (float): The desired precision of the result. Defaults to 0.0001.
+    @param number: The number whose root is to be calculated.
+    @param n: The root to be calculated (e.g., 2 for square root).
     
-    Returns:
-    float: The nth root of the given number.
+    @return Nth root of the given number.
     """
     if number < 0 and n % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
@@ -167,8 +167,16 @@ def root(number: float, n: int, precision: float = 0.0001) -> float:
     if number == 0:
         return 0
     
-    x = number / 2
-    while abs(x ** n - number) > precision:
-        x -= (x ** n - number) / (n * x ** (n - 1))
+    getcontext().prec = 50
+    number_decimal = Decimal(str(number))
+    x = number_decimal / 2
+    tolerance = Decimal('0.0000000001')
+    while abs(x ** n - number_decimal) > tolerance:
+        x -= (x ** n - number_decimal) / (n * x ** (n - 1))
         
-    return x
+    result_decimal = x
+    if isinstance(number, int) and isinstance(n, int):
+        return int(result_decimal)
+    else:
+        return float(result_decimal)
+
