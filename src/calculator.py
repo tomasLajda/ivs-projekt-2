@@ -186,6 +186,7 @@ class App(CTk):
         self.grid_columnconfigure(0, weight=1)
 
     def error(self):
+        # TODO IMPLEMENT
         self.clear()
         self.currentExpression = "Error -> Help"
         boolError = True
@@ -230,25 +231,23 @@ class App(CTk):
         """
         self.update_current_label()
 
-        # Prevent operator as the first character except '-'
-        if not self.totalExpression and not self.currentExpression:
-            if operator == '-':
-                self.currentExpression = operator
-                self.update_current_label()
-                return
-            else:
-                return
-
-        if self.decimal and not self.currentExpression[-1].isdigit():
+        if '.' in self.currentExpression and not self.currentExpression[-1].isdigit():
             self.currentExpression = self.currentExpression[:-1]
 
-        if self.decimal:
+        if '.' in self.currentExpression:
             # Check if there are only zeros behind the decimal point
             if all(char == '0' for char in self.currentExpression[self.currentExpression.index('.') + 1:]):
                 rounded_num = round(float(self.currentExpression))
                 self.currentExpression = str(rounded_num)
 
-        if self.root and not self.currentExpression[-1].isdigit():
+        # Prevent operator as the first character except '-'
+        if not self.totalExpression and self.currentExpression == '0':
+            if operator == '-':
+                self.currentExpression = operator
+                self.update_current_label()
+                return
+
+        if '√' in self.currentExpression and not self.currentExpression[-1].isdigit():
             if operator == '-':
                 self.currentExpression += operator
                 self.update_current_label()
@@ -256,7 +255,7 @@ class App(CTk):
             else:
                 self.currentExpression += '0'
 
-        if self.exponentiation and not self.currentExpression[-1].isdigit():
+        if '^' in self.currentExpression and not self.currentExpression[-1].isdigit():
             if operator == '-':
                 self.currentExpression += operator
                 self.update_current_label()
@@ -270,6 +269,7 @@ class App(CTk):
         else:
             if 'e' in self.currentExpression:
                 self.totalExpression += str(float(self.currentExpression)) + operator
+                print(self.totalExpression)
             else:
                 self.totalExpression += self.currentExpression + operator
 
@@ -320,6 +320,7 @@ class App(CTk):
         return leftSide, separator, rightSide, lastOperator
 
     def evaluate(self):
+        # TODO: IT DOESNT WORK FOR BIG NUMBERS
         """
         @brief Evaluate the expression
         @param self: Instance of the class
@@ -516,7 +517,6 @@ class App(CTk):
         return False
 
     def decimal(self):
-        # TODO: 3. can get evaluated - add zero
         """
         @brief Adds a decimal point to the current expression
         @param self: Instance of the class
@@ -527,7 +527,6 @@ class App(CTk):
         elif '.' not in self.currentExpression:
             self.currentExpression += '.'
         self.update_current_label()
-        return True
 
     def create_decimal_button(self):
         """
@@ -635,7 +634,6 @@ class App(CTk):
         if '^' not in self.currentExpression and self.currentExpression:
             self.currentExpression += '^'
             self.update_current_label()
-        return True
 
     def create_exponentiation_button(self):
         """
@@ -662,7 +660,6 @@ class App(CTk):
         if '√' not in self.currentExpression and self.currentExpression:
             self.currentExpression += '√'
         self.update_current_label()
-        return True
 
     def create_root_button(self):
         """
