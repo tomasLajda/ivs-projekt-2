@@ -107,7 +107,7 @@ def abs(num):
     else:
         return num
 
-def fac(n: int) -> int:
+def fac(num):
     """
     @brief Function to compute the factorial of a non-negative integer.
     
@@ -117,13 +117,22 @@ def fac(n: int) -> int:
 
     @exception ValueError: If the input is negative.
     """
-    if n < 0:
+    if not isinstance(num, int):
+        raise ValueError("Number must be a natural number.")
+
+    if num < 0:
         raise ValueError("Factorial is not defined for negative numbers.")
-    if n == 0:
+    
+    if num == 0:
         return 1
+    
+    if num > 100:
+        raise ValueError("Factorial computation is limited to numbers up to 100.")
+    
     result = 1
-    for i in range(1, n + 1):
+    for i in range(1, num + 1):
         result *= i
+
     return result
 
 def pow(base, exponent):
