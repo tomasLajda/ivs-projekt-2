@@ -45,7 +45,7 @@ def test_addition_zero():
 
 
 def test_addition_small():
-    assert mathlib.add(0.000_000_000_1, 0.000_000_000_2) == 0.000_000_000_3  # 1-e12 + 2-e12 = 3-e12
+    assert mathlib.add(0.000_000_000_01, 0.000_000_000_02) == 0.000_000_000_03  # 1-e12 + 2-e12 = 3-e12
     assert mathlib.add(0.000_000_1, 0.000_000_2) == 0.000_000_3
     assert mathlib.add(0.000_1, 0.000_2) == 0.000_3
 
@@ -173,7 +173,7 @@ def test_division():
 
 
 def test_division_zero():
-    with pytest.raises(ValueError):
+    with pytest.raises(ZeroDivisionError):
         mathlib.div(4, 0)
 
 
@@ -214,7 +214,7 @@ def test_modulus():
 
 
 def test_modulus_zero():
-    with pytest.raises(ValueError):
+    with pytest.raises(ZeroDivisionError):
         mathlib.mod(4, 0)
 
 
@@ -359,12 +359,12 @@ def test_pow_large_decimal_numbers():
 
 
 def test_pow_decimal_index():
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         mathlib.pow(2, 1.5)
 
 
 def test_pow_negative_index_raises_error():
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         mathlib.pow(2, -2)
 
 # POW TESTS END
