@@ -152,7 +152,7 @@ def pow(base: int, exponent: int) -> int:
     else:
         return result
 
-def root(number: float, n: int) -> float:
+def root(base, root):
     """
     @brief Function to compute the nth root of a number using Newton's method.
     
@@ -161,22 +161,11 @@ def root(number: float, n: int) -> float:
     
     @return Nth root of the given number.
     """
-    if number < 0 and n % 2 == 0:
+    if base < 0 and root % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
         
-    if number == 0:
+    if base == 0:
         return 0
     
-    getcontext().prec = 50
-    number_decimal = Decimal(str(number))
-    x = number_decimal / 2
-    tolerance = Decimal('0.0000000001')
-    while abs(x ** n - number_decimal) > tolerance:
-        x -= (x ** n - number_decimal) / (n * x ** (n - 1))
-        
-    result_decimal = x
-    if isinstance(number, int) and isinstance(n, int):
-        return int(result_decimal)
-    else:
-        return float(result_decimal)
+    return round(base ** (1/float(root)), 14)
 
