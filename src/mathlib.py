@@ -85,14 +85,14 @@ def mod(dividend, divisor):
     @exception ValueError: If the divisor is zero.
     """
     if divisor == 0:
-        raise ValueError("Division by zero is not allowed.")
-    dividend_decimal = Decimal(str(abs(dividend)))
-    divisor_decimal = Decimal(str(abs(divisor)))
-
-    remainder = dividend_decimal % divisor_decimal
+        raise ZeroDivisionError
+    
+    remainder = dividend % divisor
+    
     if divisor < 0:
         remainder = -remainder
-    return float(remainder)
+        
+    return remainder
 
 def abs(num):
     """
