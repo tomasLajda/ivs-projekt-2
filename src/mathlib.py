@@ -63,15 +63,9 @@ def div(dividend, divisor):
     @exception ValueError: If the divisor is zero.
     """
     if divisor == 0:
-        raise ValueError("Division by zero is not allowed.")
+        raise ZeroDivisionError
     
-    dividend_dec = Decimal(str(dividend))
-    divisor_dec = Decimal(str(divisor))
-    result = dividend_dec / divisor_dec
-    if isinstance(dividend, int) and isinstance(divisor, int) and result % 1 == 0:
-        return int(result)
-    else:
-        return float(result)
+    return dividend / divisor
 
 def mod(dividend, divisor):
     """
@@ -88,7 +82,7 @@ def mod(dividend, divisor):
         raise ZeroDivisionError
     
     remainder = dividend % divisor
-    
+
     if divisor < 0:
         remainder = -remainder
         
