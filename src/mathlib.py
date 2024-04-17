@@ -70,11 +70,14 @@ def mod(dividend, divisor):
     if divisor == 0:
         raise ZeroDivisionError
     
-    remainder = dividend % divisor
+    remainder = abs(dividend) % abs(divisor)
 
     if divisor < 0:
         remainder = -remainder
-        
+
+    if abs(divisor - remainder) < 1e-10:
+        return 0
+
     return round(remainder, 14)
 
 def abs(num):
@@ -101,7 +104,7 @@ def fac(num):
     @exception ValueError: If number is not a natural number.
     @exception ValueError: If number is bigger than 100.
     """
-    if not isinstance(num, int) and num < 0:
+    if not isinstance(num, int) or num < 0:
         raise ValueError("Number must be a natural number.")
     
     if num > 100:
@@ -128,7 +131,7 @@ def pow(base, exponent):
     @exception ValueError: If exponent is not a natural number.
     @exception ValueError: If exponent and base is zero.
     """
-    if not isinstance(exponent, int) and exponent < 0:
+    if not isinstance(exponent, int) or exponent < 0:
         raise ValueError("Exponent must be a natural number.")
     
     if base == 0 and exponent == 0:
@@ -163,6 +166,6 @@ def root(base, index):
         return 0
 
     if base < 0 and index % 2 != 0:
-        return -((-base) ** (1/index))
+        return round(-((-base) ** (1/index)), 14)
 
     return round(base ** (1/index), 14)
