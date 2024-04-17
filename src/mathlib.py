@@ -144,22 +144,25 @@ def pow(base, exponent):
 def root(base, index):
     """
     @brief Function to compute the nth root of a base using Newton's method.
-    
+
     @param base: The base whose root is to be calculated.
     @param index: The root to be calculated (e.g., 2 for square root).
-    
+
     @return Nth root of the given base.
 
     @exception ValueError: If index is not a natural base.
     @exception ValueError: If index is not divisible by 2 and base is negative.
     """
-    if not isinstance(index, int) and index < 0:
+    if not isinstance(index, int) or index < 0:
         raise ValueError("Index must be a natural number.")
 
     if base < 0 and index % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
-        
+
     if base == 0:
         return 0
-    
-    return round(base ** (1/float(root)), 14)
+
+    if base < 0 and index % 2 != 0:
+        return -((-base) ** (1/index))
+
+    return round(base ** (1/index), 14)
