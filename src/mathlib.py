@@ -42,14 +42,7 @@ def mul(num1, num2):
     
     @return Product of num1 and num2 (num1 * num2).
     """
-    getcontext().prec = 28
-    num1_dec = Decimal(str(num1))
-    num2_dec = Decimal(str(num2))
-    result = num1_dec * num2_dec
-    if isinstance(num1, int) and isinstance(num2, int):
-        return int(result)
-    else:
-        return float(result)
+    return num1 * num2
 
 def div(dividend, divisor):
     """
