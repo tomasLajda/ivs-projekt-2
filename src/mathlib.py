@@ -19,7 +19,7 @@ def add(num1, num2):
     @return Sum of numbers num1 and num2.
     """
     result = num1 + num2
-    return round(result, 10)
+    return round(result, 14)
 
 def sub(num1, num2):
     """
@@ -31,7 +31,7 @@ def sub(num1, num2):
     @return Difference of numbers num1 and num2 (num1 - num2).
     """
     result = num1 - num2
-    return round(result, 10)
+    return round(result, 14)
 
 def mul(num1, num2):
     """
@@ -58,7 +58,7 @@ def div(dividend, divisor):
     if divisor == 0:
         raise ZeroDivisionError
     
-    return dividend / divisor
+    return round(dividend / divisor, 14)
 
 def mod(dividend, divisor):
     """
