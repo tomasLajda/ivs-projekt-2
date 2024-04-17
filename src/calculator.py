@@ -13,6 +13,8 @@ from help_menu import ToplevelWindow
 from PIL import Image, ImageTk
 from customtkinter import *
 
+# TODO: MAKE THE CODE SHORTER
+
 LIGHT_GRAY = "#979797"
 DARK_GRAY = "#3D3D3D"
 ORANGE = "#FFA500"
@@ -308,7 +310,7 @@ class App(CTk):
             row += 1
 
     def parsing(self):
-        # TODO: PARSE NUMBERS WITH e
+        # TODO: PARSE NUMBERS WITH e, root and ^
         lastOperator = ""
         if len(self.totalExpression) >= 3:
             lastOperator = self.totalExpression[-1]
@@ -325,12 +327,6 @@ class App(CTk):
         separator = self.totalExpression[separatorIndex]
 
         return leftSide, separator, rightSide, lastOperator
-
-    def parse_exponentiation(self):
-        pass
-
-    def parse_root(self):
-        pass
 
     def evaluate(self):
         # TODO: IT DOESNT WORK FOR BIG NUMBERS
@@ -417,6 +413,27 @@ class App(CTk):
         self.evaluated = True
         return self.evaluated
 
+    def parse_exponentiation(self):
+        result = None
+        if '^' in self.currentExpression and not self.totalExpression:
+            expCurrLeft = self.currentExpression.split('^')[0]
+            expCurrRight = self.currentExpression.split('^')[1]
+            result = str(mathlib.pow(int(expCurrLeft), int(expCurrRight)))
+        return result
+
+    def parse_root(self):
+        result = None
+        if '√' in self.currentExpression and not self.totalExpression:
+            rootCurrLeft = self.currentExpression.split('√')[0]
+            rootCurrRight = self.currentExpression.split('√')[1]
+            result_float = mathlib.root(float(rootCurrRight), float(rootCurrLeft))
+            if '.' in str(result_float):
+                if round(result_float * 10 ** 5) % 10 == 0:
+                    result = str(int(round(result_float)))
+            else:
+                result = str(result_float)
+        return result
+
     def equals(self):
         # TODO: CHECK ARGUMENTS IN ROOT AND POWER - float/int
         """
@@ -424,26 +441,19 @@ class App(CTk):
         @param self: Instance of the class
         @return True if the calculation is successful, False otherwise.
         """
-
-        if '^' in self.currentExpression and not self.totalExpression:
-            expCurrLeft = self.currentExpression.split('^')[0]
-            expCurrRight = self.currentExpression.split('^')[1]
-            result = str(mathlib.pow(int(expCurrLeft), int(expCurrRight)))
-            self.currentExpression = result
-            self.totalExpression = ""
-            self.update_total_label()
+        # Parse exponentiation
+        exponentiation_result = self.parse_exponentiation()
+        if exponentiation_result is not None:
+            self.currentExpression = exponentiation_result
             self.update_current_label()
-            return
+            return True  # Return if exponentiation was performed
 
-        if '√' in self.currentExpression and not self.totalExpression:
-            rootCurrLeft = self.currentExpression.split('√')[0]
-            rootCurrRight = self.currentExpression.split('√')[1]
-            result = str(mathlib.root(int(rootCurrRight), int(rootCurrLeft)))
-            self.currentExpression = result
-            self.totalExpression = ""
-            self.update_total_label()
+        # Parse root
+        root_result = self.parse_root()
+        if root_result is not None:
+            self.currentExpression = root_result
             self.update_current_label()
-            return
+            return True  # Return if root was performed
 
         leftSide = self.totalExpression[:-1]
         operator = self.totalExpression[-1]
@@ -715,16 +725,17 @@ class App(CTk):
         @brief Computes the factorial of the current expression
         @param self: Instance of the class
         """
-        result = mathlib.fac(int(self.currentExpression))
+        if not self.totalExpression:
+            result = mathlib.fac(int(self.currentExpression))
 
-        # Check if the result is longer than 14 characters
-        if len(str(result)) > 14:
-            result_str = "{:.5e}".format(result)
-        else:
-            result_str = str(result)
+            # Check if the result is longer than 14 characters
+            if len(str(result)) > 14:
+                result_str = "{:.5e}".format(result)
+            else:
+                result_str = str(result)
 
-        self.currentExpression = result_str
-        self.update_current_label()
+            self.currentExpression = result_str
+            self.update_current_label()
 
     def create_factorial_button(self):
         """
@@ -742,18 +753,31 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def abs(self):
-        # TODO: FOR UNUSUAL NUMBERS
         """
         @brief Computes the absolute value of the current expression
         @param self: Instance of the class
         """
-        if '.' in self.currentExpression:
-            result = mathlib.abs(float(self.currentExpression))
-        else:
-            result = mathlib.abs(int(self.currentExpression))
+        if not self.totalExpression:
+            functions_to_parse = [self.parse_exponentiation, self.parse_root]
 
-        self.currentExpression = str(result)
-        self.update_current_label()
+            for func in functions_to_parse:
+                result = func()
+                if result is not None:
+                    if '.' in result:
+                        result = mathlib.abs(float(result))
+                    else:
+                        result = mathlib.abs(int(result))
+                    self.currentExpression = str(result)
+                    self.update_current_label()
+                    return
+
+            if '.' in self.currentExpression:
+                result = mathlib.abs(float(self.currentExpression))
+            else:
+                result = mathlib.abs(int(self.currentExpression))
+
+            self.currentExpression = str(result)
+            self.update_current_label()
 
     def create_abs_button(self):
         """
