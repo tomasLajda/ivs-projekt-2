@@ -36,5 +36,5 @@ rm uninstall.sh
 rm requirements.txt
 rm calculator
 rm profiling
-
+rmdir ../installer
 echo "Uninstallation completed."
