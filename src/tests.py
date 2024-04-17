@@ -301,11 +301,11 @@ def test_factorial_big_positive():
 
 
 def test_factorial_negative():
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         mathlib.fac(-6)
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         mathlib.fac(-1)
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         mathlib.fac(-10)
 
 # FACTORIAL TESTS END
@@ -314,7 +314,7 @@ def test_factorial_negative():
 def test_pow_base_zero():
     assert mathlib.pow(0, 1_000_000_000) == 0
     assert mathlib.pow(0, 143) == 0
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         mathlib.pow(0, -10)
 
 
@@ -358,12 +358,12 @@ def test_pow_large_decimal_numbers():
 
 
 def test_pow_decimal_index():
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         mathlib.pow(2, 1.5)
 
 
 def test_pow_negative_index_raises_error():
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         mathlib.pow(2, -2)
 
 # POW TESTS END
