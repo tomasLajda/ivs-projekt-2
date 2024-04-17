@@ -65,7 +65,7 @@ class App(CTk):
         self.title("Calcu-lajda")
         self.resizable(False, False)
 
-        self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "Calculator_30001 (1)-1.png"))
+        self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "real_logo.png"))
         self.wm_iconbitmap()
         self.iconphoto(False, self.iconpath)
 
@@ -154,6 +154,7 @@ class App(CTk):
 
         for operator, symbol in self.operations.items():
             expression = expression.replace(operator, f'{symbol}')
+        self.totalLabel.configure(text=expression)
         self.totalLabel.configure(text=expression[:30])
 
     def update_current_label(self):
@@ -199,7 +200,6 @@ class App(CTk):
         @param self: Instance of the class
         @param value: The value to append to the current expression
         """
-
         if self.evaluated:
             self.currentExpression = ''
             self.currentExpression += str(value)
@@ -224,6 +224,7 @@ class App(CTk):
             self.buttonFrame.grid_columnconfigure(column, weight=1)
 
     def show_operators(self, operator):
+        # TODO: 2 OPERATORS AT THE SAME TIME, CHECK FOR NEGATIVE NUMBERS
         """
         @brief Appends the provided operator to the current expression and updates the labels.
         @param self: Instance of the class
@@ -247,6 +248,12 @@ class App(CTk):
                 self.update_current_label()
                 return
 
+        if '-' in self.currentExpression and not self.currentExpression[-1].isdigit():
+            if operator == '-':
+                return
+            else:
+                self.currentExpression += '0'
+
         if '√' in self.currentExpression and not self.currentExpression[-1].isdigit():
             if operator == '-':
                 self.currentExpression += operator
@@ -267,11 +274,10 @@ class App(CTk):
                 len(self.totalExpression) != 0):
             self.totalExpression = self.totalExpression[:-1] + operator
         else:
-            if 'e' in self.currentExpression:
-                self.totalExpression += str(float(self.currentExpression)) + operator
-                print(self.totalExpression)
-            else:
-                self.totalExpression += self.currentExpression + operator
+            # if 'e' in self.currentExpression:
+            #     self.totalExpression = self.currentExpression + operator
+            # else:
+            self.totalExpression += self.currentExpression + operator
 
         self.currentExpression = ''
         self.update_total_label()
@@ -302,6 +308,7 @@ class App(CTk):
             row += 1
 
     def parsing(self):
+        # TODO: PARSE NUMBERS WITH e
         lastOperator = ""
         if len(self.totalExpression) >= 3:
             lastOperator = self.totalExpression[-1]
@@ -318,6 +325,12 @@ class App(CTk):
         separator = self.totalExpression[separatorIndex]
 
         return leftSide, separator, rightSide, lastOperator
+
+    def parse_exponentiation(self):
+        pass
+
+    def parse_root(self):
+        pass
 
     def evaluate(self):
         # TODO: IT DOESNT WORK FOR BIG NUMBERS
@@ -379,8 +392,8 @@ class App(CTk):
             result += mathlib.mul(leftSide_float, rightSide_float)
         elif separator == '/':
             if leftSide_float % rightSide_float == 0:
-                result += mathlib.div(leftSide_float, rightSide_float)
-                result += int(result)
+                result = mathlib.div(leftSide_float, rightSide_float)
+                result = int(result)
             else:
                 result += mathlib.div(leftSide_float, rightSide_float)
         elif separator == '%':
@@ -399,17 +412,39 @@ class App(CTk):
         self.update_current_label()
 
         # Update the total expression with the new result and the operator
-        self.totalExpression = str(result) + lastOperator
+        self.totalExpression = str(result_str) + lastOperator
         self.update_total_label()
         self.evaluated = True
         return self.evaluated
 
     def equals(self):
+        # TODO: CHECK ARGUMENTS IN ROOT AND POWER - float/int
+        # TODO: 3^2 when presses equal also for 3root8
         """
         @brief Calculates the result of the expression when the equals button is pressed
         @param self: Instance of the class
         @return True if the calculation is successful, False otherwise.
         """
+
+        if '^' in self.currentExpression and not self.totalExpression:
+            expCurrLeft = self.currentExpression.split('^')[0]
+            expCurrRight = self.currentExpression.split('^')[1]
+            result = str(mathlib.pow(int(expCurrLeft), int(expCurrRight)))
+            self.currentExpression = result
+            self.totalExpression = ""
+            self.update_total_label()
+            self.update_current_label()
+            return
+
+        if '√' in self.currentExpression and not self.totalExpression:
+            rootCurrLeft = self.currentExpression.split('√')[0]
+            rootCurrRight = self.currentExpression.split('√')[1]
+            result = str(mathlib.root(int(rootCurrRight), int(rootCurrLeft)))
+            self.currentExpression = result
+            self.totalExpression = ""
+            self.update_total_label()
+            self.update_current_label()
+            return
 
         leftSide = self.totalExpression[:-1]
         operator = self.totalExpression[-1]
@@ -429,7 +464,7 @@ class App(CTk):
             if '√' in leftSide:
                 rootLeft = leftSide.split('√')[0]
                 rootRight = leftSide.split('√')[1]
-                leftSide = str(mathlib.root(int(rootRight), int(rootLeft)))
+                leftSide = str(mathlib.root(float(rootRight), int(rootLeft)))
                 if '.' in leftSide:
                     leftSide_float = float(leftSide)
                     if round(leftSide_float * 10 ** 5) % 10 == 0:
@@ -437,7 +472,7 @@ class App(CTk):
             else:
                 rootLeft = rightSide.split('√')[0]
                 rootRight = rightSide.split('√')[1]
-                rightSide = str(mathlib.root(int(rootRight), int(rootLeft)))
+                rightSide = str(mathlib.root(float(rootRight), int(rootLeft)))
                 if '.' in rightSide:
                     rightSide_float = float(rightSide)
                     if round(rightSide_float * 10 ** 5) % 10 == 0:
@@ -595,8 +630,8 @@ class App(CTk):
                                  width=button_width, height=button_height, hover_color=HOVER_COLOR,
                                  command=self.delete)
         deleteButton.grid(row=0, column=4, sticky="nsew", padx=2, pady=2)
-        self.buttonFrame.grid_rowconfigure(0, weight=1)  # Allow row to expand
-        self.buttonFrame.grid_columnconfigure(4, weight=1)  # Allow column to expand
+        self.buttonFrame.grid_rowconfigure(0, weight=1)
+        self.buttonFrame.grid_columnconfigure(4, weight=1)
 
     def show_brackets(self, bracket):
         """
@@ -625,13 +660,14 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(column - 1, weight=1)
 
     def exponentiation(self):
+        # TODO: FOR UNUSUAL NUMBERS
         """
         @brief Adds an exponentiation operator to the current expression if it does not already contain one
         @param self: Instance of the class
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if '^' not in self.currentExpression and self.currentExpression:
+        if '^' not in self.currentExpression and self.currentExpression != '0':
             self.currentExpression += '^'
             self.update_current_label()
 
@@ -657,7 +693,7 @@ class App(CTk):
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if '√' not in self.currentExpression and self.currentExpression:
+        if '√' not in self.currentExpression and self.currentExpression != '0':
             self.currentExpression += '√'
         self.update_current_label()
 
@@ -676,6 +712,7 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def factorial(self):
+        # TODO: SCIENTIFIC NOTATION, UNUSUAL NUMBERS
         """
         @brief Computes the factorial of the current expression
         @param self: Instance of the class
@@ -700,6 +737,7 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def abs(self):
+        # TODO: FOR UNUSUAL NUMBERS
         """
         @brief Computes the absolute value of the current expression
         @param self: Instance of the class
@@ -753,7 +791,7 @@ class App(CTk):
         @brief Creates a settings/help button in the calculator interface
         @param self: Instance of the class
         """
-        settings_image = Image.open(os.path.join("Pictures", "Vrstva 1.png"))
+        settings_image = Image.open(os.path.join("Pictures", "help_button.png"))
         settings_image = settings_image.resize((50, 50), Image.Resampling.LANCZOS)
 
         # Create a CTkImage from the resized image
