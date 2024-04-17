@@ -126,7 +126,7 @@ def fac(n: int) -> int:
         result *= i
     return result
 
-def pow(base: int, exponent: int) -> int:
+def pow(base, exponent):
     """
     @brief Function to compute the power of a number.
     
@@ -135,9 +135,8 @@ def pow(base: int, exponent: int) -> int:
     
     @return The result of raising base to the power of exponent.
     """
-    
     if not isinstance(exponent, int):
-        raise ValueError("Exponent must be an integer.")
+        raise ValueError("Exponent must be a natural number.")
     
     if exponent < 0:
         raise ValueError("Exponent must be non-negative.")
@@ -162,7 +161,7 @@ def root(base, index):
     @return Nth root of the given number.
     """
     if not isinstance(index, int):
-        raise ValueError("Index must be an naturally a number.")
+        raise ValueError("Index must be a natural number.")
 
     if base < 0 and index % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
