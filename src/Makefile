@@ -1,23 +1,20 @@
-
 ##
 # @file Makefile
 # @author Matúš Csirik (xcsirim00)
 # @date April 8, 2024
-# @todo  Bude-li to možné, Makefile nebude obsahovat jméno ani jednoho ze zdrojových souborů.
 ##
 
 .PHONY: all pack clean run profile help setup test doc install
 DIR = ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 
 # Start the program
-all: setup run profile
-	@echo "Starting the program..."
+all: setup
 
 pack: clean install doc
 	@echo "Packing the project..."
 	mkdir -p $(DIR)/doc $(DIR)/repo $(DIR)/install
 	cp -r doc $(DIR)
-	cd .. && git clone --mirror . $(DIR)/repo && cd src
+	cd .. && git clone . ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo && cd src
 	cp installer.zip $(DIR)/install
 	zip -r $(DIR).zip $(DIR)
 
@@ -33,7 +30,7 @@ run: calculator.py
 	@echo "Running the calculator..."
 	python3 $<
 
-profile: profiling.py
+profile: setup profiling.py
 	@echo "Running the profiling script..."
 	python3 profiling.py
 
@@ -50,15 +47,14 @@ profile_stats: profiling.py print_profiling_stats.py
 
 help:
 	@echo "Makefile options:"
-	@echo "make all - Compiles the project, including the profiling program."
+	@echo "make all - Downloads all dependencies and sets up the project."
 	@echo "make pack - Packs the project for submission. (Local directory: $(DIR))"
 	@echo "make clean - Deletes all files that should not be submitted."
 	@echo "make test - Runs all tests."
 	@echo "make doc - Generates project documentation."
 	@echo "make run - Runs calculator program."
-	@echo "make profile - Compiles the standard deviation calculation program for profiling."
-	@echo "make setup - Sets up the necessary dependencies for the project."
-	@echo "make setup_tests - Sets up the necessary dependencies for the project tests."
+	@echo "make profile - Runs the standard deviation calculation program for profiling."
+	@echo "make setup - Downloads all dependencies and sets up the project."
 	@echo "make install - Sets up installation zip package."
 	@echo "If make is run without specifying a target, make all is executed."
 
@@ -76,14 +72,15 @@ setup:
 	sudo apt-get install python3-tk
 	sudo apt-get install tk-dev
 	sudo apt-get install doxygen
+	sudo apt-get install graphviz
 	pip3 install -r requirements.txt
 
 # Setup the installation zip file and clean after itself
 install: setup calculator.py help_menu.py mathlib.py profiling.py
     ifeq ($(shell id -u), 0)
 		@echo "Setting up the installer..."
-		# TODO: add all pictures to the installer
-		pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/Calculator_30001 (1)-1.png':Pictures calculator.py mathlib.py help_menu.py
+		cp Pictures ../installer -r
+		pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/*:Pictures' calculator.py mathlib.py help_menu.py
 		pyinstaller --onefile profiling.py mathlib.py
 		mv dist/calculator ../installer
 		mv dist/profiling ../installer

@@ -7,7 +7,8 @@
 @date April 11, 2024
 """
 
-from decimal import Decimal, getcontext
+MAX_PRECISION = 14
+TOLERANCE = 1e-10
 
 def add(num1, num2):
     """
@@ -18,8 +19,7 @@ def add(num1, num2):
     
     @return Sum of numbers num1 and num2.
     """
-    result = num1 + num2
-    return round(result, 10)
+    return round(num1 + num2, MAX_PRECISION)
 
 def sub(num1, num2):
     """
@@ -30,8 +30,7 @@ def sub(num1, num2):
     
     @return Difference of numbers num1 and num2 (num1 - num2).
     """
-    result = num1 - num2
-    return round(result, 10)
+    return round(num1 - num2, MAX_PRECISION)
 
 def mul(num1, num2):
     """
@@ -42,14 +41,7 @@ def mul(num1, num2):
     
     @return Product of num1 and num2 (num1 * num2).
     """
-    getcontext().prec = 28
-    num1_dec = Decimal(str(num1))
-    num2_dec = Decimal(str(num2))
-    result = num1_dec * num2_dec
-    if isinstance(num1, int) and isinstance(num2, int):
-        return int(result)
-    else:
-        return float(result)
+    return round(num1 * num2, 16)
 
 def div(dividend, divisor):
     """
@@ -63,15 +55,9 @@ def div(dividend, divisor):
     @exception ValueError: If the divisor is zero.
     """
     if divisor == 0:
-        raise ValueError("Division by zero is not allowed.")
+        raise ZeroDivisionError
     
-    dividend_dec = Decimal(str(dividend))
-    divisor_dec = Decimal(str(divisor))
-    result = dividend_dec / divisor_dec
-    if isinstance(dividend, int) and isinstance(divisor, int) and result % 1 == 0:
-        return int(result)
-    else:
-        return float(result)
+    return round(dividend / divisor, MAX_PRECISION)
 
 def mod(dividend, divisor):
     """
@@ -85,14 +71,17 @@ def mod(dividend, divisor):
     @exception ValueError: If the divisor is zero.
     """
     if divisor == 0:
-        raise ValueError("Division by zero is not allowed.")
-    dividend_decimal = Decimal(str(abs(dividend)))
-    divisor_decimal = Decimal(str(abs(divisor)))
+        raise ZeroDivisionError
+    
+    remainder = abs(dividend) % abs(divisor)
 
-    remainder = dividend_decimal % divisor_decimal
     if divisor < 0:
         remainder = -remainder
-    return float(remainder)
+
+    if abs(divisor - remainder) < TOLERANCE:
+        return 0
+
+    return round(remainder, MAX_PRECISION)
 
 def abs(num):
     """
@@ -107,26 +96,33 @@ def abs(num):
     else:
         return num
 
-def fac(n: int) -> int:
+def fac(num):
     """
     @brief Function to compute the factorial of a non-negative integer.
     
-    @param n: The non-negative integer.
+    @param num: The non-negative integer.
     
     @return The factorial of the input integer.
 
-    @exception ValueError: If the input is negative.
+    @exception ValueError: If number is not a natural number.
+    @exception ValueError: If number is bigger than 100.
     """
-    if n < 0:
-        raise ValueError("Factorial is not defined for negative numbers.")
-    if n == 0:
+    if not isinstance(num, int) or num < 0:
+        raise TypeError("Number must be a natural number.")
+    
+    if num > 100:
+        raise ValueError("Factorial computation is limited to numbers up to 100.")
+    
+    if num == 0:
         return 1
+    
     result = 1
-    for i in range(1, n + 1):
+    for i in range(1, num + 1):
         result *= i
-    return result
 
-def pow(base: int, exponent: int) -> int:
+    return float(result)
+
+def pow(base, exponent):
     """
     @brief Function to compute the power of a number.
     
@@ -134,13 +130,12 @@ def pow(base: int, exponent: int) -> int:
     @param exponent: The exponent.
     
     @return The result of raising base to the power of exponent.
+
+    @exception ValueError: If exponent is not a natural number.
+    @exception ValueError: If exponent and base is zero.
     """
-    
-    if not isinstance(exponent, int):
-        raise ValueError("Exponent must be an integer.")
-    
-    if exponent < 0:
-        raise ValueError("Exponent must be non-negative.")
+    if not isinstance(exponent, int) or exponent < 0:
+        raise TypeError("Exponent must be a natural number.")
     
     if base == 0 and exponent == 0:
         raise ValueError("0^0 is undefined.")
@@ -150,33 +145,30 @@ def pow(base: int, exponent: int) -> int:
     if result >= 1e100:
         return float('inf')
     else:
-        return result
+        return round(result, MAX_PRECISION)
 
-def root(number: float, n: int) -> float:
+def root(base, index):
     """
-    @brief Function to compute the nth root of a number using Newton's method.
-    
-    @param number: The number whose root is to be calculated.
-    @param n: The root to be calculated (e.g., 2 for square root).
-    
-    @return Nth root of the given number.
+    @brief Function to compute the nth root of a base using Newton's method.
+
+    @param base: The base whose root is to be calculated.
+    @param index: The root to be calculated (e.g., 2 for square root).
+
+    @return Nth root of the given base.
+
+    @exception ValueError: If index is not a natural base.
+    @exception ValueError: If index is not divisible by 2 and base is negative.
     """
-    if number < 0 and n % 2 == 0:
+    if not isinstance(index, int) or index < 0:
+        raise TypeError("Index must be a natural number.")
+
+    if base < 0 and index % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
-        
-    if number == 0:
-        return 0
-    
-    getcontext().prec = 50
-    number_decimal = Decimal(str(number))
-    x = number_decimal / 2
-    tolerance = Decimal('0.0000000001')
-    while abs(x ** n - number_decimal) > tolerance:
-        x -= (x ** n - number_decimal) / (n * x ** (n - 1))
-        
-    result_decimal = x
-    if isinstance(number, int) and isinstance(n, int):
-        return int(result_decimal)
-    else:
-        return float(result_decimal)
 
+    if base == 0:
+        return 0
+
+    if base < 0 and index % 2 != 0:
+        return round(-((-base) ** (1/index)), MAX_PRECISION)
+
+    return round(base ** (1/index), MAX_PRECISION)

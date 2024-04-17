@@ -7,23 +7,27 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Remove the installed package
-sudo dpkg -r Kalkulajda
+dpkg -r Kalkulajda
 
 # Remove the symbolic links
-rm Kalkulajda/usr/local/bin/kalkulajda
-rm Kalkulajda/usr/local/bin/kalkulajda_p
+rm /usr/local/bin/kalkulajda
+rm /usr/local/bin/kalkulajda_p
+
+# Remove the kalkulajda.sh script and the calculator binary from /usr/bin
+rm /usr/bin/kalkulajda.sh
+rm /usr/bin/calculator
 
 # Remove the Pictures directory from /usr/bin
-rm -r Kalkulajda/usr/bin/Pictures
+rm -r /usr/bin/Pictures
 
 # Remove the Kalkulajda directory if it exists
 if [ -d "Kalkulajda" ]; then
-    sudo rm -r Kalkulajda
+    rm -r Kalkulajda
 fi
 
 # Remove the Pictures directory if it exists
 if [ -d "Pictures" ]; then
-    sudo rm -r Pictures
+    rm -r Pictures
 fi
 
 rm Kalkulajda.deb
@@ -32,5 +36,5 @@ rm uninstall.sh
 rm requirements.txt
 rm calculator
 rm profiling
-
+rmdir ../installer
 echo "Uninstallation completed."
