@@ -224,7 +224,7 @@ class App(CTk):
             self.buttonFrame.grid_columnconfigure(column, weight=1)
 
     def show_operators(self, operator):
-        # TODO: 2 OPERATORS AT THE SAME TIME, CHECK FOR NEGATIVE NUMBERS
+        # TODO: 2 OPERATORS AT THE SAME TIME, CHECK FOR NEGATIVE NUMBERS, REMOVE 0 FROM CURR EXPRESS
         """
         @brief Appends the provided operator to the current expression and updates the labels.
         @param self: Instance of the class
@@ -419,7 +419,6 @@ class App(CTk):
 
     def equals(self):
         # TODO: CHECK ARGUMENTS IN ROOT AND POWER - float/int
-        # TODO: 3^2 when presses equal also for 3root8
         """
         @brief Calculates the result of the expression when the equals button is pressed
         @param self: Instance of the class
@@ -712,13 +711,19 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def factorial(self):
-        # TODO: SCIENTIFIC NOTATION, UNUSUAL NUMBERS
         """
         @brief Computes the factorial of the current expression
         @param self: Instance of the class
         """
         result = mathlib.fac(int(self.currentExpression))
-        self.currentExpression = str(result)
+
+        # Check if the result is longer than 14 characters
+        if len(str(result)) > 14:
+            result_str = "{:.5e}".format(result)
+        else:
+            result_str = str(result)
+
+        self.currentExpression = result_str
         self.update_current_label()
 
     def create_factorial_button(self):
