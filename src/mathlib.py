@@ -41,7 +41,7 @@ def mul(num1, num2):
     
     @return Product of num1 and num2 (num1 * num2).
     """
-    return round(num1 * num2, MAX_PRECISION)
+    return round(num1 * num2, 16)
 
 def div(dividend, divisor):
     """
@@ -108,7 +108,7 @@ def fac(num):
     @exception ValueError: If number is bigger than 100.
     """
     if not isinstance(num, int) or num < 0:
-        raise ValueError("Number must be a natural number.")
+        raise TypeError("Number must be a natural number.")
     
     if num > 100:
         raise ValueError("Factorial computation is limited to numbers up to 100.")
@@ -135,7 +135,7 @@ def pow(base, exponent):
     @exception ValueError: If exponent and base is zero.
     """
     if not isinstance(exponent, int) or exponent < 0:
-        raise ValueError("Exponent must be a natural number.")
+        raise TypeError("Exponent must be a natural number.")
     
     if base == 0 and exponent == 0:
         raise ValueError("0^0 is undefined.")
@@ -160,7 +160,7 @@ def root(base, index):
     @exception ValueError: If index is not divisible by 2 and base is negative.
     """
     if not isinstance(index, int) or index < 0:
-        raise ValueError("Index must be a natural number.")
+        raise TypeError("Index must be a natural number.")
 
     if base < 0 and index % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
