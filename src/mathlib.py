@@ -7,6 +7,9 @@
 @date April 11, 2024
 """
 
+MAX_PRECISION = 14
+TOLERANCE = 1e-10
+
 def add(num1, num2):
     """
     @brief Function to add two numbers.
@@ -16,7 +19,7 @@ def add(num1, num2):
     
     @return Sum of numbers num1 and num2.
     """
-    return round(num1 + num2, 14)
+    return round(num1 + num2, MAX_PRECISION)
 
 def sub(num1, num2):
     """
@@ -27,7 +30,7 @@ def sub(num1, num2):
     
     @return Difference of numbers num1 and num2 (num1 - num2).
     """
-    return round(num1 - num2, 14)
+    return round(num1 - num2, MAX_PRECISION)
 
 def mul(num1, num2):
     """
@@ -38,7 +41,7 @@ def mul(num1, num2):
     
     @return Product of num1 and num2 (num1 * num2).
     """
-    return round(num1 * num2, 14)
+    return round(num1 * num2, MAX_PRECISION)
 
 def div(dividend, divisor):
     """
@@ -54,7 +57,7 @@ def div(dividend, divisor):
     if divisor == 0:
         raise ZeroDivisionError
     
-    return round(dividend / divisor, 14)
+    return round(dividend / divisor, MAX_PRECISION)
 
 def mod(dividend, divisor):
     """
@@ -75,10 +78,10 @@ def mod(dividend, divisor):
     if divisor < 0:
         remainder = -remainder
 
-    if abs(divisor - remainder) < 1e-10:
+    if abs(divisor - remainder) < TOLERANCE:
         return 0
 
-    return round(remainder, 14)
+    return round(remainder, MAX_PRECISION)
 
 def abs(num):
     """
@@ -117,7 +120,7 @@ def fac(num):
     for i in range(1, num + 1):
         result *= i
 
-    return result
+    return float(result)
 
 def pow(base, exponent):
     """
@@ -142,7 +145,7 @@ def pow(base, exponent):
     if result >= 1e100:
         return float('inf')
     else:
-        return round(result, 14)
+        return round(result, MAX_PRECISION)
 
 def root(base, index):
     """
@@ -166,6 +169,6 @@ def root(base, index):
         return 0
 
     if base < 0 and index % 2 != 0:
-        return round(-((-base) ** (1/index)), 14)
+        return round(-((-base) ** (1/index)), MAX_PRECISION)
 
-    return round(base ** (1/index), 14)
+    return round(base ** (1/index), MAX_PRECISION)
