@@ -41,7 +41,7 @@ def mul(num1, num2):
     
     @return Product of num1 and num2 (num1 * num2).
     """
-    return round(num1 * num2, 20)
+    return round(num1 * num2, 16)
 
 def div(dividend, divisor):
     """
