@@ -94,23 +94,21 @@ def fac(num):
     """
     @brief Function to compute the factorial of a non-negative integer.
     
-    @param n: The non-negative integer.
+    @param num: The non-negative integer.
     
     @return The factorial of the input integer.
 
-    @exception ValueError: If the input is negative.
+    @exception ValueError: If number is not a natural number.
+    @exception ValueError: If number is bigger than 100.
     """
-    if not isinstance(num, int):
+    if not isinstance(num, int) and num < 0:
         raise ValueError("Number must be a natural number.")
-
-    if num < 0:
-        raise ValueError("Factorial is not defined for negative numbers.")
-    
-    if num == 0:
-        return 1
     
     if num > 100:
         raise ValueError("Factorial computation is limited to numbers up to 100.")
+    
+    if num == 0:
+        return 1
     
     result = 1
     for i in range(1, num + 1):
@@ -126,12 +124,12 @@ def pow(base, exponent):
     @param exponent: The exponent.
     
     @return The result of raising base to the power of exponent.
+
+    @exception ValueError: If exponent is not a natural number.
+    @exception ValueError: If exponent and base is zero.
     """
-    if not isinstance(exponent, int):
+    if not isinstance(exponent, int) and exponent < 0:
         raise ValueError("Exponent must be a natural number.")
-    
-    if exponent < 0:
-        raise ValueError("Exponent must be non-negative.")
     
     if base == 0 and exponent == 0:
         raise ValueError("0^0 is undefined.")
@@ -145,14 +143,17 @@ def pow(base, exponent):
 
 def root(base, index):
     """
-    @brief Function to compute the nth root of a number using Newton's method.
+    @brief Function to compute the nth root of a base using Newton's method.
     
-    @param number: The number whose root is to be calculated.
-    @param n: The root to be calculated (e.g., 2 for square root).
+    @param base: The base whose root is to be calculated.
+    @param index: The root to be calculated (e.g., 2 for square root).
     
-    @return Nth root of the given number.
+    @return Nth root of the given base.
+
+    @exception ValueError: If index is not a natural base.
+    @exception ValueError: If index is not divisible by 2 and base is negative.
     """
-    if not isinstance(index, int):
+    if not isinstance(index, int) and index < 0:
         raise ValueError("Index must be a natural number.")
 
     if base < 0 and index % 2 == 0:
@@ -162,4 +163,3 @@ def root(base, index):
         return 0
     
     return round(base ** (1/float(root)), 14)
-
