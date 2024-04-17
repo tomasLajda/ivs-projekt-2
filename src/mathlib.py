@@ -7,8 +7,6 @@
 @date April 11, 2024
 """
 
-from decimal import Decimal, getcontext
-
 def add(num1, num2):
     """
     @brief Function to add two numbers.
@@ -18,8 +16,7 @@ def add(num1, num2):
     
     @return Sum of numbers num1 and num2.
     """
-    result = num1 + num2
-    return round(result, 14)
+    return round(num1 + num2, 14)
 
 def sub(num1, num2):
     """
@@ -30,8 +27,7 @@ def sub(num1, num2):
     
     @return Difference of numbers num1 and num2 (num1 - num2).
     """
-    result = num1 - num2
-    return round(result, 14)
+    return round(num1 - num2, 14)
 
 def mul(num1, num2):
     """
@@ -42,7 +38,7 @@ def mul(num1, num2):
     
     @return Product of num1 and num2 (num1 * num2).
     """
-    return num1 * num2
+    return round(num1 * num2, 14)
 
 def div(dividend, divisor):
     """
@@ -79,7 +75,7 @@ def mod(dividend, divisor):
     if divisor < 0:
         remainder = -remainder
         
-    return remainder
+    return round(remainder, 14)
 
 def abs(num):
     """
@@ -145,7 +141,7 @@ def pow(base, exponent):
     if result >= 1e100:
         return float('inf')
     else:
-        return result
+        return round(result, 14)
 
 def root(base, index):
     """
