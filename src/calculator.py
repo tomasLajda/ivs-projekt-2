@@ -426,7 +426,7 @@ class App(CTk):
         if '√' in self.currentExpression and not self.totalExpression:
             rootCurrLeft = self.currentExpression.split('√')[0]
             rootCurrRight = self.currentExpression.split('√')[1]
-            result_float = mathlib.root(float(rootCurrRight), float(rootCurrLeft))
+            result_float = mathlib.root(float(rootCurrRight), int(rootCurrLeft))
             if '.' in str(result_float):
                 if round(result_float * 10 ** 5) % 10 == 0:
                     result = str(int(round(result_float)))
@@ -726,15 +726,32 @@ class App(CTk):
         @param self: Instance of the class
         """
         if not self.totalExpression:
-            result = mathlib.fac(int(self.currentExpression))
+            functions_to_parse = [self.parse_exponentiation, self.parse_root]
 
-            # Check if the result is longer than 14 characters
-            if len(str(result)) > 14:
-                result_str = "{:.5e}".format(result)
+            for func in functions_to_parse:
+                result = func()
+                if result is not None:
+                    if '.' in result:
+                        result = mathlib.fac(float(result))
+                    else:
+                        result = mathlib.fac(int(result))
+                    if result.is_integer():
+                        result = int(result)
+                    self.currentExpression = str(result)
+                    self.update_current_label()
+                    return
+
+            if '.' in self.currentExpression:
+                result = mathlib.fac(float(self.currentExpression))
             else:
-                result_str = str(result)
+                result = mathlib.fac(int(self.currentExpression))
 
-            self.currentExpression = result_str
+            if len(str(result)) > 14:
+                result = float(result)
+            else:
+                if isinstance(result, int):
+                    result = int(result)
+            self.currentExpression = str(result)
             self.update_current_label()
 
     def create_factorial_button(self):
