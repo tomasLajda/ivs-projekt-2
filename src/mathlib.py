@@ -152,7 +152,7 @@ def pow(base: int, exponent: int) -> int:
     else:
         return result
 
-def root(base, root):
+def root(base, index):
     """
     @brief Function to compute the nth root of a number using Newton's method.
     
@@ -161,7 +161,10 @@ def root(base, root):
     
     @return Nth root of the given number.
     """
-    if base < 0 and root % 2 == 0:
+    if not isinstance(index, int):
+        raise ValueError("Index must be an naturally a number.")
+
+    if base < 0 and index % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
         
     if base == 0:
