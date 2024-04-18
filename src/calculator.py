@@ -8,7 +8,6 @@
 @date - March 19, 2024
 """
 import mathlib
-import platform
 from help_menu import ToplevelWindow
 from PIL import Image, ImageTk
 from customtkinter import *
@@ -34,9 +33,8 @@ def adjust_button_size(width, height):
     @param height: Original button height
     @return: Adjusted button width and height
     """
-    if platform.system() == 'Linux':
-        width += 15
-        height += 15
+    width += 15
+    height += 15
     return width, height
 
 
@@ -63,6 +61,7 @@ class App(CTk):
         self.buttonFrame = None
         self.displayFrame = None
         self.toplevel_window = None
+        self.counter = 0
         self.title("Calcu-lajda")
         self.resizable(False, False)
 
@@ -73,10 +72,12 @@ class App(CTk):
         self.totalExpression = ""
         self.currentExpression = "0"
         self.evaluated = False
+        self.pressedEquals = False
 
         self.digits = {
             7: (1, 1),
             8: (1, 2),
+            9: (1, 3),
             9: (1, 3),
             4: (2, 1),
             5: (2, 2),
@@ -95,6 +96,8 @@ class App(CTk):
         }
 
     def center_window(self, width, height, scalefactor=1.0):
+        # TODO: ONLY FOR LINUX
+
         """
         @brief Calculates the position to center a window on the screen
         @param self: Instance of the class
@@ -103,19 +106,12 @@ class App(CTk):
         @param scalefactor: Optional scale factor to adjust the centering position
         @return: String representing the window geometry
         """
-        os_name = platform.system()
         screenWidth = self.winfo_screenwidth()
         screenHeight = self.winfo_screenheight()
 
-        if os_name == 'Linux':
-            x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
-            y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
-            return f"{width + 75}x{height + 80}+{x}+{y}"
-
-        else:
-            x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
-            y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
-            return f"{width}x{height}+{x}+{y}"
+        x = int(((screenWidth / 2) - (width / 2)) * scalefactor)
+        y = int(((screenHeight / 2) - (height / 2)) * scalefactor)
+        return f"{width + 75}x{height + 80}+{x}+{y}"
 
     def create_display_frame(self):
         """
@@ -167,7 +163,6 @@ class App(CTk):
         # If currentExpression is empty or "0", display "0"
         if not self.currentExpression or self.currentExpression == "0":
             self.currentLabel.configure(text="0")
-            self.currentExpression = '0'
         else:
             self.currentLabel.configure(text=self.currentExpression)
 
@@ -183,6 +178,7 @@ class App(CTk):
         self.grid_columnconfigure(0, weight=1)
 
     def show_numbers(self, value):
+        # TODO: FIX
         """
         @brief Appends the provided value to the current expression and updates the current label.
         @param self: Instance of the class
@@ -193,7 +189,11 @@ class App(CTk):
             self.currentExpression += str(value)
             self.evaluated = False
         else:
-            self.currentExpression += str(value)
+            if self.currentExpression == self.totalExpression[:-1] and self.counter == 0:
+                self.currentExpression = ''
+                self.currentExpression += str(value)
+            else:
+                self.currentExpression += str(value)
         self.update_current_label()
 
     def create_digit_buttons(self):
@@ -212,13 +212,14 @@ class App(CTk):
             self.buttonFrame.grid_columnconfigure(column, weight=1)
 
     def show_operators(self, operator):
-        # TODO: 2 OPERATORS AT THE SAME TIME, CHECK FOR NEGATIVE NUMBERS, REMOVE 0 FROM CURR EXPRESS
+        # TODO: 2 OPERATORS AT THE SAME TIME
         """
         @brief Appends the provided operator to the current expression and updates the labels.
         @param self: Instance of the class
         @param operator: The operator to append to the current expression
         """
         self.update_current_label()
+        self.counter = 0
 
         if '.' in self.currentExpression and not self.currentExpression[-1].isdigit():
             self.currentExpression = self.currentExpression[:-1]
@@ -230,7 +231,7 @@ class App(CTk):
                 self.currentExpression = str(rounded_num)
 
         # Prevent operator as the first character except '-'
-        if not self.totalExpression and self.currentExpression == '0':
+        if not self.totalExpression and not self.currentExpression:
             if operator == '-':
                 self.currentExpression = operator
                 self.update_current_label()
@@ -275,6 +276,9 @@ class App(CTk):
             self.evaluate()
         else:
             pass
+
+    def error(self):
+        pass
 
     def create_operator_buttons(self):
         """
@@ -604,7 +608,6 @@ class App(CTk):
         @brief Deletes the last character from the current expression
         @param self: Instance of the class
         """
-
         if self.currentExpression:
             self.currentExpression = self.currentExpression[:-1]
             self.update_current_label()
@@ -612,6 +615,8 @@ class App(CTk):
         if len(self.currentExpression) == 0:
             self.currentExpression = "0"
             self.update_current_label()
+        self.counter += 1
+        return self.counter
 
     def create_delete_button(self):
         """
