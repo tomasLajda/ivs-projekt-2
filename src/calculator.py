@@ -52,7 +52,6 @@ class App(CTk):
             currentExpression: The current expression displayed on the calculator
             digits: Dictionary mapping digit keys
             operations: Dictionary mapping operator symbols
-            brackets: Dictionary mapping bracket symbols
     """
 
     def __init__(self):
@@ -93,11 +92,6 @@ class App(CTk):
             "*": "\u00D7",
             "-": "-",
             "+": "+"
-        }
-
-        self.brackets = {
-            "(": "(",
-            ")": ")"
         }
 
     def center_window(self, width, height, scalefactor=1.0):
@@ -187,14 +181,6 @@ class App(CTk):
         self.buttonFrame.grid(row=1, column=0, sticky="nsew")
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
-
-    def error(self):
-        # TODO IMPLEMENT
-        self.clear()
-        self.currentExpression = "Error -> Help"
-        boolError = True
-        return boolError
-        pass
 
     def show_numbers(self, value):
         """
@@ -435,7 +421,6 @@ class App(CTk):
         return result
 
     def equals(self):
-        # TODO: CHECK ARGUMENTS IN ROOT AND POWER - float/int
         """
         @brief Calculates the result of the expression when the equals button is pressed
         @param self: Instance of the class
@@ -610,7 +595,7 @@ class App(CTk):
         cleanButton = CTkButton(self.buttonFrame, text="C", border_width=0, fg_color=COLOR_REST,
                                 corner_radius=10, font=(LARGE, 25), width=button_width, height=button_height,
                                 hover_color=HOVER_COLOR, command=self.clear)
-        cleanButton.grid(row=0, column=3, sticky="nsew", padx=2, pady=2)
+        cleanButton.grid(row=0, column=1, columnspan=2, sticky="nsew", padx=2, pady=2)
         self.buttonFrame.grid_rowconfigure(0, weight=1)
         self.buttonFrame.grid_columnconfigure(3, weight=1)
 
@@ -638,38 +623,11 @@ class App(CTk):
                                  corner_radius=10, font=(LARGE, 25),
                                  width=button_width, height=button_height, hover_color=HOVER_COLOR,
                                  command=self.delete)
-        deleteButton.grid(row=0, column=4, sticky="nsew", padx=2, pady=2)
+        deleteButton.grid(row=0, column=3, columnspan=2, sticky="nsew", padx=2, pady=2)
         self.buttonFrame.grid_rowconfigure(0, weight=1)
         self.buttonFrame.grid_columnconfigure(4, weight=1)
 
-    def show_brackets(self, bracket):
-        """
-        @brief Appends the selected bracket to the current expression and updates the display label
-        @param self: Instance of the class
-        @param bracket: The bracket symbol to be added
-        """
-        pass
-
-    def create_bracket_buttons(self):
-        """
-        @brief Creates bracket buttons in the calculator interface
-        @param self: Instance of the class
-        """
-        button_width, button_height = adjust_button_size(75, 45)
-        row = 0
-        column = 1
-        for bracket in self.brackets:
-            button = CTkButton(self.buttonFrame, text=bracket, fg_color=COLOR_REST,
-                               border_width=0, corner_radius=10, font=(LARGE, 25),
-                               width=button_width, height=button_height, hover_color=HOVER_COLOR,
-                               command=lambda b=bracket: self.show_brackets(b))
-            button.grid(row=row, column=column, sticky="nsew", padx=2, pady=2)
-            column += 1
-        self.buttonFrame.grid_rowconfigure(row, weight=1)
-        self.buttonFrame.grid_columnconfigure(column - 1, weight=1)
-
     def exponentiation(self):
-        # TODO: FOR UNUSUAL NUMBERS
         """
         @brief Adds an exponentiation operator to the current expression if it does not already contain one
         @param self: Instance of the class
@@ -747,7 +705,7 @@ class App(CTk):
                 result = mathlib.fac(int(self.currentExpression))
 
             if len(str(result)) > 14:
-                result = float(result)
+                result = "{:.5e}".format(result)
             else:
                 if isinstance(result, int):
                     result = int(result)
@@ -876,9 +834,6 @@ class App(CTk):
         for key in self.operations:
             self.bind(str(key), lambda event, op=key: self.show_operators(op))
 
-        for key in self.brackets:
-            self.bind(str(key), lambda event, bracket=key: self.show_brackets(bracket))
-
         self.bind("<BackSpace>", lambda event: self.delete())
         self.bind("<c>", lambda event: self.clear())
         self.bind(".", lambda event: self.decimal())
@@ -899,7 +854,6 @@ class App(CTk):
         self.create_decimal_button()
         self.create_clean_button()
         self.create_delete_button()
-        self.create_bracket_buttons()
         self.create_exponentiation_button()
         self.create_root_button()
         self.create_factorial_button()

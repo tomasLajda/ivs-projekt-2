@@ -56,7 +56,7 @@ class ToplevelWindow(CTkToplevel):
 
         self.resizable(True, True)
         self.title("Help")
-        self.help_path = ImageTk.PhotoImage(file=os.path.join("Pictures", 'questionmark1_83827.png'))
+        self.help_path = ImageTk.PhotoImage(file=os.path.join("Pictures", 'help_icon.png'))
         self.wm_iconbitmap()
         self.iconphoto(False, self.help_path)
 
@@ -124,7 +124,7 @@ class ToplevelWindow(CTkToplevel):
 
         # =====================================About part===============================================
         aboutText = """Simple calculator developed by: 
-        xcsirim00, xgajduv00, xlajdat00 a xvalapm00\n 
+        xcsirim00, xgajduv00, xlajdat00 and xvalapm00\n 
         It supports basic arithmetic operations: 
         Addition, subtraction, multiplication, and division. 
         Additionally, it provides features like: 
@@ -136,7 +136,7 @@ class ToplevelWindow(CTkToplevel):
         While the button frame contains buttons for inputting numbers, operators, and performing various operations.\n 
         The evaluation works automatically when you press the operator or when you press the equals button. 
         You can also perform calculations by typing directly on the keyboard, and the calculator will update accordingly.\n 
-        The calculator takes maximum two operands at the same time (brackets not implemented) and performs the specified operation between them. 
+        The calculator takes maximum two operands at the same time and performs the specified operation between them. 
         When you make a mistake with choosing the operator, you can directly change it by selecting your desired operator.\n 
         The current expression is limited to 14 characters, while the total expression can accommodate up to 30 characters."""
 
@@ -205,11 +205,7 @@ class ToplevelWindow(CTkToplevel):
                                  "Clears the total expression\n"
                                  "Prints the result to the current expression")
 
-        add_image_and_label(subFrame, row=12, image_path=r'Pictures/brackets.ico',
-                            text="Brackets: NOT IMPLEMENTED\nUseless in this version of calculator"
-                                 "\nMight be implemented later")
-
-        add_image_and_label(subFrame, row=13, image_path=r'Pictures/decimal.ico',
+        add_image_and_label(subFrame, row=12, image_path=r'Pictures/decimal.ico',
                             text="Decimal point: Places decimal point in the current expression"
                                  "\nRounds the number if there are only zeroes behind the decimal point\n"
                                  "Removes trailing decimal point if no digit follows it")
