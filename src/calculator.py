@@ -71,13 +71,14 @@ class App(CTk):
 
         self.totalExpression = ""
         self.currentExpression = "0"
+        self.totalEvaluator = ""
         self.evaluated = False
         self.pressedEquals = False
+        self.resultStr = ''
 
         self.digits = {
             7: (1, 1),
             8: (1, 2),
-            9: (1, 3),
             9: (1, 3),
             4: (2, 1),
             5: (2, 2),
@@ -96,8 +97,6 @@ class App(CTk):
         }
 
     def center_window(self, width, height, scalefactor=1.0):
-        # TODO: ONLY FOR LINUX
-
         """
         @brief Calculates the position to center a window on the screen
         @param self: Instance of the class
@@ -178,22 +177,22 @@ class App(CTk):
         self.grid_columnconfigure(0, weight=1)
 
     def show_numbers(self, value):
-        # TODO: FIX
         """
         @brief Appends the provided value to the current expression and updates the current label.
         @param self: Instance of the class
         @param value: The value to append to the current expression
         """
         if self.evaluated:
-            self.currentExpression = ''
-            self.currentExpression += str(value)
-            self.evaluated = False
-        else:
-            if self.currentExpression == self.totalExpression[:-1] and self.counter == 0:
+            if ('.' not in self.currentExpression and ['^', '√'] not in self.currentExpression and
+                    ['+', '-', '*', '/', '%']):
                 self.currentExpression = ''
-                self.currentExpression += str(value)
-            else:
-                self.currentExpression += str(value)
+                self.totalExpression = self.resultStr
+                self.update_total_label()
+                self.resultStr = ''
+        # Append the new value to the current expression regardless of the state of self.currentExpression and
+        # self.counter
+        self.currentExpression += str(value)
+        self.evaluated = False
         self.update_current_label()
 
     def create_digit_buttons(self):
@@ -212,7 +211,7 @@ class App(CTk):
             self.buttonFrame.grid_columnconfigure(column, weight=1)
 
     def show_operators(self, operator):
-        # TODO: 2 OPERATORS AT THE SAME TIME
+        # TODO: self.evaluated, self.resultStr, self.totalEvaluator
         """
         @brief Appends the provided operator to the current expression and updates the labels.
         @param self: Instance of the class
@@ -268,6 +267,12 @@ class App(CTk):
             # else:
             self.totalExpression += self.currentExpression + operator
 
+        if self.evaluated:
+            self.totalExpression = self.resultStr
+            self.update_total_label()
+            self.resultStr = ''
+
+        self.evaluated = False
         self.currentExpression = ''
         self.update_total_label()
         self.update_current_label()
@@ -334,11 +339,17 @@ class App(CTk):
             if '^' in leftSide:
                 expLeft = leftSide.split('^')[0]
                 expRight = leftSide.split('^')[1]
-                leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
+                if '.' not in expLeft:
+                    leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
+                else:
+                    leftSide = str(mathlib.pow(float(expLeft), int(expRight)))
             else:
                 expLeft = rightSide.split('^')[0]
                 expRight = rightSide.split('^')[1]
-                rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
+                if '.' not in expRight:
+                    rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
+                else:
+                    rightSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
         # Then handle square root
         if '√' in leftSide or '√' in rightSide:
@@ -389,26 +400,31 @@ class App(CTk):
 
         # Convert the result to a float string if it's in scientific notation
         if -1e14 < result < 1e14:
-            result_str = str(result)
+            self.resultStr = str(result)
         else:
-            result_str = "{:.5e}".format(result)
+            self.resultStr = "{:.5e}".format(result)
 
         # Update the current expression with the result
-        self.currentExpression = result_str
+        self.currentExpression = self.resultStr
         self.update_current_label()
-
+        self.resultStr = self.resultStr + lastOperator
         # Update the total expression with the new result and the operator
-        self.totalExpression = str(result_str) + lastOperator
+        self.totalEvaluator = self.totalExpression
+        self.totalExpression = self.totalEvaluator + lastOperator
         self.update_total_label()
         self.evaluated = True
         return self.evaluated
 
     def parse_exponentiation(self):
+        # TODO: Opravit
         result = None
         if '^' in self.currentExpression and not self.totalExpression:
             expCurrLeft = self.currentExpression.split('^')[0]
             expCurrRight = self.currentExpression.split('^')[1]
-            result = str(mathlib.pow(int(expCurrLeft), int(expCurrRight)))
+            if '.' not in expCurrLeft:
+                result = str(mathlib.pow(int(expCurrLeft), int(expCurrRight)))
+            else:
+                result = str(mathlib.pow(float(expCurrLeft), int(expCurrRight)))
         return result
 
     def parse_root(self):
@@ -448,33 +464,39 @@ class App(CTk):
         operator = self.totalExpression[-1]
         rightSide = self.currentExpression
 
-        if '^' in leftSide or '^' in rightSide:
-            if '^' in leftSide:
-                expLeft = leftSide.split('^')[0]
-                expRight = leftSide.split('^')[1]
+        if '^' in leftSide:
+            expLeft = leftSide.split('^')[0]
+            expRight = leftSide.split('^')[1]
+            if '.' not in expLeft:
                 leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
             else:
-                expLeft = rightSide.split('^')[0]
-                expRight = rightSide.split('^')[1]
-                rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
+                leftSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
-        if '√' in leftSide or '√' in rightSide:
-            if '√' in leftSide:
-                rootLeft = leftSide.split('√')[0]
-                rootRight = leftSide.split('√')[1]
-                leftSide = str(mathlib.root(float(rootRight), int(rootLeft)))
-                if '.' in leftSide:
-                    leftSide_float = float(leftSide)
-                    if round(leftSide_float * 10 ** 5) % 10 == 0:
-                        leftSide = str(round(leftSide_float))
+        if '^' in rightSide:
+            expLeft = rightSide.split('^')[0]
+            expRight = rightSide.split('^')[1]
+            if '.' not in expLeft:
+                rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
             else:
-                rootLeft = rightSide.split('√')[0]
-                rootRight = rightSide.split('√')[1]
-                rightSide = str(mathlib.root(float(rootRight), int(rootLeft)))
-                if '.' in rightSide:
-                    rightSide_float = float(rightSide)
-                    if round(rightSide_float * 10 ** 5) % 10 == 0:
-                        rightSide = str(round(rightSide_float))
+                rightSide = str(mathlib.pow(float(expLeft), int(expRight)))
+
+        if '√' in leftSide:
+            rootLeft = leftSide.split('√')[0]
+            rootRight = leftSide.split('√')[1]
+            leftSide = str(mathlib.root(float(rootRight), int(rootLeft)))
+            if '.' in leftSide:
+                leftSide_float = float(leftSide)
+                if round(leftSide_float * 10 ** 5) % 10 == 0:
+                    leftSide = str(round(leftSide_float))
+
+        if '√' in rightSide:
+            rootLeft = rightSide.split('√')[0]
+            rootRight = rightSide.split('√')[1]
+            rightSide = str(mathlib.root(float(rootRight), int(rootLeft)))
+            if '.' in rightSide:
+                rightSide_float = float(rightSide)
+                if round(rightSide_float * 10 ** 5) % 10 == 0:
+                    rightSide = str(round(rightSide_float))
 
         if '.' in leftSide:
             leftSide_float = float(leftSide)
@@ -516,8 +538,8 @@ class App(CTk):
         # Update the total expression with the new result and the operator
         self.totalExpression = ""
         self.update_total_label()
-        self.evaluated = True
-        return self.evaluated
+        # self.evaluated = True
+        # return self.evaluated
 
     def create_equals_button(self):
         """
@@ -545,6 +567,8 @@ class App(CTk):
 
             for i, char in enumerate(self.totalExpression):
                 if char in operators and i != 0 and self.totalExpression[i - 1] not in ['^', '√']:
+                    if self.totalExpression[i - 1] == 'e':
+                        continue
                     operatorCount += 1
             return operatorCount == 2
         return False
@@ -639,9 +663,9 @@ class App(CTk):
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if '^' not in self.currentExpression and self.currentExpression != '0':
+        if '^' not in self.currentExpression and '√' not in self.currentExpression and self.currentExpression:
             self.currentExpression += '^'
-            self.update_current_label()
+        self.update_current_label()
 
     def create_exponentiation_button(self):
         """
@@ -665,7 +689,7 @@ class App(CTk):
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if '√' not in self.currentExpression and self.currentExpression != '0':
+        if '√' not in self.currentExpression and '^' not in self.currentExpression and self.currentExpression:
             self.currentExpression += '√'
         self.update_current_label()
 
