@@ -192,19 +192,21 @@ class App(CTk):
         if 'Error' in self.currentExpression:
             self.currentLabel.configure(font=("Arial", 50))  # Reset the font size when not displaying an error
             self.currentExpression = str(value)
+        elif self.evaluated:
+            if ('.' not in self.currentExpression and '^' not in self.currentExpression and
+                    '√' not in self.currentExpression and '+' not in self.currentExpression and
+                    '-' not in self.currentExpression and '*' not in self.currentExpression and
+                    '/' not in self.currentExpression and '%' not in self.currentExpression):
+                self.currentExpression = ''
+                self.totalExpression = self.resultStr
+                self.update_total_label()
+                self.resultStr = ''
+            # Overwrite the current expression with the new value after an evaluation
+            self.currentExpression = str(value)
+            self.evaluated = False
         else:
-            if self.evaluated:
-                if ('.' not in self.currentExpression and ['^', '√'] not in self.currentExpression and
-                        ['+', '-', '*', '/', '%']):
-                    self.currentExpression = ''
-                    self.totalExpression = self.resultStr
-                    self.update_total_label()
-                    self.resultStr = ''
-            # Append the new value to the current expression regardless of the state of self.currentExpression and
-            # self.counter
+            # Append the new value to the current expression if an evaluation has not just been performed
             self.currentExpression += str(value)
-
-        self.evaluated = False
         self.update_current_label()
 
     def create_digit_buttons(self):
@@ -250,20 +252,16 @@ class App(CTk):
             else:
                 return
 
-        # Prevent operator as the first character except '-'
-        if not self.totalExpression and not self.currentExpression:
+        # Allow operator as the first character if it is '-' and disallow any other operator
+        if not self.currentExpression:
             if operator == '-':
                 self.currentExpression = operator
-                self.update_current_label()
-                return
-            else:
-                return  # Do not allow any other operator to be the first character
+            elif not self.totalExpression:
+                return  # Do not allow any other operator to be the first character if total expression is also empty
+        self.update_current_label()
 
         if '-' in self.currentExpression and not self.currentExpression[-1].isdigit():
-            if operator == '-':
-                return
-            else:
-                self.currentExpression += '0'
+            return
 
         if '√' in self.currentExpression and not self.currentExpression[-1].isdigit():
             if operator == '-':
@@ -281,9 +279,12 @@ class App(CTk):
             else:
                 self.currentExpression += '0'
 
-        if (self.totalExpression and self.totalExpression[-1] in "+-*/%" and not self.currentExpression and
-                len(self.totalExpression) != 0):
-            self.totalExpression = self.totalExpression[:-1] + operator
+        if self.totalExpression and self.totalExpression[-1] in "+-*/%" and not self.currentExpression and len(
+                self.totalExpression) != 0:
+            if operator == '-' and self.totalExpression[-1] in "+-*/%":
+                self.currentExpression = operator
+            else:
+                self.totalExpression = self.totalExpression[:-1] + operator
         else:
             self.totalExpression += self.currentExpression + operator
 
@@ -352,7 +353,7 @@ class App(CTk):
         return leftSide, separator, rightSide, lastOperator
 
     def evaluate(self):
-        # TODO: IT DOESNT WORK FOR BIG NUMBERS AND WHEN THE NUMBER DOESNT FIT ITS DECIMAL PART
+        # TODO: IT DOESNT WORK FOR BIG NUMBERS, MUL AND DIV WITH NEGATIVE NUMBERS
         """
         @brief Evaluate the expression
         @param self: Instance of the class
@@ -753,8 +754,8 @@ class App(CTk):
         @brief Adds an exponentiation operator to the current expression if it does not already contain one
         @param self: Instance of the class
         """
-        if ('^' not in self.currentExpression and '√' not in self.currentExpression and self.currentExpression and
-                'Error' not in self.currentExpression):
+        if ('^' not in self.currentExpression and '√' not in self.currentExpression and self.currentExpression != '-'
+                and 'Error' not in self.currentExpression and self.currentLabel.cget("text") != '0'):
             self.currentExpression += '^'
         self.update_current_label()
 
@@ -778,8 +779,8 @@ class App(CTk):
         @brief Adds a root operator to the current expression if it does not already contain one
         @param self: Instance of the class
         """
-        if ('√' not in self.currentExpression and '^' not in self.currentExpression and self.currentExpression and
-                'Error' not in self.currentExpression):
+        if ('√' not in self.currentExpression and '^' not in self.currentExpression and self.currentExpression != '-'
+                and 'Error' not in self.currentExpression and self.currentLabel.cget("text") != '0'):
             self.currentExpression += '√'
         self.update_current_label()
 
@@ -828,8 +829,7 @@ class App(CTk):
             if len(str(result)) > 14:
                 result = "{:.5e}".format(result)
             else:
-                if isinstance(result, int):
-                    result = int(result)
+                result = int(result)
             self.currentExpression = str(result)
             self.update_current_label()
 
