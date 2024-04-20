@@ -168,7 +168,7 @@ def root(base, index):
     if base == 0:
         return 0
 
-    if base < 0 and index % 2 != 0:
+    if base < 0:
         return round(-((-base) ** (1/index)), MAX_PRECISION)
 
     return round(base ** (1/index), MAX_PRECISION)

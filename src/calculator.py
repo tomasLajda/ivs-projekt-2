@@ -11,6 +11,7 @@ import mathlib
 from help_menu import ToplevelWindow
 from PIL import Image, ImageTk
 from customtkinter import *
+from decimal import *
 
 # TODO: MAKE THE CODE SHORTER
 
@@ -211,7 +212,6 @@ class App(CTk):
             self.buttonFrame.grid_columnconfigure(column, weight=1)
 
     def show_operators(self, operator):
-        # TODO: self.evaluated, self.resultStr, self.totalEvaluator
         """
         @brief Appends the provided operator to the current expression and updates the labels.
         @param self: Instance of the class
@@ -305,7 +305,6 @@ class App(CTk):
             row += 1
 
     def parsing(self):
-        # TODO: PARSE NUMBERS WITH e, root and ^
         lastOperator = ""
         if len(self.totalExpression) >= 3:
             lastOperator = self.totalExpression[-1]
@@ -324,7 +323,7 @@ class App(CTk):
         return leftSide, separator, rightSide, lastOperator
 
     def evaluate(self):
-        # TODO: IT DOESNT WORK FOR BIG NUMBERS
+        # TODO: IT DOESNT WORK FOR BIG NUMBERS AND WHEN THE NUMBER DOESNT FIT ITS DECIMAL PART
         """
         @brief Evaluate the expression
         @param self: Instance of the class
@@ -399,7 +398,7 @@ class App(CTk):
             return False
 
         # Convert the result to a float string if it's in scientific notation
-        if -1e14 < result < 1e14:
+        if -1e14 < result < 1e14 or len(str(result)) < 14:
             self.resultStr = str(result)
         else:
             self.resultStr = "{:.5e}".format(result)
@@ -416,7 +415,6 @@ class App(CTk):
         return self.evaluated
 
     def parse_exponentiation(self):
-        # TODO: Opravit
         result = None
         if '^' in self.currentExpression and not self.totalExpression:
             expCurrLeft = self.currentExpression.split('^')[0]
@@ -526,7 +524,7 @@ class App(CTk):
             return False
 
         # Check if the result is within a certain range to avoid scientific notation
-        if -1e14 < result < 1e14:
+        if -1e14 < result < 1e14 or len(str(result)) < 14:
             result_str = str(result)
         else:
             result_str = "{:.5e}".format(result)
@@ -538,8 +536,6 @@ class App(CTk):
         # Update the total expression with the new result and the operator
         self.totalExpression = ""
         self.update_total_label()
-        # self.evaluated = True
-        # return self.evaluated
 
     def create_equals_button(self):
         """
