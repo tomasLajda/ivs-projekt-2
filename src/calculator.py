@@ -13,8 +13,6 @@ from PIL import Image, ImageTk
 from customtkinter import *
 from decimal import *
 
-# TODO: MAKE THE CODE SHORTER
-
 LIGHT_GRAY = "#979797"
 DARK_GRAY = "#3D3D3D"
 ORANGE = "#FFA500"
@@ -75,6 +73,7 @@ class App(CTk):
         self.totalEvaluator = ""
         self.evaluated = False
         self.pressedEquals = False
+        self.wait_for_third_input = False
         self.resultStr = ''
 
         self.digits = {
@@ -192,7 +191,7 @@ class App(CTk):
         if 'Error' in self.currentExpression:
             self.currentLabel.configure(font=("Arial", 50))  # Reset the font size when not displaying an error
             self.currentExpression = str(value)
-        elif self.evaluated:
+        if self.evaluated:
             if ('.' not in self.currentExpression and '^' not in self.currentExpression and
                     '√' not in self.currentExpression and '+' not in self.currentExpression and
                     '-' not in self.currentExpression and '*' not in self.currentExpression and
@@ -342,26 +341,49 @@ class App(CTk):
         self.totalExpression = self.totalExpression[:-1]
         operators = {'+', '-', '*', '/', '%'}
 
-        # Find the index of the operator with the highest precedence
-        separatorIndex = max((self.totalExpression.rfind(op), op) for op in operators)[0]
+        # Find the indices of the operators
+        separatorIndices = [i for i, char in enumerate(self.totalExpression) if char in operators]
 
-        # Split the expression using the separator
-        leftSide = self.totalExpression[:separatorIndex]
-        rightSide = self.totalExpression[separatorIndex + 1:]
-        separator = self.totalExpression[separatorIndex]
+        # Ignore minus sign if it's part of a negative number
+        separatorIndices = [i for i in separatorIndices if not (
+                self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators))]
 
-        return leftSide, separator, rightSide, lastOperator
+        # Determine if there are two or more operators
+        if len(separatorIndices) >= 2:
+            # Get the indices of the first and second operators
+            separatorIndex1, separatorIndex2 = separatorIndices[:2]
+            # Split the expression into three parts: left side, middle side, and right side
+            leftSide = self.totalExpression[:separatorIndex1]
+            middleSide = self.totalExpression[separatorIndex1 + 1:separatorIndex2]
+            rightSide = self.totalExpression[separatorIndex2 + 1:]
+            separator1 = self.totalExpression[separatorIndex1]
+            separator2 = self.totalExpression[separatorIndex2]
+            return leftSide, separator1, middleSide, separator2, rightSide, lastOperator
+        else:
+            # If there's only one operator or none, split the expression normally
+            separatorIndex = max(separatorIndices)
+            leftSide = self.totalExpression[:separatorIndex]
+            rightSide = self.totalExpression[separatorIndex + 1:]
+            separator = self.totalExpression[separatorIndex]
+            return leftSide, separator, "", "", rightSide, lastOperator
 
     def evaluate(self):
-        # TODO: IT DOESNT WORK FOR BIG NUMBERS, MUL AND DIV WITH NEGATIVE NUMBERS
         """
         @brief Evaluate the expression
         @param self: Instance of the class
         @return: True if the result is successfully evaluated and cleaned, False otherwise
         """
         components = self.parsing()
-        leftSide, separator, rightSide, lastOperator = components
+        leftSide, separator1, middleSide, separator2, rightSide, lastOperator = components
         result = 0
+        middleSide_float = 0
+
+        print(f"Left side of the expression: {leftSide}")
+        print(f"First operator: {separator1}")
+        print(f"Middle side of the expression: {middleSide}")
+        print(f"Second operator: {separator2}")
+        print(f"Right side of the expression: {rightSide}")
+        print(f"Last operator: {lastOperator}")
 
         # Handle exponentiation first
         if '^' in leftSide:
@@ -377,6 +399,20 @@ class App(CTk):
                 leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
             else:
                 leftSide = str(mathlib.pow(float(expLeft), int(expRight)))
+
+        if '^' in middleSide:
+            expLeft = middleSide.split('^')[0]
+            expRight = middleSide.split('^')[1]
+            if '.' in expRight or int(expRight) < 0:
+                self.error("Exponent must be a non-negative integer")
+                return None
+            if expLeft == '0' and expRight == '0':
+                self.error("0^0 is undefined")
+                return None
+            if '.' not in expLeft:
+                middleSide = str(mathlib.pow(int(expLeft), int(expRight)))
+            else:
+                middleSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
         if '^' in rightSide:
             expLeft = rightSide.split('^')[0]
@@ -408,6 +444,21 @@ class App(CTk):
                 if round(leftSide_float * 10 ** 5) % 10 == 0:
                     leftSide = str(round(leftSide_float))
 
+        if '√' in middleSide:
+            rootRight = middleSide.split('√')[0]
+            rootLeft = middleSide.split('√')[1]
+            if '.' in rootRight or int(rootRight) < 0:
+                self.error("Root index must be a non-negative integer")
+                return None
+            if float(rootLeft) < 0:
+                self.error("Cannot take the root of a negative number")
+                return None
+            middleSide = str(mathlib.root(float(rootLeft), int(rootRight)))
+            if '.' in leftSide:
+                middleSide_float = float(leftSide)
+                if round(middleSide_float * 10 ** 5) % 10 == 0:
+                    leftSide = str(round(middleSide_float))
+
         if '√' in rightSide:
             rootRight = rightSide.split('√')[0]
             rootLeft = rightSide.split('√')[1]
@@ -428,34 +479,88 @@ class App(CTk):
             leftSide_float = float(leftSide)
         else:
             leftSide_float = int(leftSide)
+        if middleSide:
+            if '.' in middleSide:
+                middleSide_float = float(middleSide)
+            else:
+                middleSide_float = int(middleSide)
         if '.' in rightSide:
             rightSide_float = float(rightSide)
         else:
             rightSide_float = int(rightSide)
 
-        # Perform the remaining operations
-        if separator == '+':
-            result += mathlib.add(leftSide_float, rightSide_float)
-        elif separator == '-':
-            result += mathlib.sub(leftSide_float, rightSide_float)
-        elif separator == '*':
-            result += mathlib.mul(leftSide_float, rightSide_float)
-        elif separator == '/':
-            if rightSide_float == 0:
-                self.error("Cannot divide by zero")
-                return False
-            if leftSide_float % rightSide_float == 0:
-                result = mathlib.div(leftSide_float, rightSide_float)
-                result = int(result)
+        # ==================TWO OPERATORS IN TOTAL EXPRESSION==========================
+        # Perform the calculation based on the operator and the type of the left and right side
+        # If the last operator is not multiplication, division or modulo, perform the calculation
+        if lastOperator not in ['*', '/', '%']:
+            if separator1 == '+':
+                result += mathlib.add(leftSide_float, rightSide_float)
+            elif separator1 == '-':
+                result += mathlib.sub(leftSide_float, rightSide_float)
+            elif separator1 == '*':
+                result += mathlib.mul(leftSide_float, rightSide_float)
+            elif separator1 == '/':
+                if rightSide_float == 0:
+                    self.error("Cannot divide by zero")
+                    return False
+                if leftSide_float % rightSide_float == 0:
+                    result = mathlib.div(leftSide_float, rightSide_float)
+                    result = int(result)
+                else:
+                    result += mathlib.div(leftSide_float, rightSide_float)
+            elif separator1 == '%':
+                if rightSide_float == 0:
+                    self.error("Cannot perform modulo with zero")
+                    return None
+                result += mathlib.mod(leftSide_float, rightSide_float)
             else:
-                result += mathlib.div(leftSide_float, rightSide_float)
-        elif separator == '%':
-            if rightSide_float == 0:
-                self.error("Cannot perform modulo with zero")
-                return None
-            result += mathlib.mod(leftSide_float, rightSide_float)
-        else:
-            return False
+                return False
+
+        # ==================THREE OPERATORS IN TOTAL EXPRESSION==========================
+        # Perform the calculation based on the operator and the type of the left and right side
+        # If the last operator is multiplication, division or modulo, perform the calculation
+        if separator2 in ['*', '/', '%']:
+            if separator2 == '*':
+                partialResult = mathlib.mul(middleSide_float, rightSide_float)
+            elif separator2 == '/':
+                if rightSide_float == 0:
+                    self.error("Cannot divide by zero")
+                    return False
+                if middleSide_float % rightSide_float == 0:
+                    partialResult = mathlib.div(middleSide_float, rightSide_float)
+                    partialResult = int(partialResult)
+                else:
+                    partialResult = mathlib.div(middleSide_float, rightSide_float)
+            elif separator2 == '%':
+                if rightSide_float == 0:
+                    self.error("Cannot perform modulo with zero")
+                    return None
+                partialResult = mathlib.mod(middleSide_float, rightSide_float)
+            else:
+                return False
+
+            # Perform the calculation with the left side of the total expression
+            if self.totalExpression:
+                if separator1 == '+':
+                    result = mathlib.add(leftSide_float, partialResult)
+                elif separator1 == '-':
+                    result = mathlib.sub(leftSide_float, partialResult)
+                if separator1 == '*':
+                    result = mathlib.mul(leftSide_float, partialResult)
+                elif separator1 == '/':
+                    if result == 0:
+                        self.error("Cannot divide by zero")
+                        return False
+                    if leftSide_float % result == 0:
+                        result = mathlib.div(leftSide_float, partialResult)
+                        result = int(result)
+                    else:
+                        result = mathlib.div(leftSide_float, partialResult)
+                elif separator1 == '%':
+                    if result == 0:
+                        self.error("Cannot perform modulo with zero")
+                        return None
+                    result = mathlib.mod(leftSide_float, partialResult)
 
         # Convert the result to a float string if it's in scientific notation
         if -1e14 < result < 1e14 or len(str(result)) < 14:
@@ -510,12 +615,54 @@ class App(CTk):
                 result = str(result_float)
         return result
 
+    def parse_for_equals(self):
+        operators = {'+', '-', '*', '/', '%'}
+
+        # Find the indices of the operators
+        separatorIndices = [i for i, char in enumerate(self.totalExpression) if char in operators]
+
+        # Ignore minus sign if it's part of a negative number
+        separatorIndices = [i for i in separatorIndices if not (
+                self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators))]
+        print("Separator indices: ", separatorIndices)
+        # Determine if there are two or more operators
+        if len(separatorIndices) >= 2:
+            # Get the indices of the first and second operators
+            separatorIndex1, separatorIndex2 = separatorIndices[:2]
+            # Split the expression into three parts: left side, middle side, and right side
+            leftSide = self.totalExpression[:separatorIndex1]
+            middleSide = self.totalExpression[separatorIndex1 + 1:separatorIndex2]
+            separator1 = self.totalExpression[separatorIndex1]
+            separator2 = self.totalExpression[separatorIndex2]
+            return leftSide, separator1, middleSide, separator2
+        elif len(separatorIndices) == 1:
+            # If there's only one operator, split the expression into left side and right side
+            separatorIndex = separatorIndices[0]
+            leftSide = self.totalExpression[:separatorIndex]
+            separator = self.totalExpression[separatorIndex]
+            rightSide = ""
+            return leftSide, separator, rightSide, ""
+        else:
+            # If there are no operators, return the entire expression as left side
+            return self.totalExpression, "", "", ""
+
     def equals(self):
         """
         @brief Calculates the result of the expression when the equals button is pressed
         @param self: Instance of the class
         @return True if the calculation is successful, False otherwise.
         """
+        components = self.parse_for_equals()
+        leftSide, separator1, middleSide, separator2 = components
+        rightSide = self.currentExpression
+        middleSide_float = 0
+        result = 0
+
+        print(f"Left side of the expression: {leftSide}")
+        print(f"First operator: {separator1}")
+        print(f"Middle side of the expression: {middleSide}")
+        print(f"Second operator: {separator2}")
+
         # Parse exponentiation
         exponentiation_result = self.parse_exponentiation()
         if exponentiation_result is not None:
@@ -530,10 +677,6 @@ class App(CTk):
             self.update_current_label()
             return True  # Return if root was performed
 
-        leftSide = self.totalExpression[:-1]
-        operator = self.totalExpression[-1]
-        rightSide = self.currentExpression
-
         if '^' in leftSide:
             expLeft = leftSide.split('^')[0]
             expRight = leftSide.split('^')[1]
@@ -544,6 +687,17 @@ class App(CTk):
                 leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
             else:
                 leftSide = str(mathlib.pow(float(expLeft), int(expRight)))
+
+        if '^' in middleSide:
+            expLeft = middleSide.split('^')[0]
+            expRight = middleSide.split('^')[1]
+            if '.' in expRight or int(expRight) < 0:
+                self.error("Exponent must be a non-negative integer")
+                return None
+            if '.' not in expLeft:
+                middleSide = str(mathlib.pow(int(expLeft), int(expRight)))
+            else:
+                middleSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
         if '^' in rightSide:
             expLeft = rightSide.split('^')[0]
@@ -571,6 +725,21 @@ class App(CTk):
                 if round(leftSide_float * 10 ** 5) % 10 == 0:
                     leftSide = str(round(leftSide_float))
 
+        if '√' in middleSide:
+            rootLeft = middleSide.split('√')[0]
+            rootRight = middleSide.split('√')[1]
+            if '.' in rootLeft or int(rootLeft) < 0:
+                self.error("Root index must be a non-negative integer")
+                return None
+            if float(rootRight) < 0:
+                self.error("Cannot take the root of a negative number")
+                return None
+            middleSide = str(mathlib.root(float(rootRight), int(rootLeft)))
+            if '.' in leftSide:
+                middleSide_float = float(leftSide)
+                if round(middleSide_float * 10 ** 5) % 10 == 0:
+                    leftSide = str(round(middleSide_float))
+
         if '√' in rightSide:
             rootLeft = rightSide.split('√')[0]
             rootRight = rightSide.split('√')[1]
@@ -590,34 +759,76 @@ class App(CTk):
             leftSide_float = float(leftSide)
         else:
             leftSide_float = int(leftSide)
-
+        if middleSide:
+            if '.' in middleSide:
+                middleSide_float = float(middleSide)
+            else:
+                middleSide_float = int(middleSide)
         if '.' in rightSide:
             rightSide_float = float(rightSide)
         else:
             rightSide_float = int(rightSide)
 
-        if operator == '+':
-            result = mathlib.add(leftSide_float, rightSide_float)
-        elif operator == '-':
-            result = mathlib.sub(leftSide_float, rightSide_float)
-        elif operator == '*':
-            result = mathlib.mul(leftSide_float, rightSide_float)
-        elif operator == '/':
-            if rightSide_float == 0:
-                self.error("Cannot divide by zero")
-                return False
-            if leftSide_float % rightSide_float == 0:
-                result = mathlib.div(leftSide_float, rightSide_float)
-                result = int(result)
+        if separator2 == '':
+            if separator1 == '+':
+                result = mathlib.add(leftSide_float, rightSide_float)
+                print(result)
+            elif separator1 == '-':
+                result = mathlib.sub(leftSide_float, rightSide_float)
+            elif separator1 == '*':
+                result = mathlib.mul(leftSide_float, rightSide_float)
+            elif separator1 == '/':
+                if rightSide_float == 0:
+                    self.error("Cannot divide by zero")
+                    return False
+                if leftSide_float % rightSide_float == 0:
+                    result = mathlib.div(leftSide_float, rightSide_float)
+                    result = int(result)
+                else:
+                    result = mathlib.div(leftSide_float, rightSide_float)
+            elif separator1 == '%':
+                if rightSide_float == 0:
+                    self.error("Cannot perform modulo with zero")
+                    return False
+                result = mathlib.mod(leftSide_float, rightSide_float)
             else:
-                result = mathlib.div(leftSide_float, rightSide_float)
-        elif operator == '%':
-            if rightSide_float == 0:
-                self.error("Cannot perform modulo with zero")
                 return False
-            result = mathlib.mod(leftSide_float, rightSide_float)
-        else:
-            return False
+
+        if separator2 in ['*', '/', '%']:
+            if separator2 == '*':
+                result = mathlib.mul(middleSide_float, rightSide_float)
+            elif separator2 == '/':
+                if rightSide_float == 0:
+                    self.error("Cannot divide by zero")
+                    return False
+                result = mathlib.div(middleSide_float, rightSide_float)
+            elif separator2 == '%':
+                if rightSide_float == 0:
+                    self.error("Cannot perform modulo with zero")
+                    return False
+                result = mathlib.mod(middleSide_float, rightSide_float)
+            # Update middleSide_float with the result
+            middleSide_float = result
+
+            # Perform the operation with the left side and the updated middle side
+            if separator1 == '+':
+                result = mathlib.add(leftSide_float, middleSide_float)
+            elif separator1 == '-':
+                result = mathlib.sub(leftSide_float, middleSide_float)
+            elif separator1 == '*':
+                result = mathlib.mul(leftSide_float, middleSide_float)
+            elif separator1 == '/':
+                if middleSide_float == 0:
+                    self.error("Cannot divide by zero")
+                    return False
+                result = mathlib.div(leftSide_float, middleSide_float)
+            elif separator1 == '%':
+                if middleSide_float == 0:
+                    self.error("Cannot perform modulo with zero")
+                    return False
+                result = mathlib.mod(leftSide_float, middleSide_float)
+            else:
+                return False
 
         # Check if the result is within a certain range to avoid scientific notation
         if -1e14 < result < 1e14 or len(str(result)) < 14:
@@ -656,12 +867,22 @@ class App(CTk):
         if self.totalExpression and len(self.totalExpression) >= 2:
             operators = ['+', '-', '*', '/', '%']
             operatorCount = 0
-
+            second_operator = None
             for i, char in enumerate(self.totalExpression):
                 if char in operators and i != 0 and self.totalExpression[i - 1] not in ['^', '√']:
+                    # Skip the operator if it's a minus sign and the character before it is a digit or another operator
+                    if char == '-' and self.totalExpression[i - 1] in operators:
+                        continue
                     if self.totalExpression[i - 1] == 'e':
                         continue
                     operatorCount += 1
+                    if operatorCount == 2:
+                        second_operator = char
+                    if operatorCount == 3 and self.wait_for_third_input:
+                        return True
+            if operatorCount == 2 and second_operator in ['*', '/', '%']:
+                self.wait_for_third_input = True
+                return operatorCount == 3  # Return True if third input is expected
             return operatorCount == 2
         return False
 
@@ -696,13 +917,17 @@ class App(CTk):
         @brief Clears both the current and total expression
         @param self: Instance of the class
         """
+        self.evaluated = False
+        self.resultStr = ''
+        self.pressedEquals = False
+        self.totalEvaluator = ''
+        self.counter = 0
         self.currentExpression = "0"
         self.totalExpression = ""
         self.update_total_label()
 
         if not self.currentExpression:
             self.currentExpression = "0"
-
         self.update_current_label()
 
     def create_clean_button(self):
