@@ -11,7 +11,6 @@ import mathlib
 from help_menu import ToplevelWindow
 from PIL import Image, ImageTk
 from customtkinter import *
-from decimal import *
 
 LIGHT_GRAY = "#979797"
 DARK_GRAY = "#3D3D3D"
@@ -73,7 +72,7 @@ class App(CTk):
         self.totalEvaluator = ""
         self.evaluated = False
         self.pressedEquals = False
-        self.wait_for_third_input = False
+        self.waitForTheThirdInput = False
         self.resultStr = ''
 
         self.digits = {
@@ -155,8 +154,8 @@ class App(CTk):
         """
         if self.currentExpression.startswith("0") and not self.currentExpression.startswith("0."):
             self.currentExpression = self.currentExpression[1:]
-
-        if "Error" in self.currentExpression:  # Check if the current expression is an error message
+        # Check if the current expression is an error message
+        if "Error" in self.currentExpression:
             if len(self.currentExpression) > 20:  # Increase the number of characters displayed for error messages
                 self.currentExpression = self.currentExpression[:80]
         else:
@@ -193,9 +192,9 @@ class App(CTk):
             self.currentExpression = str(value)
         if self.evaluated:
             if ('.' not in self.currentExpression and '^' not in self.currentExpression and
-                    '√' not in self.currentExpression and '+' not in self.currentExpression and
-                    '-' not in self.currentExpression and '*' not in self.currentExpression and
-                    '/' not in self.currentExpression and '%' not in self.currentExpression):
+                '√' not in self.currentExpression and '+' not in self.currentExpression and
+                '-' not in self.currentExpression and '*' not in self.currentExpression and
+                '/' not in self.currentExpression and '%' not in self.currentExpression):
                 self.currentExpression = ''
                 self.totalExpression = self.resultStr
                 self.update_total_label()
@@ -232,16 +231,17 @@ class App(CTk):
         self.update_current_label()
         self.counter = 0
 
+        # If the current expression ends with a decimal point, remove it
         if '.' in self.currentExpression and not self.currentExpression[-1].isdigit():
             self.currentExpression = self.currentExpression[:-1]
 
+        # If the current expression has a decimal point followed only by zeros, round it to an integer
         if '.' in self.currentExpression:
-            # Check if there are only zeros behind the decimal point
             if all(char == '0' for char in self.currentExpression[self.currentExpression.index('.') + 1:]):
                 rounded_num = round(float(self.currentExpression))
                 self.currentExpression = str(rounded_num)
 
-        # If 'Error' is in the current expression, only allow '-' to overwrite it
+        # If the current expression is an error message, only allow '-' to overwrite it
         if 'Error' in self.currentExpression:
             if operator == '-':
                 self.currentLabel.configure(font=("Arial", 50))  # Reset the font size when not displaying an error
@@ -251,7 +251,7 @@ class App(CTk):
             else:
                 return
 
-        # Allow operator as the first character if it is '-' and disallow any other operator
+        # If the current expression is empty, only allow '-' as the first character
         if not self.currentExpression:
             if operator == '-':
                 self.currentExpression = operator
@@ -259,9 +259,11 @@ class App(CTk):
                 return  # Do not allow any other operator to be the first character if total expression is also empty
         self.update_current_label()
 
+        # If the current expression ends with '-', do not append another operator
         if '-' in self.currentExpression and not self.currentExpression[-1].isdigit():
             return
 
+        # If the current expression ends with '√' and not a digit, append '-' or '0' based on the operator
         if '√' in self.currentExpression and not self.currentExpression[-1].isdigit():
             if operator == '-':
                 self.currentExpression += operator
@@ -270,6 +272,7 @@ class App(CTk):
             else:
                 self.currentExpression += '0'
 
+        # If the current expression ends with '^' and not a digit, append '-' or '0' based on the operator
         if '^' in self.currentExpression and not self.currentExpression[-1].isdigit():
             if operator == '-':
                 self.currentExpression += operator
@@ -278,8 +281,9 @@ class App(CTk):
             else:
                 self.currentExpression += '0'
 
+        # If the total expression ends with an operator and the current expression is empty, handle '-' differently
         if self.totalExpression and self.totalExpression[-1] in "+-*/%" and not self.currentExpression and len(
-                self.totalExpression) != 0:
+            self.totalExpression) != 0:
             if operator == '-' and self.totalExpression[-1] in "+-*/%":
                 self.currentExpression = operator
             else:
@@ -287,6 +291,7 @@ class App(CTk):
         else:
             self.totalExpression += self.currentExpression + operator
 
+        # If an evaluation has just been performed, update the total expression with the result
         if self.evaluated:
             self.totalExpression = self.resultStr
             self.update_total_label()
@@ -297,6 +302,7 @@ class App(CTk):
         self.update_total_label()
         self.update_current_label()
 
+        # If the signal function returns True, perform an evaluation
         if self.signal():
             self.evaluate()
         else:
@@ -334,6 +340,12 @@ class App(CTk):
             row += 1
 
     def parsing(self):
+        """
+        @brief Parses the total expression into its components
+        @param self: Instance of the class
+        @return: Tuple containing the left side, first operator, middle side, second operator, right side, last operator
+        """
+
         lastOperator = ""
         if len(self.totalExpression) >= 3:
             lastOperator = self.totalExpression[-1]
@@ -346,7 +358,7 @@ class App(CTk):
 
         # Ignore minus sign if it's part of a negative number
         separatorIndices = [i for i in separatorIndices if not (
-                self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators))]
+            self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators))]
 
         # Determine if there are two or more operators
         if len(separatorIndices) >= 2:
@@ -377,13 +389,6 @@ class App(CTk):
         leftSide, separator1, middleSide, separator2, rightSide, lastOperator = components
         result = 0
         middleSide_float = 0
-
-        print(f"Left side of the expression: {leftSide}")
-        print(f"First operator: {separator1}")
-        print(f"Middle side of the expression: {middleSide}")
-        print(f"Second operator: {separator2}")
-        print(f"Right side of the expression: {rightSide}")
-        print(f"Last operator: {lastOperator}")
 
         # Handle exponentiation first
         if '^' in leftSide:
@@ -580,6 +585,11 @@ class App(CTk):
         return self.evaluated
 
     def parse_exponentiation(self):
+        """
+        @brief Parses the current expression for exponentiation operation
+        @param self: Instance of the class
+        @return: Result of the exponentiation operation if successful, None otherwise
+        """
         result = None
         if '^' in self.currentExpression and not self.totalExpression:
             expCurrLeft = self.currentExpression.split('^')[0]
@@ -597,6 +607,11 @@ class App(CTk):
         return result
 
     def parse_root(self):
+        """
+        @brief Parses the current expression for root operation
+        @param self: Instance of the class
+        @return: Result of the root operation if successful, None otherwise
+        """
         result = None
         if '√' in self.currentExpression and not self.totalExpression:
             rootCurrLeft = self.currentExpression.split('√')[0]
@@ -616,15 +631,20 @@ class App(CTk):
         return result
 
     def parse_for_equals(self):
+        """
+        @brief Parses the total expression into its components
+        @param self: Instance of the class
+        @return: Tuple containing the left side, first operator, middle side, second operator, right side
+        """
         operators = {'+', '-', '*', '/', '%'}
 
-        # Find the indices of the operators
+        # Find the indices of the operators in the total expression
         separatorIndices = [i for i, char in enumerate(self.totalExpression) if char in operators]
 
         # Ignore minus sign if it's part of a negative number
         separatorIndices = [i for i in separatorIndices if not (
-                self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators))]
-        print("Separator indices: ", separatorIndices)
+            self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators))]
+
         # Determine if there are two or more operators
         if len(separatorIndices) >= 2:
             # Get the indices of the first and second operators
@@ -642,9 +662,6 @@ class App(CTk):
             separator = self.totalExpression[separatorIndex]
             rightSide = ""
             return leftSide, separator, rightSide, ""
-        else:
-            # If there are no operators, return the entire expression as left side
-            return self.totalExpression, "", "", ""
 
     def equals(self):
         """
@@ -652,31 +669,28 @@ class App(CTk):
         @param self: Instance of the class
         @return True if the calculation is successful, False otherwise.
         """
+        # Parse the expression for equals
         components = self.parse_for_equals()
         leftSide, separator1, middleSide, separator2 = components
         rightSide = self.currentExpression
         middleSide_float = 0
         result = 0
 
-        print(f"Left side of the expression: {leftSide}")
-        print(f"First operator: {separator1}")
-        print(f"Middle side of the expression: {middleSide}")
-        print(f"Second operator: {separator2}")
-
-        # Parse exponentiation
+        # Parse the expression for exponentiation
         exponentiation_result = self.parse_exponentiation()
         if exponentiation_result is not None:
             self.currentExpression = exponentiation_result
             self.update_current_label()
             return True  # Return if exponentiation was performed
 
-        # Parse root
+        # Parse the expression for root
         root_result = self.parse_root()
         if root_result is not None:
             self.currentExpression = root_result
             self.update_current_label()
             return True  # Return if root was performed
 
+        # Check and handle exponentiation in leftSide
         if '^' in leftSide:
             expLeft = leftSide.split('^')[0]
             expRight = leftSide.split('^')[1]
@@ -688,6 +702,7 @@ class App(CTk):
             else:
                 leftSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
+        # Check and handle exponentiation in middleSide
         if '^' in middleSide:
             expLeft = middleSide.split('^')[0]
             expRight = middleSide.split('^')[1]
@@ -699,6 +714,7 @@ class App(CTk):
             else:
                 middleSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
+        # Check and handle exponentiation in rightSide
         if '^' in rightSide:
             expLeft = rightSide.split('^')[0]
             expRight = rightSide.split('^')[1]
@@ -710,6 +726,7 @@ class App(CTk):
             else:
                 rightSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
+        # Check and handle root in leftSide
         if '√' in leftSide:
             rootLeft = leftSide.split('√')[0]
             rootRight = leftSide.split('√')[1]
@@ -725,6 +742,7 @@ class App(CTk):
                 if round(leftSide_float * 10 ** 5) % 10 == 0:
                     leftSide = str(round(leftSide_float))
 
+        # Check and handle root in middleSide
         if '√' in middleSide:
             rootLeft = middleSide.split('√')[0]
             rootRight = middleSide.split('√')[1]
@@ -740,6 +758,7 @@ class App(CTk):
                 if round(middleSide_float * 10 ** 5) % 10 == 0:
                     leftSide = str(round(middleSide_float))
 
+        # Check and handle root in rightSide
         if '√' in rightSide:
             rootLeft = rightSide.split('√')[0]
             rootRight = rightSide.split('√')[1]
@@ -755,6 +774,7 @@ class App(CTk):
                 if round(rightSide_float * 10 ** 5) % 10 == 0:
                     rightSide = str(round(rightSide_float))
 
+        # Convert leftSide, middleSide, and rightSide to float or int as necessary
         if '.' in leftSide:
             leftSide_float = float(leftSide)
         else:
@@ -769,10 +789,10 @@ class App(CTk):
         else:
             rightSide_float = int(rightSide)
 
+        # Perform the operation if there is only one operator
         if separator2 == '':
             if separator1 == '+':
                 result = mathlib.add(leftSide_float, rightSide_float)
-                print(result)
             elif separator1 == '-':
                 result = mathlib.sub(leftSide_float, rightSide_float)
             elif separator1 == '*':
@@ -794,6 +814,7 @@ class App(CTk):
             else:
                 return False
 
+        # Perform the operation if there are two operators
         if separator2 in ['*', '/', '%']:
             if separator2 == '*':
                 result = mathlib.mul(middleSide_float, rightSide_float)
@@ -864,6 +885,7 @@ class App(CTk):
         @param self: Instance of the class
         @return: True if the total expression has two operators, False otherwise
         """
+        # Check if totalExpression is not empty and has at least two characters
         if self.totalExpression and len(self.totalExpression) >= 2:
             operators = ['+', '-', '*', '/', '%']
             operatorCount = 0
@@ -873,15 +895,17 @@ class App(CTk):
                     # Skip the operator if it's a minus sign and the character before it is a digit or another operator
                     if char == '-' and self.totalExpression[i - 1] in operators:
                         continue
+                    # Skip if previous character is 'e'
                     if self.totalExpression[i - 1] == 'e':
                         continue
                     operatorCount += 1
                     if operatorCount == 2:
                         second_operator = char
-                    if operatorCount == 3 and self.wait_for_third_input:
+                    if operatorCount == 3 and self.waitForTheThirdInput:
                         return True
+            # If there are two operators and second one is '*', '/', or '%', set wait_for_third_input to True
             if operatorCount == 2 and second_operator in ['*', '/', '%']:
-                self.wait_for_third_input = True
+                self.waitForTheThirdInput = True
                 return operatorCount == 3  # Return True if third input is expected
             return operatorCount == 2
         return False
@@ -980,7 +1004,7 @@ class App(CTk):
         @param self: Instance of the class
         """
         if ('^' not in self.currentExpression and '√' not in self.currentExpression and self.currentExpression != '-'
-                and 'Error' not in self.currentExpression and self.currentLabel.cget("text") != '0'):
+            and 'Error' not in self.currentExpression and self.currentLabel.cget("text") != '0'):
             self.currentExpression += '^'
         self.update_current_label()
 
@@ -1005,7 +1029,7 @@ class App(CTk):
         @param self: Instance of the class
         """
         if ('√' not in self.currentExpression and '^' not in self.currentExpression and self.currentExpression != '-'
-                and 'Error' not in self.currentExpression and self.currentLabel.cget("text") != '0'):
+            and 'Error' not in self.currentExpression and self.currentLabel.cget("text") != '0'):
             self.currentExpression += '√'
         self.update_current_label()
 
@@ -1029,28 +1053,34 @@ class App(CTk):
         @param self: Instance of the class
         """
         if not self.totalExpression:
+            # List of functions to parse
             functions_to_parse = [self.parse_exponentiation, self.parse_root]
 
             for func in functions_to_parse:
                 result = func()
                 if result is not None:
+                    # Check if the result is a decimal or negative
                     if '.' in result or int(result) < 0:
                         self.error("Factorial is only defined for non-negative integers")
                         return
                     else:
+                        # If it's not, calculate the factorial of the result
                         result = mathlib.fac(int(result))
+                    # If the result is an integer, convert it to an integer
                     if result.is_integer():
                         result = int(result)
                     self.currentExpression = str(result)
                     self.update_current_label()
                     return
 
+            # If the current expression is a decimal or negative
             if '.' in self.currentExpression or int(self.currentExpression) < 0:
                 self.error("Factorial is only defined for non-negative integers")
                 return
             else:
                 result = mathlib.fac(int(self.currentExpression))
 
+            # If the length of the result is greater than 14
             if len(str(result)) > 14:
                 result = "{:.5e}".format(result)
             else:
@@ -1080,10 +1110,11 @@ class App(CTk):
         """
         if not self.totalExpression:
             functions_to_parse = [self.parse_exponentiation, self.parse_root]
-
+            # Loop through the functions to parse
             for func in functions_to_parse:
                 result = func()
                 if result is not None:
+                    # Check if the result is a decimal
                     if '.' in result:
                         result = mathlib.abs(float(result))
                     else:
@@ -1092,13 +1123,14 @@ class App(CTk):
                     self.update_current_label()
                     return
 
-            if '.' in self.currentExpression:
-                result = mathlib.abs(float(self.currentExpression))
-            else:
-                result = mathlib.abs(int(self.currentExpression))
+        # If the total expression is not empty, check if the current expression is a decimal
+        if '.' in self.currentExpression:
+            result = mathlib.abs(float(self.currentExpression))
+        else:
+            result = mathlib.abs(int(self.currentExpression))
 
-            self.currentExpression = str(result)
-            self.update_current_label()
+        self.currentExpression = str(result)
+        self.update_current_label()
 
     def create_abs_button(self):
         """
