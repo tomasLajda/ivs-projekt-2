@@ -24,6 +24,24 @@ The application includes robust error handling to manage invalid inputs and unex
 
 The calculator is designed to be compatible with the Ubuntu 64-bit platform.
 
+### Installation:
+
+<ol>
+  <li>'unzip installer.zip'</li>
+  <li>'cd installer'</li>
+  <li>'sudo sh installer.sh'</li>
+</ol>
+	
+### Usage:
+	run the calculator from anywhere: 'kalkulajda'
+	run the profiling from anywhere : 'kalkulajda_p'
+	
+## Uninstallation:
+<ol>
+  <li>Navigate to the originl installer directory</li>
+  <li>'sudo sh uninstall.sh'</li>
+</ol>
+
 ## Authors
 
 Lajda-ci
