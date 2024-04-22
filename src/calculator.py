@@ -169,6 +169,7 @@ class App(CTk):
         else:
             self.currentLabel.configure(text=self.currentExpression)
 
+
     def create_button_frame(self):
         """
         @brief Creates a frame for buttons in the calculator interface
@@ -186,6 +187,10 @@ class App(CTk):
         @param self: Instance of the class
         @param value: The value to append to the current expression
         """
+        if(self.pressedEquals ):
+            self.currentExpression = "0"
+            self.pressedEquals = False
+
         # If 'Error' is in the current expression, overwrite it with the clicked number
         if 'Error' in self.currentExpression:
             self.currentLabel.configure(font=("Arial", 50))  # Reset the font size when not displaying an error
@@ -869,6 +874,8 @@ class App(CTk):
         # Update the total expression with the new result and the operator
         self.totalExpression = ""
         self.update_total_label()
+
+        self.pressedEquals = True;
 
     def create_equals_button(self):
         """
