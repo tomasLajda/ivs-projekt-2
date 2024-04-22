@@ -60,7 +60,7 @@ class App(CTk):
         self.displayFrame = None
         self.toplevel_window = None
         self.counter = 0
-        self.title("Calcu-lajda")
+        self.title("kalkulajda")
         self.resizable(False, False)
 
         self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "real_logo.png"))
