@@ -52,7 +52,7 @@ chmod +x /usr/bin/kalkulajda.sh
 
 # Create symbolic links to the executables
 ln -sf /usr/bin/kalkulajda.sh Kalkulajda/usr/bin/kalkulajda
-ln -sf /usr/bin/profiling Kalkulajda/usr/bin/kalkulajda_p
+ln -sf /usr/bin/profiling Kalkulajda/usr/bin/kalkulajda_stddev
 
 dpkg-deb --build Kalkulajda
 dpkg -i Kalkulajda.deb

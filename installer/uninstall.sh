@@ -11,7 +11,7 @@ dpkg -r Kalkulajda
 
 # Remove the symbolic links
 rm /usr/local/bin/kalkulajda
-rm /usr/local/bin/kalkulajda_p
+rm /usr/local/bin/kalkulajda_stddev
 
 # Remove the kalkulajda.sh script and the calculator binary from /usr/bin
 rm /usr/bin/kalkulajda.sh
