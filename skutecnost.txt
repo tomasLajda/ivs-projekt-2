@@ -1,1 +1,34 @@
-tento soubor bude obsahovat rozdil mezi planem projektu a skutecnosti
+Nedostatky plánu
+	- Nerozdelenie dokumentácie
+	- nerozdelenie uzivatelskej dokumentacie
+	- nevyuzite trello
+	- nerozdelenie vyvoja GUI a integracie funkcii roznym ludom
+	- nečastá kontrola kódu
+
+- format kodu na testy/funkcie sme dali snake_case
+- prelinanie uloh / pomoc ked treba
+- sposob pouzivania githubu -> pull requesty
+- malo teambuildingov :(
+- vyvoj gui nebol presne naplanovany + bol podcenenny
+
+hodnotenie: 
+	meetingy - vyborne, informativne, povzbudzujuce
+	komunikacne kanaly - super, vyuzivane
+	git praca - spolahliva, prehladna
+	
+kniznice: 
+	pytest - spoko
+	tkinter - sracka
+	snakewiz - spica
+	customtkinter - okruhle tlacitka :)
+	
+stihali sme predom
+	testy
+	prototyp ui
+	Makefile
+	profiling
+
+nestihali sme
+	GUI
+	kniznica
+	
