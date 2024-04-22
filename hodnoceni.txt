@@ -1,4 +1,4 @@
-xlogin01 100 (základ GUI a základní mat. operace)
-xlogin02 100 (pokročilé mat. operace)
-xlogin03 90 (profiling, instalátor)
-xlogin04 110 (testy, dokumentace)
+xcsirim00 80 (installation, tests)
+xlajdat00 110 (documentation, profiling, tests, math library)
+xgajduv00 80 (math library, user doc, mockup)
+xvalapm00 130 (user interface + its mathlib integration)
