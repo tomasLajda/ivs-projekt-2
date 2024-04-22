@@ -28,9 +28,9 @@ cd \"\$(dirname \"\$0\")\"
 chmod +x kalkulajda.sh
 mv kalkulajda.sh /usr/bin/
 
-# Copy the binary executables into the package
-cp calculator Kalkulajda/usr/bin/
-cp profiling Kalkulajda/usr/bin/
+# Move the binary executables into the package
+mv calculator Kalkulajda/usr/bin/
+mv profiling Kalkulajda/usr/bin/
 
 # Assign the executable permissions to the binaries and the wrapper script
 chmod +x Kalkulajda/usr/bin/calculator

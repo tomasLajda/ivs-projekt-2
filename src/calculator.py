@@ -359,9 +359,10 @@ class App(CTk):
         # Find the indices of the operators
         separatorIndices = [i for i, char in enumerate(self.totalExpression) if char in operators]
 
-        # Ignore minus sign if it's part of a negative number
+        # Ignore minus sign if it's part of a negative number or if it's part of scientific notation
         separatorIndices = [i for i in separatorIndices if not (
-            self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators))]
+            (self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators)) or
+            (i > 0 and self.totalExpression[i - 1].lower() == 'e'))]
 
         # Determine if there are two or more operators
         if len(separatorIndices) >= 2:
@@ -600,9 +601,6 @@ class App(CTk):
             if '.' in expCurrRight or int(expCurrRight) < 0:
                 self.error("Exponent must be a non-negative integer")
                 return None
-            if float(expCurrLeft) < 0:
-                self.error("Cannot raise a negative number to a power")
-                return None
             if '.' not in expCurrLeft:
                 result = str(mathlib.pow(int(expCurrLeft), int(expCurrRight)))
             else:
@@ -626,9 +624,9 @@ class App(CTk):
                 self.error("Cannot take the root of a negative number")
                 return None
             result_float = mathlib.root(float(rootCurrRight), int(rootCurrLeft))
-            if '.' in str(result_float):
-                if round(result_float * 10 ** 5) % 10 == 0:
-                    result = str(int(round(result_float)))
+            # Check if the result is an integer
+            if result_float.is_integer():
+                result = str(int(result_float))
             else:
                 result = str(result_float)
         return result
@@ -644,9 +642,10 @@ class App(CTk):
         # Find the indices of the operators in the total expression
         separatorIndices = [i for i, char in enumerate(self.totalExpression) if char in operators]
 
-        # Ignore minus sign if it's part of a negative number
+        # Ignore minus sign if it's part of a negative number or if it's part of scientific notation
         separatorIndices = [i for i in separatorIndices if not (
-            self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators))]
+            (self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators)) or
+            (i > 0 and self.totalExpression[i - 1].lower() == 'e'))]
 
         # Determine if there are two or more operators
         if len(separatorIndices) >= 2:
@@ -665,6 +664,9 @@ class App(CTk):
             separator = self.totalExpression[separatorIndex]
             rightSide = ""
             return leftSide, separator, rightSide, ""
+        else:
+            # If no operators are found, return a tuple of empty strings
+            return "", "", "", ""
 
     def equals(self):
         """
