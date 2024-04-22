@@ -67,33 +67,33 @@ doc: Doxyfile
 	doxygen Doxyfile
 
 setup:
-	@echo "Setting up the project..."
-	sudo apt-get install python3-pip
-	sudo apt-get install python3-tk
-	sudo apt-get install tk-dev
-	sudo apt-get install doxygen
-	sudo apt-get install graphviz
-	pip3 install -r requirements.txt
+	ifeq ($(shell id -u), 0)
+		@echo "Setting up the project..."
+		apt-get install python3-pip
+		apt-get install python3-tk
+		apt-get install tk-dev
+		apt-get install doxygen
+		apt-get install graphviz
+		install -r requirements.txt
+	else
+		@echo "Please run with sudo."
+		exit 1
+	endif
 
 # Setup the installation zip file and clean after itself
 install: setup calculator.py help_menu.py mathlib.py profiling.py
-    ifeq ($(shell id -u), 0)
-		@echo "Setting up the installer..."
-		cp Pictures ../installer -r
-		pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/*:Pictures' calculator.py mathlib.py help_menu.py
-		pyinstaller --onefile profiling.py mathlib.py
-		mv dist/calculator ../installer
-		mv dist/profiling ../installer
-		rm -rf dist
-		rm -rf build
-		rm -f *.spec
-		rm -rf ../installer/Kalkulajda
-		if [ -f "../installer/Kalkulajda.deb" ]; then rm ../installer/Kalkulajda.deb; fi
-		if [ -f "calculator" ]; then rm calculator; fi
-		if [ -f "profiling" ]; then rm profiling; fi
-		@echo "installer.zip created."
-		zip -r installer.zip ../installer/*
-    else
-		@echo "Please run 'make install' with sudo."
-		exit 1
-    endif
+	@echo "Setting up the installer..."
+	cp Pictures ../installer -r
+	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/*:Pictures' calculator.py mathlib.py help_menu.py
+	pyinstaller --onefile profiling.py mathlib.py
+	mv dist/calculator ../installer
+	mv dist/profiling ../installer
+	rm -rf dist
+	rm -rf build
+	rm -f *.spec
+	rm -rf ../installer/Kalkulajda
+	if [ -f "../installer/Kalkulajda.deb" ]; then rm ../installer/Kalkulajda.deb; fi
+	if [ -f "calculator" ]; then rm calculator; fi
+	if [ -f "profiling" ]; then rm profiling; fi
+	zip -r installer.zip ../installer/*
+	@echo "installer.zip created."
