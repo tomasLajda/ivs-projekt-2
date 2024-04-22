@@ -31,4 +31,9 @@ stihali sme predom
 nestihali sme
 	GUI
 	kniznica
-	
+
+zdovodenenie hodnoceni.txt:
+    xcsirim 80 - zla implementacia testov pre profiling
+    xlajdat 110 - sprava githubu, oprava mathlib v nudzi
+    xgajduv 80 - zla implementacia mathlib
+    xvalapm 130 - bol sam na cely gui, zla implementacia mathlib stazila vyvoj
