@@ -67,18 +67,17 @@ doc: Doxyfile
 	doxygen Doxyfile
 
 setup:
-	ifeq ($(shell id -u), 0)
-		@echo "Setting up the project..."
-		apt-get install python3-pip
-		apt-get install python3-tk
-		apt-get install tk-dev
-		apt-get install doxygen
-		apt-get install graphviz
-		install -r requirements.txt
-	else
-		@echo "Please run with sudo."
-		exit 1
-	endif
+	@if [ `id -u` -ne 0 ]; then \
+		echo "Please run with sudo."; \
+		exit 1; \
+	fi
+	@echo "Setting up the project..."
+	apt-get install python3-pip
+	apt-get install python3-tk
+	apt-get install tk-dev
+	apt-get install doxygen
+	apt-get install graphviz
+	pip3 install -r requirements.txt
 
 # Setup the installation zip file and clean after itself
 install: setup calculator.py help_menu.py mathlib.py profiling.py
