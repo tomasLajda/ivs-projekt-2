@@ -32,6 +32,7 @@ fi
 
 rm Kalkulajda.deb
 rm installer.sh
+rm kalkulajda.sh
 rm uninstall.sh
 rm requirements.txt
 rm calculator
