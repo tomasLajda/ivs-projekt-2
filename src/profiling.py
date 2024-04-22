@@ -1,6 +1,6 @@
 """
 @file profiling.py
-@brief File containing profiling.
+@brief File contains function to calculate standard deviation from stdin.
 
 @author
 - Tomáš Lajda (xlajdat00)
@@ -74,6 +74,7 @@ def standard_deviation(numbers):
 
 numbers = seperate_numbers_from_std()
 
+# check for error
 try:
   std = standard_deviation(numbers)
   print(std)

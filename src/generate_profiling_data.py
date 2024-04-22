@@ -1,3 +1,11 @@
+"""
+@file profiling.py
+@brief Script to generate inputed number of numbers to data.txt file
+
+@author
+- Tomáš Lajda (xlajdat00)
+@date April 22, 2024
+"""
 import random
 
 number = input("Enter a number of random generated numbers: ")
