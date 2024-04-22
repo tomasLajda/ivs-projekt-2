@@ -161,8 +161,15 @@ class App(CTk):
         if self.currentExpression.startswith("0") and not self.currentExpression.startswith("0."):
             self.currentExpression = self.currentExpression[1:]
 
-        if len(self.currentExpression) > 14:
-            self.currentExpression = self.currentExpression[:14]
+        # If 'Error' is in the current expression, change the length to 80 and adjust the font size
+        if 'Error' in self.currentExpression:
+            if len(self.currentExpression) > 20:
+                self.currentExpression = self.currentExpression[:80]
+            self.currentLabel.configure(font=("Arial", 15))  # Smaller font size for error messages
+        else:
+            if len(self.currentExpression) > 14:
+                self.currentExpression = self.currentExpression[:14]  # Limit the length to 14
+            self.currentLabel.configure(font=("Arial", 50))  # Larger font size for normal expressions
 
         # If currentExpression is empty or "0", display "0"
         if not self.currentExpression or self.currentExpression == "0":
@@ -188,7 +195,10 @@ class App(CTk):
         @param self: Instance of the class
         @param value: The value to append to the current expression
         """
-        if self.evaluated:
+        # If 'Error' is in the current expression, overwrite it
+        if 'Error' in self.currentExpression:
+            self.currentExpression = str(value)
+        elif self.evaluated:
             self.currentExpression = ''
             self.currentExpression += str(value)
             self.evaluated = False
@@ -212,7 +222,6 @@ class App(CTk):
             self.buttonFrame.grid_columnconfigure(column, weight=1)
 
     def show_operators(self, operator):
-        # TODO: 2 OPERATORS AT THE SAME TIME, CHECK FOR NEGATIVE NUMBERS, REMOVE 0 FROM CURR EXPRESS
         """
         @brief Appends the provided operator to the current expression and updates the labels.
         @param self: Instance of the class
@@ -220,28 +229,39 @@ class App(CTk):
         """
         self.update_current_label()
 
+        # If the current expression ends with a decimal point, remove it
         if '.' in self.currentExpression and not self.currentExpression[-1].isdigit():
             self.currentExpression = self.currentExpression[:-1]
 
+        # If the current expression has a decimal point followed only by zeros, round it to an integer
         if '.' in self.currentExpression:
-            # Check if there are only zeros behind the decimal point
             if all(char == '0' for char in self.currentExpression[self.currentExpression.index('.') + 1:]):
                 rounded_num = round(float(self.currentExpression))
                 self.currentExpression = str(rounded_num)
 
-        # Prevent operator as the first character except '-'
-        if not self.totalExpression and self.currentExpression == '0':
+        # If the current expression is an error message, only allow '-' to overwrite it
+        if 'Error' in self.currentExpression:
             if operator == '-':
+                self.currentLabel.configure(font=("Arial", 50))  # Reset the font size when not displaying an error
                 self.currentExpression = operator
                 self.update_current_label()
                 return
-
-        if '-' in self.currentExpression and not self.currentExpression[-1].isdigit():
-            if operator == '-':
-                return
             else:
-                self.currentExpression += '0'
+                return
 
+        # If the current expression is empty, only allow '-' as the first character
+        if self.currentExpression == '0':
+            if operator == '-':
+                self.currentExpression = operator
+            elif not self.totalExpression:
+                self.totalExpression = self.currentExpression + operator
+        self.update_current_label()
+
+        # If the current expression ends with '-', do not append another operator
+        if '-' in self.currentExpression and not self.currentExpression[-1].isdigit():
+            return
+
+        # If the current expression ends with '√' and not a digit, append '-' or '0' based on the operator
         if '√' in self.currentExpression and not self.currentExpression[-1].isdigit():
             if operator == '-':
                 self.currentExpression += operator
@@ -250,6 +270,7 @@ class App(CTk):
             else:
                 self.currentExpression += '0'
 
+        # If the current expression ends with '^' and not a digit, append '-' or '0' based on the operator
         if '^' in self.currentExpression and not self.currentExpression[-1].isdigit():
             if operator == '-':
                 self.currentExpression += operator
@@ -258,23 +279,41 @@ class App(CTk):
             else:
                 self.currentExpression += '0'
 
-        if (self.totalExpression and self.totalExpression[-1] in "+-*/%" and not self.currentExpression and
-            len(self.totalExpression) != 0):
-            self.totalExpression = self.totalExpression[:-1] + operator
+        # If the total expression ends with an operator and the current expression is empty, handle '-' differently
+        if self.totalExpression and self.totalExpression[-1] in "+-*/%" and self.currentExpression == '0' and len(
+            self.totalExpression) != 0:
+            if operator == '-' and self.totalExpression[-1] in "+-*/%":
+                self.currentExpression = operator
+            else:
+                # Replace the last operator in totalExpression with the new operator
+                self.totalExpression = self.totalExpression[:-1] + operator
         else:
-            # if 'e' in self.currentExpression:
-            #     self.totalExpression = self.currentExpression + operator
-            # else:
-            self.totalExpression += self.currentExpression + operator
+            # Check if the current label text is '0' before appending the operator to the total expression
+            if self.currentLabel.cget("text") != '0':
+                self.totalExpression += self.currentExpression + operator
 
+        self.evaluated = False
         self.currentExpression = ''
         self.update_total_label()
         self.update_current_label()
 
+        # If the signal function returns True, perform an evaluation
         if self.signal():
             self.evaluate()
         else:
             pass
+
+    def error(self, message):
+        """
+        @brief Displays an error message on the calculator's display
+        @param self: Instance of the class
+        @param message: The error message to display
+        """
+        self.totalExpression = ""
+        self.update_total_label()
+        self.currentExpression = "Error: " + message
+        self.currentLabel.configure(font=("Arial", 15))  # Changed the font size to a smaller value
+        self.update_current_label()
 
     def create_operator_buttons(self):
         """
@@ -400,22 +439,44 @@ class App(CTk):
         return self.evaluated
 
     def parse_exponentiation(self):
+        """
+        @brief Parses the current expression for exponentiation operation
+        @param self: Instance of the class
+        @return: Result of the exponentiation operation if successful, None otherwise
+        """
         result = None
         if '^' in self.currentExpression and not self.totalExpression:
             expCurrLeft = self.currentExpression.split('^')[0]
             expCurrRight = self.currentExpression.split('^')[1]
-            result = str(mathlib.pow(int(expCurrLeft), int(expCurrRight)))
+            if '.' in expCurrRight or int(expCurrRight) < 0:
+                self.error("Exponent must be a non-negative integer")
+                return None
+            if '.' not in expCurrLeft:
+                result = str(mathlib.pow(int(expCurrLeft), int(expCurrRight)))
+            else:
+                result = str(mathlib.pow(float(expCurrLeft), int(expCurrRight)))
         return result
 
     def parse_root(self):
+        """
+        @brief Parses the current expression for root operation
+        @param self: Instance of the class
+        @return: Result of the root operation if successful, None otherwise
+        """
         result = None
         if '√' in self.currentExpression and not self.totalExpression:
             rootCurrLeft = self.currentExpression.split('√')[0]
             rootCurrRight = self.currentExpression.split('√')[1]
+            if '.' in rootCurrLeft or int(rootCurrLeft) < 0:
+                self.error("Root index must be a non-negative integer")
+                return None
+            if float(rootCurrRight) < 0:
+                self.error("Cannot take the root of a negative number")
+                return None
             result_float = mathlib.root(float(rootCurrRight), int(rootCurrLeft))
-            if '.' in str(result_float):
-                if round(result_float * 10 ** 5) % 10 == 0:
-                    result = str(int(round(result_float)))
+            # Check if the result is an integer
+            if result_float.is_integer():
+                result = str(int(result_float))
             else:
                 result = str(result_float)
         return result
@@ -634,7 +695,8 @@ class App(CTk):
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if '^' not in self.currentExpression and self.currentExpression != '0':
+        if ('^' not in self.currentExpression and self.currentExpression != '0' and '√' not in self.currentExpression
+            and self.currentExpression[-1] != '.' and self.currentExpression[-1] != '-'):
             self.currentExpression += '^'
             self.update_current_label()
 
@@ -660,7 +722,8 @@ class App(CTk):
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if '√' not in self.currentExpression and self.currentExpression != '0':
+        if ('√' not in self.currentExpression and self.currentExpression != '0' and '^' not in self.currentExpression
+            and self.currentExpression[-1] != '.' and self.currentExpression[-1] != '-'):
             self.currentExpression += '√'
         self.update_current_label()
 
@@ -684,31 +747,38 @@ class App(CTk):
         @param self: Instance of the class
         """
         if not self.totalExpression:
+            # List of functions to parse
             functions_to_parse = [self.parse_exponentiation, self.parse_root]
 
             for func in functions_to_parse:
                 result = func()
                 if result is not None:
-                    if '.' in result:
-                        result = mathlib.fac(float(result))
+                    # Check if the result is a decimal or negative
+                    if '.' in result or int(result) < 0:
+                        self.error("Factorial is only defined for non-negative integers")
+                        return
                     else:
+                        # If it's not, calculate the factorial of the result
                         result = mathlib.fac(int(result))
+                    # If the result is an integer, convert it to an integer
                     if result.is_integer():
                         result = int(result)
                     self.currentExpression = str(result)
                     self.update_current_label()
                     return
 
-            if '.' in self.currentExpression:
-                result = mathlib.fac(float(self.currentExpression))
+            # If the current expression is a decimal or negative
+            if '.' in self.currentExpression or int(self.currentExpression) < 0:
+                self.error("Factorial is only defined for non-negative integers")
+                return
             else:
                 result = mathlib.fac(int(self.currentExpression))
 
+            # If the length of the result is greater than 14
             if len(str(result)) > 14:
                 result = "{:.5e}".format(result)
             else:
-                if isinstance(result, int):
-                    result = int(result)
+                result = int(result)
             self.currentExpression = str(result)
             self.update_current_label()
 
@@ -734,10 +804,11 @@ class App(CTk):
         """
         if not self.totalExpression:
             functions_to_parse = [self.parse_exponentiation, self.parse_root]
-
+            # Loop through the functions to parse
             for func in functions_to_parse:
                 result = func()
                 if result is not None:
+                    # Check if the result is a decimal
                     if '.' in result:
                         result = mathlib.abs(float(result))
                     else:
@@ -746,13 +817,14 @@ class App(CTk):
                     self.update_current_label()
                     return
 
-            if '.' in self.currentExpression:
-                result = mathlib.abs(float(self.currentExpression))
-            else:
-                result = mathlib.abs(int(self.currentExpression))
+        # If the total expression is not empty, check if the current expression is a decimal
+        if '.' in self.currentExpression:
+            result = mathlib.abs(float(self.currentExpression))
+        else:
+            result = mathlib.abs(int(self.currentExpression))
 
-            self.currentExpression = str(result)
-            self.update_current_label()
+        self.currentExpression = str(result)
+        self.update_current_label()
 
     def create_abs_button(self):
         """
@@ -809,10 +881,8 @@ class App(CTk):
     def open_settings_window(self):
         """
         @brief Opens the settings window.
-
         If the settings window is not open, it creates a new one and links it to the root window.
         Otherwise, it just focuses on the existing window.
-
         @param self: Instance of the class
         """
 
@@ -838,6 +908,7 @@ class App(CTk):
         self.bind("<c>", lambda event: self.clear())
         self.bind(".", lambda event: self.decimal())
         self.bind("=", lambda event: self.equals())
+        self.bind("<Return>", lambda event: self.equals())
 
     def run(self):
         """
