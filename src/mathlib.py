@@ -4,6 +4,7 @@
 
 @author
 - Vojtěch Gajdušek (xgajduv00)
+- co-author Tomáš Lajda (xlajdat00)
 @date April 11, 2024
 """
 
