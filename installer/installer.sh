@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# Check if the package is already installed
+if dpkg -s Kalkulajda >/dev/null 2>&1; then
+    echo "The package is already installed."
+    echo "For uninstallation, run 'sudo sh uninstall.sh'"
+    exit 0
+fi
+
 # Check if the script is run as root
 if [ "$(id -u)" != "0" ]; then
    echo "This script must be run as root" 1>&2
