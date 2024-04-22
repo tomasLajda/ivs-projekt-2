@@ -287,9 +287,12 @@ class App(CTk):
             if operator == '-' and self.totalExpression[-1] in "+-*/%":
                 self.currentExpression = operator
             else:
+                # Replace the last operator in totalExpression with the new operator
                 self.totalExpression = self.totalExpression[:-1] + operator
         else:
-            self.totalExpression += self.currentExpression + operator
+            # Check if the current label text is '0' before appending the operator to the total expression
+            if self.currentLabel.cget("text") != '0':
+                self.totalExpression += self.currentExpression + operator
 
         # If an evaluation has just been performed, update the total expression with the result
         if self.evaluated:
