@@ -1,39 +1,31 @@
-Nedostatky plánu
-	- Nerozdelenie dokumentácie
-	- nerozdelenie uzivatelskej dokumentacie
-	- nevyuzite trello
-	- nerozdelenie vyvoja GUI a integracie funkcii roznym ludom
-	- nečastá kontrola kódu
+Project went mostly according to plan with a few minor mistakes. 
+Agile-style development with weekly meetings and frequent communication 
+allowed for a steady workflow and good team morale.
 
-- format kodu na testy/funkcie sme dali snake_case
-- prelinanie uloh / pomoc ked treba
-- sposob pouzivania githubu -> pull requesty
-- malo teambuildingov :(
-- vyvoj gui nebol presne naplanovany + bol podcenenny
+Plan shortcomings: 
+	- Not assigning the development of user and program documentation
+	- Underestimating the difficulty of GUI and mathlib integration
+	- Insufficient code review
+	- 'Trello' tool was not needed
+	- Code formatting agreement was changed for its lack of snake_case
+	- Some work had to be redistributed due to development mistakes
+		(mistakes such as underestimating development time estimates, 
+		low quality code and the scarcity proper peer review)
 
-hodnotenie: 
-	meetingy - vyborne, informativne, povzbudzujuce
-	komunikacne kanaly - super, vyuzivane
-	git praca - spolahliva, prehladna
+Inaccurate chronological planning decisions:
+	Underestimated
+		- GUI
+		- Math library
+	Overestimated
+		- Tests
+		- Makefile
+		- Profiling
 	
-kniznice: 
-	pytest - spoko
-	tkinter - sracka
-	snakewiz - spica
-	customtkinter - okruhle tlacitka :)
-	
-stihali sme predom
-	testy
-	prototyp ui
-	Makefile
-	profiling
-
-nestihali sme
-	GUI
-	kniznica
-
-zdovodenenie hodnoceni.txt:
-    xcsirim 80 - zla implementacia testov pre profiling
-    xlajdat 110 - sprava githubu, oprava mathlib v nudzi
-    xgajduv 80 - zla implementacia mathlib
-    xvalapm 130 - bol sam na cely gui, zla implementacia mathlib stazila vyvoj
+Ratings of major libraries/tools used:
+	- python - Good choice, team familiarity and confidence
+	- pytest - Very easy to use, lacking functionality at times
+	- tkinter - Proved difficult to package along with 'pillow'
+	- snakewiz - Very easy to use, nothing to complain about
+	- github - Reliable, yet easy to make a mistake
+			 - In retrospect, a pull request based system would have worked better.
+	- discord - Most used communication channel, amazing
