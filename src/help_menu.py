@@ -236,7 +236,7 @@ class ToplevelWindow(CTkToplevel):
 
         add_image_and_label(subFrame2, row=19, image_path=r'Pictures/Fact.ico',
                             text="How to use Factorial: \n1. Choose the number - not negative or decimal \n2. Select "
-                                 "the factorial button or '!'")
+                                 "the factorial button '!'")
 
         add_image_and_label(subFrame2, row=20, image_path=r'Pictures/Abs.ico',
                             text="How to use Absolute value: \n1. Choose the number \n"
