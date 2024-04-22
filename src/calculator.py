@@ -13,8 +13,6 @@ from help_menu import ToplevelWindow
 from PIL import Image, ImageTk
 from customtkinter import *
 
-# TODO: MAKE THE CODE SHORTER
-
 LIGHT_GRAY = "#979797"
 DARK_GRAY = "#3D3D3D"
 ORANGE = "#FFA500"
@@ -142,6 +140,7 @@ class App(CTk):
         self.displayFrame.grid_columnconfigure(0, weight=1)
 
     def update_total_label(self):
+        # TODO: MAKE THE LABEL TEXT SMALLER WHEN IT'S TOO LONG
         """
         @brief Updates the total expression label
         @param self: Instance of the class
@@ -335,7 +334,12 @@ class App(CTk):
             row += 1
 
     def parsing(self):
-        # TODO: PARSE NUMBERS WITH e, root and ^
+        """
+        @brief Parses the total expression into its components
+        @param self: Instance of the class
+        @return: Tuple containing the left side, operator, right side, last operator
+        """
+
         lastOperator = ""
         if len(self.totalExpression) >= 3:
             lastOperator = self.totalExpression[-1]
@@ -343,18 +347,26 @@ class App(CTk):
         self.totalExpression = self.totalExpression[:-1]
         operators = {'+', '-', '*', '/', '%'}
 
-        # Find the index of the operator with the highest precedence
-        separatorIndex = max((self.totalExpression.rfind(op), op) for op in operators)[0]
+        # Find the indices of the operators
+        separatorIndices = [i for i, char in enumerate(self.totalExpression) if char in operators]
 
-        # Split the expression using the separator
-        leftSide = self.totalExpression[:separatorIndex]
-        rightSide = self.totalExpression[separatorIndex + 1:]
-        separator = self.totalExpression[separatorIndex]
+        # Ignore minus sign if it's part of a negative number or if it's part of scientific notation
+        separatorIndices = [i for i in separatorIndices if not (
+            (self.totalExpression[i] == '-' and (i == 0 or self.totalExpression[i - 1] in operators)) or
+            (i > 0 and self.totalExpression[i - 1].lower() == 'e'))]
 
-        return leftSide, separator, rightSide, lastOperator
+        # If there's only one operator or none, split the expression normally
+        if len(separatorIndices) == 1:
+            separatorIndex = separatorIndices[0]
+            leftSide = self.totalExpression[:separatorIndex]
+            rightSide = self.totalExpression[separatorIndex + 1:]
+            separator = self.totalExpression[separatorIndex]
+            return leftSide, separator, rightSide, lastOperator
+        else:
+            # If there are no operators or more than one, return an error
+            self.error("Invalid number of operators")
 
     def evaluate(self):
-        # TODO: IT DOESNT WORK FOR BIG NUMBERS
         """
         @brief Evaluate the expression
         @param self: Instance of the class
@@ -364,35 +376,64 @@ class App(CTk):
         leftSide, separator, rightSide, lastOperator = components
         result = 0
 
-        # Handle exponentiation first
-        if '^' in leftSide or '^' in rightSide:
-            if '^' in leftSide:
-                expLeft = leftSide.split('^')[0]
-                expRight = leftSide.split('^')[1]
+        if '^' in leftSide:
+            expLeft = leftSide.split('^')[0]
+            expRight = leftSide.split('^')[1]
+            if '.' in expRight or int(expRight) < 0:
+                self.error("Exponent must be a non-negative integer")
+                return None
+            if expLeft == '0' and expRight == '0':
+                self.error("0^0 is undefined")
+                return None
+            if '.' not in expLeft:
                 leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
             else:
+                leftSide = str(mathlib.pow(float(expLeft), int(expRight)))
+
+            if '^' in rightSide:
                 expLeft = rightSide.split('^')[0]
                 expRight = rightSide.split('^')[1]
-                rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
+                if '.' in expRight or int(expRight) < 0:
+                    self.error("Exponent must be a non-negative integer")
+                    return None
+                if expLeft == '0' and expRight == '0':
+                    self.error("0^0 is undefined")
+                    return None
+                if '.' not in expLeft:
+                    rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
+                else:
+                    rightSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
         # Then handle square root
-        if '√' in leftSide or '√' in rightSide:
-            if '√' in leftSide:
-                rootRight = leftSide.split('√')[0]
-                rootLeft = leftSide.split('√')[1]
-                leftSide = str(mathlib.root(int(rootLeft), int(rootRight)))
-                if '.' in leftSide:
-                    leftSide_float = float(leftSide)
-                    if round(leftSide_float * 10 ** 5) % 10 == 0:
-                        leftSide = str(round(leftSide_float))
-            else:
-                rootRight = rightSide.split('√')[0]
-                rootLeft = rightSide.split('√')[1]
-                rightSide = str(mathlib.root(int(rootLeft), int(rootRight)))
-                if '.' in rightSide:
-                    rightSide_float = float(rightSide)
-                    if round(rightSide_float * 10 ** 5) % 10 == 0:
-                        rightSide = str(round(rightSide_float))
+        if '√' in leftSide:
+            rootRight = leftSide.split('√')[0]
+            rootLeft = leftSide.split('√')[1]
+            if '.' in rootRight or int(rootRight) < 0:
+                self.error("Root index must be a non-negative integer")
+                return None
+            if float(rootLeft) < 0:
+                self.error("Cannot take the root of a negative number")
+                return None
+            leftSide = str(mathlib.root(float(rootLeft), int(rootRight)))
+            if '.' in leftSide:
+                leftSide_float = float(leftSide)
+                if round(leftSide_float * 10 ** 5) % 10 == 0:
+                    leftSide = str(round(leftSide_float))
+
+        if '√' in rightSide:
+            rootRight = rightSide.split('√')[0]
+            rootLeft = rightSide.split('√')[1]
+            if '.' in rootRight or int(rootRight) < 0:
+                self.error("Root index must be a non-negative integer")
+                return None
+            if float(rootLeft) < 0:
+                self.error("Cannot take the root of a negative number")
+                return None
+            rightSide = str(mathlib.root(float(rootLeft), int(rootRight)))
+            if '.' in rightSide:
+                rightSide_float = float(rightSide)
+                if round(rightSide_float * 10 ** 5) % 10 == 0:
+                    rightSide = str(round(rightSide_float))
 
         # Convert to float or int as necessary
         if '.' in leftSide:
@@ -439,6 +480,7 @@ class App(CTk):
         return self.evaluated
 
     def parse_exponentiation(self):
+        # TODO: RESTRCIT RESULT TO 5 DECIMAL PLACES
         """
         @brief Parses the current expression for exponentiation operation
         @param self: Instance of the class
@@ -458,6 +500,7 @@ class App(CTk):
         return result
 
     def parse_root(self):
+        # TODO: RESTRCIT RESULT TO 5 DECIMAL PLACES
         """
         @brief Parses the current expression for root operation
         @param self: Instance of the class
@@ -505,33 +548,60 @@ class App(CTk):
         operator = self.totalExpression[-1]
         rightSide = self.currentExpression
 
-        if '^' in leftSide or '^' in rightSide:
-            if '^' in leftSide:
-                expLeft = leftSide.split('^')[0]
-                expRight = leftSide.split('^')[1]
+        # Check and handle exponentiation in leftSide
+        if '^' in leftSide:
+            expLeft = leftSide.split('^')[0]
+            expRight = leftSide.split('^')[1]
+            if '.' in expRight or int(expRight) < 0:
+                self.error("Exponent must be a non-negative integer")
+                return None
+            if '.' not in expLeft:
                 leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
             else:
-                expLeft = rightSide.split('^')[0]
-                expRight = rightSide.split('^')[1]
-                rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
+                leftSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
-        if '√' in leftSide or '√' in rightSide:
-            if '√' in leftSide:
-                rootLeft = leftSide.split('√')[0]
-                rootRight = leftSide.split('√')[1]
-                leftSide = str(mathlib.root(float(rootRight), int(rootLeft)))
-                if '.' in leftSide:
-                    leftSide_float = float(leftSide)
-                    if round(leftSide_float * 10 ** 5) % 10 == 0:
-                        leftSide = str(round(leftSide_float))
+        if '^' in rightSide:
+            expLeft = rightSide.split('^')[0]
+            expRight = rightSide.split('^')[1]
+            if '.' in expRight or int(expRight) < 0:
+                self.error("Exponent must be a non-negative integer")
+                return None
+            if '.' not in expLeft:
+                rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
             else:
-                rootLeft = rightSide.split('√')[0]
-                rootRight = rightSide.split('√')[1]
-                rightSide = str(mathlib.root(float(rootRight), int(rootLeft)))
-                if '.' in rightSide:
-                    rightSide_float = float(rightSide)
-                    if round(rightSide_float * 10 ** 5) % 10 == 0:
-                        rightSide = str(round(rightSide_float))
+                rightSide = str(mathlib.pow(float(expLeft), int(expRight)))
+
+        # Check and handle root in leftSide
+        if '√' in leftSide:
+            rootLeft = leftSide.split('√')[0]
+            rootRight = leftSide.split('√')[1]
+            if '.' in rootLeft or int(rootLeft) < 0:
+                self.error("Root index must be a non-negative integer")
+                return None
+            if float(rootRight) < 0:
+                self.error("Cannot take the root of a negative number")
+                return None
+            leftSide = str(mathlib.root(float(rootRight), int(rootLeft)))
+            if '.' in leftSide:
+                leftSide_float = float(leftSide)
+                if round(leftSide_float * 10 ** 5) % 10 == 0:
+                    leftSide = str(round(leftSide_float))
+
+        # Check and handle root in rightSide
+        if '√' in rightSide:
+            rootLeft = rightSide.split('√')[0]
+            rootRight = rightSide.split('√')[1]
+            if '.' in rootLeft or int(rootLeft) < 0:
+                self.error("Root index must be a non-negative integer")
+                return None
+            if float(rootRight) < 0:
+                self.error("Cannot take the root of a negative number")
+                return None
+            rightSide = str(mathlib.root(float(rootRight), int(rootLeft)))
+            if '.' in rightSide:
+                rightSide_float = float(rightSide)
+                if round(rightSide_float * 10 ** 5) % 10 == 0:
+                    rightSide = str(round(rightSide_float))
 
         if '.' in leftSide:
             leftSide_float = float(leftSide)
@@ -596,12 +666,18 @@ class App(CTk):
         @param self: Instance of the class
         @return: True if the total expression has two operators, False otherwise
         """
+        # Check if totalExpression is not empty and has at least two characters
         if self.totalExpression and len(self.totalExpression) >= 2:
             operators = ['+', '-', '*', '/', '%']
             operatorCount = 0
-
             for i, char in enumerate(self.totalExpression):
                 if char in operators and i != 0 and self.totalExpression[i - 1] not in ['^', '√']:
+                    # Skip the operator if it's a minus sign and the character before it is a digit or another operator
+                    if char == '-' and self.totalExpression[i - 1] in operators:
+                        continue
+                    # Skip if previous character is 'e'
+                    if self.totalExpression[i - 1] == 'e':
+                        continue
                     operatorCount += 1
             return operatorCount == 2
         return False
@@ -611,11 +687,11 @@ class App(CTk):
         @brief Adds a decimal point to the current expression
         @param self: Instance of the class
         """
-
-        if not self.currentExpression:
-            self.currentExpression += '0.'
-        elif '.' not in self.currentExpression:
-            self.currentExpression += '.'
+        if 'Error' not in self.currentExpression:
+            if not self.currentExpression:
+                self.currentExpression += '0.'
+            elif '.' not in self.currentExpression:
+                self.currentExpression += '.'
         self.update_current_label()
 
     def create_decimal_button(self):
@@ -665,14 +741,15 @@ class App(CTk):
         @brief Deletes the last character from the current expression
         @param self: Instance of the class
         """
+        # Only delete if 'Error' is not in the current expression
+        if 'Error' not in self.currentExpression:
+            if self.currentExpression:
+                self.currentExpression = self.currentExpression[:-1]
+                self.update_current_label()
 
-        if self.currentExpression:
-            self.currentExpression = self.currentExpression[:-1]
-            self.update_current_label()
-
-        if len(self.currentExpression) == 0:
-            self.currentExpression = "0"
-            self.update_current_label()
+            if len(self.currentExpression) == 0:
+                self.currentExpression = "0"
+                self.update_current_label()
 
     def create_delete_button(self):
         """
@@ -689,14 +766,15 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(4, weight=1)
 
     def exponentiation(self):
+        # TODO: 0^
         """
         @brief Adds an exponentiation operator to the current expression if it does not already contain one
         @param self: Instance of the class
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if ('^' not in self.currentExpression and self.currentExpression != '0' and '√' not in self.currentExpression
-            and self.currentExpression[-1] != '.' and self.currentExpression[-1] != '-'):
+        if ('^' not in self.currentExpression and '√' not in self.currentExpression and self.currentExpression[-1] != '.'
+            and self.currentExpression[-1] != '-' and 'Error' not in self.currentExpression):
             self.currentExpression += '^'
             self.update_current_label()
 
@@ -722,8 +800,8 @@ class App(CTk):
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if ('√' not in self.currentExpression and self.currentExpression != '0' and '^' not in self.currentExpression
-            and self.currentExpression[-1] != '.' and self.currentExpression[-1] != '-'):
+        if ('√' not in self.currentExpression and '^' not in self.currentExpression and self.currentExpression[-1] != '.'
+           and self.currentExpression[-1] != '-' and 'Error' not in self.currentExpression):
             self.currentExpression += '√'
         self.update_current_label()
 
@@ -742,6 +820,7 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def factorial(self):
+        # TODO: IF THERE IS NUMBER IN THE TOTAL EXPRESSION ALSO FOR ABS
         """
         @brief Computes the factorial of the current expression
         @param self: Instance of the class
