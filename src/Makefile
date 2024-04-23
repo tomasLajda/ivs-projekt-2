@@ -81,7 +81,7 @@ setup:
 # Setup the installation zip file and clean after itself
 install: setup calculator.py help_menu.py mathlib.py profiling.py
 	@echo "Setting up the installer..."
-	cp Pictures ../installer/Kalkulajda/usr/Kalkulajda -r
+	cp Pictures ../installer/Kalkulajda/usr/share/Kalkulajda -r
 	pyinstaller --name kalkulajda --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/*:Pictures' calculator.py mathlib.py help_menu.py
 	pyinstaller --name kalkulajda_stddev --onefile profiling.py mathlib.py
 	mv dist/kalkulajda ../installer/Kalkulajda/usr/bin
