@@ -20,7 +20,6 @@ pack: clean
 
 clean:
 	@echo "Cleaning up..."
-	rm -rf ../doc
 	rm -f $(DIR).zip
 	rm -rf $(DIR)
 	rm -rf __pycache__
