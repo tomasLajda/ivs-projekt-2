@@ -26,6 +26,7 @@ HOVER_OPERATOR = "#FF8409"
 PRODUCTION = True;
 
 help_pictures = {
+    "Help": r'Pictures/help_icon.png',
     "Clear": r'Pictures/Clear.ico',
     "Del": r'Pictures/Del.ico',
     "Exponentiation": r'Pictures/^.ico',
@@ -43,6 +44,7 @@ help_pictures = {
 
 if PRODUCTION:
     help_pictures = {
+        "Help": '/usr/share/Kalkulajda/Pictures/help_icon.png',
         "Clear": '/usr/share/Kalkulajda/Pictures/Clear.ico',
         "Del": '/usr/share/Kalkulajda/Pictures/Del.ico',
         "Exponentiation": '/usr/share/Kalkulajda/Pictures/^.ico',
@@ -94,7 +96,7 @@ class ToplevelWindow(CTkToplevel):
 
         self.resizable(True, True)
         self.title("Help")
-        self.help_path = ImageTk.PhotoImage(file=os.path.join("Pictures", 'help_icon.png'))
+        self.help_path = ImageTk.PhotoImage(file=help_pictures["Help"])
         self.wm_iconbitmap()
         self.iconphoto(False, self.help_path)
 
