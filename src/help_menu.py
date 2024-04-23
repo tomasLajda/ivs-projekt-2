@@ -23,6 +23,38 @@ SMALL = "Arial 15"
 HOVER_COLOR = "#898989"
 HOVER_OPERATOR = "#FF8409"
 
+help_pictures = {
+    "Clear": '/usr/share/Kalkulajda/Pictures/Clear.ico',
+    "Del": '/usr/share/Kalkulajda/Pictures/Del.ico',
+    "Exponentiation": '/usr/share/Kalkulajda/Pictures/^.ico',
+    "Root": '/usr/share/Kalkulajda/Pictures/Root.ico',
+    "Factorial": '/usr/share/Kalkulajda/Pictures/Fact.ico',
+    "Absolute value": '/usr/share/Kalkulajda/Pictures/Abs.ico',
+    "Modulo": '/usr/share/Kalkulajda/Pictures/Mod.ico',
+    "Addition": '/usr/share/Kalkulajda/Pictures/add.ico',
+    "Subtraction": '/usr/share/Kalkulajda/Pictures/sub.ico',
+    "Multiplication": '/usr/share/Kalkulajda/Pictures/mul.ico',
+    "Division": '/usr/share/Kalkulajda/Pictures/div.ico',
+    "Equals": '/usr/share/Kalkulajda/Pictures/equals.ico',
+    "Decimal": '/usr/share/Kalkulajda/Pictures/decimal.ico'
+}
+
+help_pictures_test = {
+    "Clear": r'Pictures/Clear.ico',
+    "Del": r'Pictures/Del.ico',
+    "Exponentiation": r'Pictures/^.ico',
+    "Root": r'Pictures/Root.ico',
+    "Factorial": r'Pictures/Fact.ico',
+    "Absolute value": r'Pictures/Abs.ico',
+    "Modulo": r'Pictures/Mod.ico',
+    "Addition": r'Pictures/add.ico',
+    "Subtraction": r'Pictures/sub.ico',
+    "Multiplication": r'Pictures/mul.ico',
+    "Division": r'Pictures/div.ico',
+    "Equals": r'Pictures/equals.ico',
+    "Decimal": r'Pictures/decimal.ico'
+}
+
 
 class ToplevelWindow(CTkToplevel):
     """
@@ -162,50 +194,50 @@ class ToplevelWindow(CTkToplevel):
 
         # =====================================First part===============================================
 
-        add_image_and_label(subFrame, row=0, image_path=r'Pictures/Clear.ico',
+        add_image_and_label(subFrame, row=0, image_path=help_pictures["Clear"],
                             text="Clears both the current and total expression")
 
-        add_image_and_label(subFrame, row=1, image_path=r'Pictures/Del.ico',
+        add_image_and_label(subFrame, row=1, image_path=help_pictures["Del"],
                             text="Erases the last digit/operator in the current expression")
 
-        add_image_and_label(subFrame, row=2, image_path=r'Pictures/^.ico',
+        add_image_and_label(subFrame, row=2, image_path=help_pictures["Exponentiation"],
                             text="Exponentiation: \nBase^Exponent = Product\n5^2 = 25")
 
-        add_image_and_label(subFrame, row=3, image_path=r'Pictures/Root.ico',
+        add_image_and_label(subFrame, row=3, image_path=help_pictures["Root"],
                             text="Root: ⁿ√x = Root\nn - degree, x - radical\n²√25 = 5")
 
-        add_image_and_label(subFrame, row=4, image_path=r'Pictures/Fact.ico',
+        add_image_and_label(subFrame, row=4, image_path=help_pictures["Factorial"],
                             text="Factorial: Number!\n(Num-1)\u00D7(Num-2) \u00D7 ... \u00D7 1\n4! = 4 \u00D7 3 \u00D7 "
                                  "2 \u00D7 1")
 
-        add_image_and_label(subFrame, row=5, image_path=r'Pictures/Abs.ico',
+        add_image_and_label(subFrame, row=5, image_path=help_pictures["Absolute value"],
                             text="Absolute value: |Number|\nReturns the distance from 0\n|5| = 5 and |-5| = 5")
 
-        add_image_and_label(subFrame, row=6, image_path=r'Pictures/Mod.ico',
+        add_image_and_label(subFrame, row=6, image_path=help_pictures["Modulo"],
                             text="Modulo: Num % Num = R\nEvaluates the remainder after division\n7 % 3 = 1")
 
-        add_image_and_label(subFrame, row=7, image_path=r'Pictures/add.ico',
+        add_image_and_label(subFrame, row=7, image_path=help_pictures["Addition"],
                             text="Addition: Num + Num = Sum\nReturns the sum after addition\n7 + 3 = 10")
 
-        add_image_and_label(subFrame, row=8, image_path=r'Pictures/sub.ico',
+        add_image_and_label(subFrame, row=8, image_path=help_pictures["Subtraction"],
                             text="Subtraction: Num - Num = Difference\nReturns the difference after subtraction"
                                  "\n7 - 3 = 4")
 
-        add_image_and_label(subFrame, row=9, image_path=r'Pictures/mul.ico',
+        add_image_and_label(subFrame, row=9, image_path=help_pictures["Multiplication"],
                             text="Multiplication: Num \u00D7 Num = Product\nReturns the product after multiplication"
                                  "\n7 \u00D7 3 = 21")
 
-        add_image_and_label(subFrame, row=10, image_path=r'Pictures/div.ico',
+        add_image_and_label(subFrame, row=10, image_path=help_pictures["Division"],
                             text="Division: Num \u00F7 Num = Quotient\nReturns the quotient after division\n"
                                  "Num \u00F7 0 = Division error"
                                  "\n10 \u00F7 2 = 5")
 
-        add_image_and_label(subFrame, row=11, image_path=r'Pictures/equals.ico',
+        add_image_and_label(subFrame, row=11, image_path=help_pictures["Equals"],
                             text="Equals: Evaluates the expression:\nFrom the total and current expression\n"
                                  "Clears the total expression\n"
                                  "Prints the result to the current expression")
 
-        add_image_and_label(subFrame, row=12, image_path=r'Pictures/decimal.ico',
+        add_image_and_label(subFrame, row=12, image_path=help_pictures["Decimal"],
                             text="Decimal point: Places decimal point in the current expression"
                                  "\nRounds the number if there are only zeroes behind the decimal point\n"
                                  "Removes trailing decimal point if no digit follows it")
@@ -225,24 +257,24 @@ class ToplevelWindow(CTkToplevel):
         frame.grid_rowconfigure(1, weight=1)
         frame.grid_columnconfigure(0, weight=1)
 
-        add_image_and_label(subFrame2, row=17, image_path=r'Pictures/^.ico',
+        add_image_and_label(subFrame2, row=17, image_path=help_pictures["Exponentiation"],
                             text="How to use Exponentiation: \n1. Choose the base \n2. Select the exponentiation "
                                  "button\n 3. Choose the Exponent \n 4. Exponent cannot be decimal or negative")
 
-        add_image_and_label(subFrame2, row=18, image_path=r'Pictures/Root.ico',
+        add_image_and_label(subFrame2, row=18, image_path=help_pictures["Root"],
                             text="How to use Root: \n1. Choose the degree \n2. Select the root "
                                  "button\n 3. Choose the radical \n4. Radical follows mathematical rules + cannot be "
                                  "decimal")
 
-        add_image_and_label(subFrame2, row=19, image_path=r'Pictures/Fact.ico',
+        add_image_and_label(subFrame2, row=19, image_path=help_pictures["Factorial"],
                             text="How to use Factorial: \n1. Choose the number - not negative or decimal \n2. Select "
                                  "the factorial button '!'")
 
-        add_image_and_label(subFrame2, row=20, image_path=r'Pictures/Abs.ico',
+        add_image_and_label(subFrame2, row=20, image_path=help_pictures["Absolute value"],
                             text="How to use Absolute value: \n1. Choose the number \n"
                                  "2. Select the Abs. value button")
 
-        add_image_and_label(subFrame2, row=21, image_path=r'Pictures/Mod.ico',
+        add_image_and_label(subFrame2, row=21, image_path=help_pictures["Modulo"],
                             text="How to use Modulo: \n1. Choose the number \n"
                                  "2. Select the Modulo button\n"
                                  "3. Choose the divisor except 0")
