@@ -23,7 +23,7 @@ SMALL = "Arial 15"
 HOVER_COLOR = "#898989"
 HOVER_OPERATOR = "#FF8409"
 
-PRODUCTION = True;
+PRODUCTION = True
 
 help_pictures = {
     "Help": r'Pictures/help_icon.png',
@@ -59,9 +59,6 @@ if PRODUCTION:
         "Equals": '/usr/share/Kalkulajda/Pictures/equals.ico',
         "Decimal": '/usr/share/Kalkulajda/Pictures/decimal.ico'
     }
-    
-
-
 
 
 class ToplevelWindow(CTkToplevel):
@@ -85,8 +82,6 @@ class ToplevelWindow(CTkToplevel):
         @param *args: Variable length argument list
         @param **kwargs: Arbitrary keyword arguments
         """
-
-        # TODO: ADD MORE DESCRIPTION
         super().__init__(*args, **kwargs)
 
         if platform.system() == 'Linux':
@@ -209,17 +204,19 @@ class ToplevelWindow(CTkToplevel):
                             text="Erases the last digit/operator in the current expression")
 
         add_image_and_label(subFrame, row=2, image_path=help_pictures["Exponentiation"],
-                            text="Exponentiation: \nBase^Exponent = Product\n5^2 = 25")
+                            text="Exponentiation: (NOT AN OPERATOR)\nBase^Exponent = Product\n5^2 = 25")
 
         add_image_and_label(subFrame, row=3, image_path=help_pictures["Root"],
-                            text="Root: ⁿ√x = Root\nn - degree, x - radical\n²√25 = 5")
+                            text="Root: ⁿ√x = Root (NOT AN OPERATOR)\nn - degree, x - radical\n²√25 = 5")
 
         add_image_and_label(subFrame, row=4, image_path=help_pictures["Factorial"],
-                            text="Factorial: Number!\n(Num-1)\u00D7(Num-2) \u00D7 ... \u00D7 1\n4! = 4 \u00D7 3 \u00D7 "
+                            text="Factorial: \n UNARY OPERATOR\nNumber!\n(Num-1)\u00D7(Num-2) \u00D7 ... \u00D7 1\n4! "
+                                 "= 4 \u00D7 3 \u00D7"
                                  "2 \u00D7 1")
 
         add_image_and_label(subFrame, row=5, image_path=help_pictures["Absolute value"],
-                            text="Absolute value: |Number|\nReturns the distance from 0\n|5| = 5 and |-5| = 5")
+                            text="Absolute value: \n UNARY OPERATOR\n|Number|\nReturns the distance from 0\n|5| = 5 "
+                                 "and |-5| = 5")
 
         add_image_and_label(subFrame, row=6, image_path=help_pictures["Modulo"],
                             text="Modulo: Num % Num = R\nEvaluates the remainder after division\n7 % 3 = 1")
