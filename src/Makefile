@@ -82,17 +82,19 @@ setup:
 # Setup the installation zip file and clean after itself
 install: setup calculator.py help_menu.py mathlib.py profiling.py
 	@echo "Setting up the installer..."
-	cp Pictures ../installer/Kalkulajda/usr/Kalkulajda -r
+	cp Pictures ../installer/Kalkulajda/usr/share/Kalkulajda -r
 	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/*:Pictures' calculator.py mathlib.py help_menu.py
 	pyinstaller --onefile profiling.py mathlib.py
 	mv dist/calculator ../installer/Kalkulajda/usr/bin
 	mv dist/profiling ../installer/Kalkulajda/usr/bin
+	chmod 755 ../installer/Kalkulajda/DEBIAN/control
+	chmod 755 ../installer/Kalkulajda/DEBIAN/postinst
+	chmod 755 ../installer/Kalkulajda/DEBIAN/postrm
 	rm -rf dist
 	rm -rf build
 	rm -f *.spec
 	if [ -f "calculator" ]; then rm calculator; fi
 	if [ -f "profiling" ]; then rm profiling; fi
-	zip -r installer.zip ../installer/*
 	@echo "Moved binaries and pictures to installer"
 	dpkg --build ../installer/Kalkulajda
 	@echo "Built package"
