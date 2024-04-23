@@ -87,6 +87,8 @@ install: setup calculator.py help_menu.py mathlib.py profiling.py
 	pyinstaller --name kalkulajda_stddev --onefile profiling.py mathlib.py
 	mv dist/kalkulajda ../installer/Kalkulajda/usr/bin
 	mv dist/kalkulajda_stddev ../installer/Kalkulajda/usr/bin
+	chmod 755 ../installer/Kalkulajda/DEBIAN/control
+	chmod 755 ../installer/Kalkulajda/DEBIAN/postinst
 	rm -rf dist
 	rm -rf build
 	rm -f *.spec
