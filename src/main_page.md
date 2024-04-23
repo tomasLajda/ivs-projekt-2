@@ -27,19 +27,18 @@ The calculator is designed to be compatible with the Ubuntu 64-bit platform.
 ### Installation:
 
 <ol>
-  <li>'unzip installer.zip'</li>
-  <li>'cd installer'</li>
-  <li>'sudo sh installer.sh'</li>
+  <li>It is recommended to use 'sudo apt-get update' before installing the calculator/li>
+  <li>Navigate to folder where downloaded 'Kalkulajda.deb' is located</li>
+  <li>Use the following command to install the calculator: 'sudo dpkg -i Kalkulajda.deb' </li>
 </ol>
 	
 ### Usage:
-	run the calculator from anywhere: 'kalkulajda'
-	run the profiling from anywhere : 'kalkulajda_p'
-	
+Run the calculator from anywhere: kalkulajda <br>
+Run the profiling from anywhere : kalkulajda_stddev <br>
+
 ## Uninstallation:
 <ol>
-  <li>Navigate to the originl installer directory</li>
-  <li>'sudo sh uninstall.sh'</li>
+  <li>Use the following command to uninstall the calculator: 'sudo dpkg -r Kalkulajda' </li>
 </ol>
 
 ## Authors
@@ -56,3 +55,7 @@ Lajda-ci
 ## License
 
 This program is distributed under a GNU General Public License v3.0.
+
+## Credits
+
+Resources for mockup provided by [Icons8](https://icons8.com).
