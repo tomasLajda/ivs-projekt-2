@@ -11,5 +11,5 @@ pip install -r /usr/share/Kalkulajda/requirements.txt
 apt-get install -y python3-pip python3-tk tk-dev
 
 # Add symlinks for the application binaries
-ln -s /usr/bin/myapp/calculator /usr/local/bin/kalkulajda
-ln -s /usr/bin/myapp/profiling /usr/local/bin/kalkulajda_stddev
+ln -s /usr/bin/Kalkulajda/calculator /usr/local/bin/kalkulajda
+ln -s /usr/bin/Kalkulajda/profiling /usr/local/bin/kalkulajda_stddev
