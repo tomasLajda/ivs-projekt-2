@@ -33,8 +33,9 @@ The calculator is designed to be compatible with the Ubuntu 64-bit platform.
 </ol>
 	
 ### Usage:
-run the calculator from anywhere: kalkulajda
-run the profiling from anywhere : kalkulajda_stddev 
+Run the calculator from anywhere: kalkulajda <br>
+Run the profiling from anywhere : kalkulajda_stddev <br>
+<img src="screenshot.png" alt="Calculator" width="500" height="600">
 	
 ## Uninstallation:
 <ol>
