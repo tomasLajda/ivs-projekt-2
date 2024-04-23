@@ -140,7 +140,6 @@ class App(CTk):
         self.displayFrame.grid_columnconfigure(0, weight=1)
 
     def update_total_label(self):
-        # TODO: MAKE THE LABEL TEXT SMALLER WHEN IT'S TOO LONG
         """
         @brief Updates the total expression label
         @param self: Instance of the class
@@ -153,13 +152,10 @@ class App(CTk):
         self.totalLabel.configure(text=expression[:30])
 
     def update_current_label(self):
-        # TODO: MAKE THE LABEL TEXT SMALLER WHEN IT'S TOO LONG
         """
         @brief Updates the current expression label by truncating if necessary
         @param self: Instance of the class
         """
-        if self.currentExpression.startswith("0") and not self.currentExpression.startswith("0."):
-            self.currentExpression = self.currentExpression[1:]
 
         # If 'Error' is in the current expression, change the length to 80 and adjust the font size
         if 'Error' in self.currentExpression:
@@ -195,13 +191,20 @@ class App(CTk):
         @param self: Instance of the class
         @param value: The value to append to the current expression
         """
-        # If 'Error' is in the current expression, overwrite it
-        if 'Error' in self.currentExpression:
-            self.currentExpression = str(value)
-        elif self.evaluated:
-            self.currentExpression = ''
-            self.currentExpression += str(value)
-            self.evaluated = False
+        # If the current expression is a single minus sign, do not reset it
+        if self.currentExpression != "-":
+            if (self.currentExpression.startswith("0") and not self.currentExpression.startswith("0.")
+                and '^' not in self.currentExpression and '√' not in self.currentExpression):
+                self.currentExpression = self.currentExpression[1:]
+            # If 'Error' is in the current expression, overwrite it
+            if 'Error' in self.currentExpression or 'inf' in self.currentExpression:
+                self.currentExpression = str(value)
+            elif self.evaluated:
+                self.currentExpression = ''
+                self.currentExpression += str(value)
+                self.evaluated = False
+            else:
+                self.currentExpression += str(value)
         else:
             self.currentExpression += str(value)
         self.update_current_label()
@@ -239,8 +242,8 @@ class App(CTk):
                 rounded_num = round(float(self.currentExpression))
                 self.currentExpression = str(rounded_num)
 
-        # If the current expression is an error message, only allow '-' to overwrite it
-        if 'Error' in self.currentExpression:
+        # If the current expression is an error message or 'inf', only allow '-' to overwrite it
+        if 'Error' in self.currentExpression or 'inf' in self.currentExpression:
             if operator == '-':
                 # Reset the font size when not displaying an error
                 self.currentLabel.configure(font=("Arial", 50), pady=20)
@@ -249,6 +252,9 @@ class App(CTk):
                 return
             else:
                 return
+
+        if self.currentExpression.endswith('e+') or self.currentExpression.endswith('e-'):
+            self.currentExpression += '0'
 
         # If the current expression is empty, only allow '-' as the first character
         if self.currentExpression == '0':
@@ -392,19 +398,19 @@ class App(CTk):
             else:
                 leftSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
-            if '^' in rightSide:
-                expLeft = rightSide.split('^')[0]
-                expRight = rightSide.split('^')[1]
-                if '.' in expRight or int(expRight) < 0:
-                    self.error("Exponent must be a non-negative integer")
-                    return None
-                if expLeft == '0' and expRight == '0':
-                    self.error("0^0 is undefined")
-                    return None
-                if '.' not in expLeft:
-                    rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
-                else:
-                    rightSide = str(mathlib.pow(float(expLeft), int(expRight)))
+        if '^' in rightSide:
+            expLeft = rightSide.split('^')[0]
+            expRight = rightSide.split('^')[1]
+            if '.' in expRight or int(expRight) < 0:
+                self.error("Exponent must be a non-negative integer")
+                return None
+            if expLeft == '0' and expRight == '0':
+                self.error("0^0 is undefined")
+                return None
+            if '.' not in expLeft:
+                rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
+            else:
+                rightSide = str(mathlib.pow(float(expLeft), int(expRight)))
 
         # Then handle square root
         if '√' in leftSide:
@@ -438,11 +444,11 @@ class App(CTk):
                     rightSide = str(round(rightSide_float))
 
         # Convert to float or int as necessary
-        if '.' in leftSide:
+        if '.' in leftSide or 'e' in leftSide:
             leftSide_float = float(leftSide)
         else:
             leftSide_float = int(leftSide)
-        if '.' in rightSide:
+        if '.' in rightSide or 'e' in rightSide:
             rightSide_float = float(rightSide)
         else:
             rightSide_float = int(rightSide)
@@ -471,9 +477,13 @@ class App(CTk):
         else:
             return False
 
-        # Convert the result to a float string if it's in scientific notation
+        # Check if the result is within a certain range to avoid scientific notation
         if -1e14 < result < 1e14:
             result_str = str(result)
+            # If the result string is longer than 14 characters, round the result
+            if len(result_str) > 14:
+                result = round(result)
+                result_str = str(result)
         else:
             result_str = "{:.5e}".format(result)
 
@@ -514,7 +524,6 @@ class App(CTk):
         return result
 
     def parse_root(self):
-        # TODO: RESTRCIT RESULT TO 5 DECIMAL PLACES
         """
         @brief Parses the current expression for root operation
         @param self: Instance of the class
@@ -524,8 +533,8 @@ class App(CTk):
         if '√' in self.currentExpression and not self.totalExpression:
             rootCurrLeft = self.currentExpression.split('√')[0]
             rootCurrRight = self.currentExpression.split('√')[1]
-            if '.' in rootCurrLeft or int(rootCurrLeft) < 0:
-                self.error("Root index must be a non-negative integer")
+            if '.' in rootCurrLeft or int(rootCurrLeft) < 0 or int(rootCurrLeft) == 0:
+                self.error("Index must be a non-negative integer and not zero")
                 return None
             if float(rootCurrRight) < 0:
                 self.error("Cannot take the root of a negative number")
@@ -628,12 +637,12 @@ class App(CTk):
                 if round(rightSide_float * 10 ** 5) % 10 == 0:
                     rightSide = str(round(rightSide_float))
 
-        if '.' in leftSide:
+        if '.' in leftSide or 'e' in leftSide:
             leftSide_float = float(leftSide)
         else:
             leftSide_float = int(leftSide)
 
-        if '.' in rightSide:
+        if '.' in rightSide or 'e' in rightSide:
             rightSide_float = float(rightSide)
         else:
             rightSide_float = int(rightSide)
@@ -664,6 +673,10 @@ class App(CTk):
         # Check if the result is within a certain range to avoid scientific notation
         if -1e14 < result < 1e14:
             result_str = str(result)
+            # If the result string is longer than 14 characters, round the result
+            if len(result_str) > 14:
+                result = round(result)
+                result_str = str(result)
         else:
             result_str = "{:.5e}".format(result)
 
@@ -718,11 +731,12 @@ class App(CTk):
         @brief Adds a decimal point to the current expression
         @param self: Instance of the class
         """
-        if 'Error' not in self.currentExpression:
-            if not self.currentExpression:
-                self.currentExpression += '0.'
-            elif '.' not in self.currentExpression:
-                self.currentExpression += '.'
+        if 'Error' not in self.currentExpression or 'inf' not in self.currentExpression:
+            if not self.currentExpression or self.currentExpression[-1] != '-':
+                if not self.currentExpression:
+                    self.currentExpression += '0.'
+                elif '.' not in self.currentExpression:
+                    self.currentExpression += '.'
         self.update_current_label()
 
     def create_decimal_button(self):
@@ -773,7 +787,7 @@ class App(CTk):
         @param self: Instance of the class
         """
         # Only delete if 'Error' is not in the current expression
-        if 'Error' not in self.currentExpression:
+        if 'Error' not in self.currentExpression or 'inf' not in self.currentExpression:
             if self.currentExpression:
                 self.currentExpression = self.currentExpression[:-1]
                 self.update_current_label()
@@ -797,15 +811,15 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(4, weight=1)
 
     def exponentiation(self):
-        # TODO: 0^
         """
         @brief Adds an exponentiation operator to the current expression if it does not already contain one
         @param self: Instance of the class
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if ('^' not in self.currentExpression and '√' not in self.currentExpression and self.currentExpression[-1] != '.'
-           and self.currentExpression[-1] != '-' and 'Error' not in self.currentExpression):
+        if ('^' not in self.currentExpression and '√' not in self.currentExpression and self.currentExpression[
+            -1] != '.' and self.currentExpression[-1] != '-' and 'Error' not in self.currentExpression
+            and 'inf' not in self.currentExpression):
             self.currentExpression += '^'
             self.update_current_label()
 
@@ -832,7 +846,8 @@ class App(CTk):
         """
 
         if ('√' not in self.currentExpression and '^' not in self.currentExpression and self.currentExpression[-1] != '.'
-           and self.currentExpression[-1] != '-' and 'Error' not in self.currentExpression):
+            and self.currentExpression[-1] != '-' and 'Error' not in self.currentExpression
+            and 'inf' not in self.currentExpression):
             self.currentExpression += '√'
         self.update_current_label()
 
