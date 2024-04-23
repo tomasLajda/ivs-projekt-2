@@ -2,5 +2,5 @@
 set -e
 
 # Remove symlinks for the application binaries
-#rm /usr/local/bin/kalkulajda
-#rm /usr/local/bin/kalkulajda_stddev
+rm /usr/local/bin/kalkulajda
+rm /usr/local/bin/kalkulajda_stddev
