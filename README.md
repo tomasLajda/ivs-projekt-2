@@ -56,3 +56,7 @@ Lajda-ci
 ## License
 
 This program is distributed under a GNU General Public License v3.0.
+
+## Credits
+
+Resources for mockup provided by [Icons8](https://icons8.com).
