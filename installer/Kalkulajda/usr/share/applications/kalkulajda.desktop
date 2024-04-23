@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Calcu-lajda
+Comment=Basic calculator.
+Exec=/usr/bin/kalkulajda
+Icon=real_logo.png
+Terminal=false

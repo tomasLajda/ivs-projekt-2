@@ -10,12 +10,12 @@ DIR = ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 # Start the program
 all: setup
 
-pack: clean install doc
+pack:
 	@echo "Packing the project..."
 	mkdir -p $(DIR)/doc $(DIR)/repo $(DIR)/install
 	cp -r doc $(DIR)
 	cd .. && git clone . ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo && cd src
-	cp installer.zip $(DIR)/install
+	cp ../installer/Kalkulajda.deb $(DIR)/install
 	zip -r $(DIR).zip $(DIR)
 
 clean:
@@ -23,7 +23,6 @@ clean:
 	rm -rf ../doc
 	rm -f $(DIR).zip
 	rm -rf $(DIR)
-	rm -f installer.zip
 	rm -rf __pycache__
 
 run: calculator.py
@@ -82,17 +81,18 @@ setup:
 # Setup the installation zip file and clean after itself
 install: setup calculator.py help_menu.py mathlib.py profiling.py
 	@echo "Setting up the installer..."
-	cp Pictures ../installer/Kalkulajda/usr/Kalkulajda -r
-	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/*:Pictures' calculator.py mathlib.py help_menu.py
-	pyinstaller --onefile profiling.py mathlib.py
-	mv dist/calculator ../installer/Kalkulajda/usr/bin
-	mv dist/profiling ../installer/Kalkulajda/usr/bin
+	cp Pictures ../installer/Kalkulajda/usr/share/Kalkulajda -r
+	pyinstaller --name kalkulajda --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/*:Pictures' calculator.py mathlib.py help_menu.py
+	pyinstaller --name kalkulajda_stddev --onefile profiling.py mathlib.py
+	mv dist/kalkulajda ../installer/Kalkulajda/usr/bin
+	mv dist/kalkulajda_stddev ../installer/Kalkulajda/usr/bin
+	chmod 755 ../installer/Kalkulajda/DEBIAN/control
 	rm -rf dist
 	rm -rf build
 	rm -f *.spec
 	if [ -f "calculator" ]; then rm calculator; fi
 	if [ -f "profiling" ]; then rm profiling; fi
-	zip -r installer.zip ../installer/*
 	@echo "Moved binaries and pictures to installer"
+	chmod 755 ../installer/Kalkulajda/DEBIAN/control
 	dpkg --build ../installer/Kalkulajda
 	@echo "Built package"

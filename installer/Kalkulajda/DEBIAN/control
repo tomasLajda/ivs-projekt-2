@@ -3,6 +3,5 @@ Version: 1.0
 Section: base
 Priority: optional
 Architecture: all
-Depends: python3
 Maintainer: Matúš Csirik <matus.csirik@gmail.com>
 Description: Basic calculator.

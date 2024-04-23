@@ -10,9 +10,9 @@ Plan shortcomings:
 	- Code formatting agreement was changed for its lack of snake_case
 	- Some work had to be redistributed due to development mistakes
 		(mistakes such as underestimating development time estimates, 
-		low quality code and the scarcity proper peer review)
+		low quality code and the scarcity of proper peer review)
 
-Inaccurate chronological planning decisions:
+Plan deadline problems:
 	Underestimated
 		- GUI
 		- Math library
