@@ -24,7 +24,7 @@ SMALL = "Arial 15"
 HOVER_COLOR = "#898989"
 HOVER_OPERATOR = "#FF8409"
 
-PRODUCTION = True;
+PRODUCTION = True
 pictures = {
     "logo": r"Pictures/real_logo.png",
     "help": r"Pictures/help_button.png",
@@ -35,7 +35,7 @@ if PRODUCTION:
         "logo": "/usr/share/Kalkulajda/Pictures/real_logo.png",
         "help": "/usr/share/Kalkulajda/Pictures/help_button.png",
     }
-    
+
 
 def adjust_button_size(width, height):
     """
@@ -428,7 +428,7 @@ class App(CTk):
         if '√' in leftSide:
             rootRight = leftSide.split('√')[0]
             rootLeft = leftSide.split('√')[1]
-            if '.' in rootRight or int(rootRight) < 0:
+            if '.' in rootRight or int(rootRight) <= 0:
                 self.error("Root index must be a non-negative integer")
                 return None
             if float(rootLeft) < 0:
@@ -443,7 +443,7 @@ class App(CTk):
         if '√' in rightSide:
             rootRight = rightSide.split('√')[0]
             rootLeft = rightSide.split('√')[1]
-            if '.' in rootRight or int(rootRight) < 0:
+            if '.' in rootRight or int(rootRight) <= 0:
                 self.error("Root index must be a non-negative integer")
                 return None
             if float(rootLeft) < 0:
@@ -621,7 +621,7 @@ class App(CTk):
         if '√' in leftSide:
             rootLeft = leftSide.split('√')[0]
             rootRight = leftSide.split('√')[1]
-            if '.' in rootLeft or int(rootLeft) < 0:
+            if '.' in rootLeft or int(rootLeft) <= 0:
                 self.error("Root index must be a non-negative integer")
                 return None
             if float(rootRight) < 0:
@@ -637,7 +637,7 @@ class App(CTk):
         if '√' in rightSide:
             rootLeft = rightSide.split('√')[0]
             rootRight = rightSide.split('√')[1]
-            if '.' in rootLeft or int(rootLeft) < 0:
+            if '.' in rootLeft or int(rootLeft) <= 0:
                 self.error("Root index must be a non-negative integer")
                 return None
             if float(rootRight) < 0:
@@ -857,7 +857,8 @@ class App(CTk):
         @return: True if the operation is located in the expression, False otherwise
         """
 
-        if ('√' not in self.currentExpression and '^' not in self.currentExpression and self.currentExpression[-1] != '.'
+        if ('√' not in self.currentExpression and '^' not in self.currentExpression and self.currentExpression[
+            -1] != '.'
             and self.currentExpression[-1] != '-' and 'Error' not in self.currentExpression
             and 'inf' not in self.currentExpression):
             self.currentExpression += '√'
