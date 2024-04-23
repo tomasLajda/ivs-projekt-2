@@ -176,5 +176,3 @@ def root(base, index):
         return round(-((-base) ** (1/index)), MAX_PRECISION)
 
     return round(base ** (1/index), MAX_PRECISION)
-
-root(2, 0)
