@@ -1,4 +1,4 @@
-xcsirim00 80 (installation, tests)
-xlajdat00 110 (documentation, profiling, tests, math library)
-xgajduv00 80 (math library, user doc, mockup)
-xvalapm00 130 (user interface + its mathlib integration)
+xcsirim00 80 (installation, makefile, tests)
+xlajdat00 110 (documentation, math library, tests, profiling)
+xgajduv00 80 (user documentation, math library, mockup)
+xvalapm00 130 (user interface, mathlib integration)

@@ -55,7 +55,7 @@ help:
 	@echo "make run - Runs calculator program."
 	@echo "make profile - Runs the standard deviation calculation program for profiling."
 	@echo "make setup - Downloads all dependencies and sets up the project."
-	@echo "make install - Sets up installation zip package."
+	@echo "make install - Moves binaries and pictures to installation directory."
 	@echo "If make is run without specifying a target, make all is executed."
 
 test:
@@ -82,17 +82,17 @@ setup:
 # Setup the installation zip file and clean after itself
 install: setup calculator.py help_menu.py mathlib.py profiling.py
 	@echo "Setting up the installer..."
-	cp Pictures ../installer -r
+	cp Pictures ../installer/Kalkulajda/usr/Kalkulajda -r
 	pyinstaller --onefile --hidden-import=PIL._tkinter_finder --hidden-import=_tkinter --hidden-import=PIL --hidden-import=tkinter --add-data 'Pictures/*:Pictures' calculator.py mathlib.py help_menu.py
 	pyinstaller --onefile profiling.py mathlib.py
-	mv dist/calculator ../installer
-	mv dist/profiling ../installer
+	mv dist/calculator ../installer/Kalkulajda/usr/bin
+	mv dist/profiling ../installer/Kalkulajda/usr/bin
 	rm -rf dist
 	rm -rf build
 	rm -f *.spec
-	rm -rf ../installer/Kalkulajda
-	if [ -f "../installer/Kalkulajda.deb" ]; then rm ../installer/Kalkulajda.deb; fi
 	if [ -f "calculator" ]; then rm calculator; fi
 	if [ -f "profiling" ]; then rm profiling; fi
 	zip -r installer.zip ../installer/*
-	@echo "installer.zip created."
+	@echo "Moved binaries and pictures to installer"
+	dpkg --build ../installer/Kalkulajda
+	@echo "Built package"
