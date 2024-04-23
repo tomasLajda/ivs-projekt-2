@@ -10,12 +10,12 @@ DIR = ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 # Start the program
 all: setup
 
-pack: clean install doc
+pack: install doc
 	@echo "Packing the project..."
 	mkdir -p $(DIR)/doc $(DIR)/repo $(DIR)/install
 	cp -r doc $(DIR)
 	cd .. && git clone . ../xcsirim00_xgajduv00_xlajdat00_xvalapm00/repo && cd src
-	cp installer.zip $(DIR)/install
+	cp ../installer/Kalkulajda.deb $(DIR)/install
 	zip -r $(DIR).zip $(DIR)
 
 clean:
@@ -23,7 +23,6 @@ clean:
 	rm -rf ../doc
 	rm -f $(DIR).zip
 	rm -rf $(DIR)
-	rm -f installer.zip
 	rm -rf __pycache__
 
 run: calculator.py
