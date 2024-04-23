@@ -436,9 +436,9 @@ class App(CTk):
                 return None
             leftSide = str(mathlib.root(float(rootLeft), int(rootRight)))
             if '.' in leftSide:
-                leftSide_float = float(leftSide)
-                if round(leftSide_float * 10 ** 5) % 10 == 0:
-                    leftSide = str(round(leftSide_float))
+                leftSideFloat = float(leftSide)
+                if round(leftSideFloat * 10 ** 5) % 10 == 0:
+                    leftSide = str(round(leftSideFloat))
 
         if '√' in rightSide:
             rootRight = rightSide.split('√')[0]
@@ -457,9 +457,9 @@ class App(CTk):
 
         # Convert to float or int as necessary
         if '.' in leftSide or 'e' in leftSide:
-            leftSide_float = float(leftSide)
+            leftSideFloat = float(leftSide)
         else:
-            leftSide_float = int(leftSide)
+            leftSideFloat = int(leftSide)
         if '.' in rightSide or 'e' in rightSide:
             rightSide_float = float(rightSide)
         else:
@@ -467,44 +467,48 @@ class App(CTk):
 
         # Perform the remaining operations
         if separator == '+':
-            result += mathlib.add(leftSide_float, rightSide_float)
+            result += mathlib.add(leftSideFloat, rightSide_float)
         elif separator == '-':
-            result += mathlib.sub(leftSide_float, rightSide_float)
+            result += mathlib.sub(leftSideFloat, rightSide_float)
         elif separator == '*':
-            result += mathlib.mul(leftSide_float, rightSide_float)
+            result += mathlib.mul(leftSideFloat, rightSide_float)
         elif separator == '/':
             if rightSide_float == 0:
                 self.error("Cannot divide by zero")
                 return False
-            elif leftSide_float % rightSide_float == 0:
-                result = mathlib.div(leftSide_float, rightSide_float)
+            elif leftSideFloat % rightSide_float == 0:
+                result = mathlib.div(leftSideFloat, rightSide_float)
                 result = int(result)
             else:
-                result += mathlib.div(leftSide_float, rightSide_float)
+                result += mathlib.div(leftSideFloat, rightSide_float)
         elif separator == '%':
             if rightSide_float == 0:
                 self.error("Cannot perform modulo operation with zero")
                 return False
-            result += mathlib.mod(leftSide_float, rightSide_float)
+            result += mathlib.mod(leftSideFloat, rightSide_float)
         else:
             return False
 
         # Check if the result is within a certain range to avoid scientific notation
         if -1e14 < result < 1e14:
-            result_str = str(result)
+            resultStr = str(result)
+            resultIntLength = len(str(int(result)))
             # If the result string is longer than 14 characters, round the result
-            if len(result_str) > 14:
-                result = round(result)
-                result_str = str(result)
+            if len(resultStr) > 14:
+                if resultIntLength == 14:
+                    result = round(result)
+                else:
+                    result = round(result, 14 - resultIntLength)
+                resultStr = str(result)
         else:
-            result_str = "{:.5e}".format(result)
+            resultStr = "{:.5e}".format(result)
 
         # Update the current expression with the result
-        self.currentExpression = result_str
+        self.currentExpression = resultStr
         self.update_current_label()
 
         # Update the total expression with the new result and the operator
-        self.totalExpression = str(result_str) + lastOperator
+        self.totalExpression = str(resultStr) + lastOperator
         self.update_total_label()
         self.evaluated = True
         return self.evaluated
@@ -629,9 +633,9 @@ class App(CTk):
                 return None
             leftSide = str(mathlib.root(float(rootRight), int(rootLeft)))
             if '.' in leftSide:
-                leftSide_float = float(leftSide)
-                if round(leftSide_float * 10 ** 5) % 10 == 0:
-                    leftSide = str(round(leftSide_float))
+                leftSideFloat = float(leftSide)
+                if round(leftSideFloat * 10 ** 5) % 10 == 0:
+                    leftSide = str(round(leftSideFloat))
 
         # Check and handle root in rightSide
         if '√' in rightSide:
@@ -645,55 +649,59 @@ class App(CTk):
                 return None
             rightSide = str(mathlib.root(float(rootRight), int(rootLeft)))
             if '.' in rightSide:
-                rightSide_float = float(rightSide)
-                if round(rightSide_float * 10 ** 5) % 10 == 0:
-                    rightSide = str(round(rightSide_float))
+                rightSideFloat = float(rightSide)
+                if round(rightSideFloat * 10 ** 5) % 10 == 0:
+                    rightSide = str(round(rightSideFloat))
 
         if '.' in leftSide or 'e' in leftSide:
-            leftSide_float = float(leftSide)
+            leftSideFloat = float(leftSide)
         else:
-            leftSide_float = int(leftSide)
+            leftSideFloat = int(leftSide)
 
         if '.' in rightSide or 'e' in rightSide:
-            rightSide_float = float(rightSide)
+            rightSideFloat = float(rightSide)
         else:
-            rightSide_float = int(rightSide)
+            rightSideFloat = int(rightSide)
 
         if operator == '+':
-            result = mathlib.add(leftSide_float, rightSide_float)
+            result = mathlib.add(leftSideFloat, rightSideFloat)
         elif operator == '-':
-            result = mathlib.sub(leftSide_float, rightSide_float)
+            result = mathlib.sub(leftSideFloat, rightSideFloat)
         elif operator == '*':
-            result = mathlib.mul(leftSide_float, rightSide_float)
+            result = mathlib.mul(leftSideFloat, rightSideFloat)
         elif operator == '/':
-            if rightSide_float == 0:
+            if rightSideFloat == 0:
                 self.error("Cannot divide by zero")
                 return None
-            if leftSide_float % rightSide_float == 0:
-                result = mathlib.div(leftSide_float, rightSide_float)
+            if leftSideFloat % rightSideFloat == 0:
+                result = mathlib.div(leftSideFloat, rightSideFloat)
                 result = int(result)
             else:
-                result = mathlib.div(leftSide_float, rightSide_float)
+                result = mathlib.div(leftSideFloat, rightSideFloat)
         elif operator == '%':
-            if rightSide_float == 0:
+            if rightSideFloat == 0:
                 self.error("Cannot perform modulo operation by zero")
                 return None
-            result = mathlib.mod(leftSide_float, rightSide_float)
+            result = mathlib.mod(leftSideFloat, rightSideFloat)
         else:
             return False
 
         # Check if the result is within a certain range to avoid scientific notation
         if -1e14 < result < 1e14:
-            result_str = str(result)
+            resultStr = str(result)
+            resultIntLength = len(str(int(result)))
             # If the result string is longer than 14 characters, round the result
-            if len(result_str) > 14:
-                result = round(result)
-                result_str = str(result)
+            if len(resultStr) > 14:
+                if resultIntLength == 14:
+                    result = round(result)
+                else:
+                    result = round(result, 14 - resultIntLength)
+                resultStr = str(result)
         else:
-            result_str = "{:.5e}".format(result)
+            resultStr = "{:.5e}".format(result)
 
         # Update the current expression with the result
-        self.currentExpression = result_str
+        self.currentExpression = resultStr
         self.update_current_label()
 
         # Update the total expression with the new result and the operator
@@ -898,6 +906,9 @@ class App(CTk):
                 if '.' in result or int(result) < 0:
                     self.error("Factorial is only defined for non-negative integers")
                     return
+                elif int(result) > 100:
+                    self.error("Factorial of numbers greater than 100 is too large")
+                    return
                 else:
                     # If it's not, calculate the factorial of the result
                     result = mathlib.fac(int(result))
@@ -911,6 +922,9 @@ class App(CTk):
         # If the current expression is a decimal or negative
         if '.' in self.currentExpression or int(self.currentExpression) < 0:
             self.error("Factorial is only defined for non-negative integers")
+            return
+        elif int(self.currentExpression) > 100:
+            self.error("Factorial of numbers greater than 100 is too large")
             return
         else:
             result = mathlib.fac(int(self.currentExpression))
