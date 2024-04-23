@@ -94,3 +94,5 @@ install: setup calculator.py help_menu.py mathlib.py profiling.py
 	if [ -f "profiling" ]; then rm profiling; fi
 	zip -r installer.zip ../installer/*
 	@echo "Moved binaries and pictures to installer"
+	dpkg --build ../installer/Kalkulajda
+	@echo "Built package"
