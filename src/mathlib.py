@@ -163,7 +163,7 @@ def root(base, index):
     if not isinstance(index, int) or index < 0:
         raise TypeError("Index must be a natural number.")
 
-    if (index == 0)
+    if (index == 0):
         raise ValueError("Index cannot be zero.")
 
     if base < 0 and index % 2 == 0:
