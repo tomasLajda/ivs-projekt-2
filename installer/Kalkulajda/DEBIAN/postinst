@@ -1,15 +1,5 @@
 #!/bin/bash
 set -e
 
-# Update package list
-#apt-get update
-
 # Install Python dependencies
-#pip install -r /usr/share/Kalkulajda/requirements.txt
-
-# Install required packages
-#apt-get install -y python3-pip python3-tk tk-dev
-
-## Add symlinks for the application binaries
-#ln -s /usr/bin/calculator /usr/bin/kalkulajda
-#ln -s /usr/bin/profiling /usr/bin/kalkulajda_stddev
+pip install -r /usr/share/Kalkulajda/requirements.txt
