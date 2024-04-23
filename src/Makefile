@@ -95,6 +95,5 @@ install: setup calculator.py help_menu.py mathlib.py profiling.py
 	if [ -f "profiling" ]; then rm profiling; fi
 	@echo "Moved binaries and pictures to installer"
 	chmod 755 ../installer/Kalkulajda/DEBIAN/control
-	chmod 755 ../installer/Kalkulajda/DEBIAN/postinst
 	dpkg --build ../installer/Kalkulajda
 	@echo "Built package"
