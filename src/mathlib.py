@@ -163,6 +163,9 @@ def root(base, index):
     if not isinstance(index, int) or index < 0:
         raise TypeError("Index must be a natural number.")
 
+    if (index == 0)
+        raise ValueError("Index cannot be zero.")
+
     if base < 0 and index % 2 == 0:
         raise ValueError("Cannot compute even root of negative number.")
 
@@ -173,3 +176,5 @@ def root(base, index):
         return round(-((-base) ** (1/index)), MAX_PRECISION)
 
     return round(base ** (1/index), MAX_PRECISION)
+
+root(2, 0)
