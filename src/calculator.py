@@ -24,6 +24,18 @@ SMALL = "Arial 15"
 HOVER_COLOR = "#898989"
 HOVER_OPERATOR = "#FF8409"
 
+PRODUCTION = True;
+pictures = {
+    "logo": r"Pictures/real_logo.png",
+    "help": r"Pictures/help_button.png",
+}
+
+if PRODUCTION:
+    pictures = {
+        "logo": "/usr/share/Kalkulajda/Pictures/real_logo.png",
+        "help": "/usr/share/Kalkulajda/Pictures/help_button.png",
+    }
+    
 
 def adjust_button_size(width, height):
     """
@@ -64,7 +76,7 @@ class App(CTk):
         self.title("Calcu-lajda")
         self.resizable(False, False)
 
-        self.iconpath = ImageTk.PhotoImage(file=os.path.join("Pictures", "real_logo.png"))
+        self.iconpath = ImageTk.PhotoImage(file=pictures["logo"])
         self.wm_iconbitmap()
         self.iconphoto(False, self.iconpath)
 
@@ -985,7 +997,7 @@ class App(CTk):
         @brief Creates a settings/help button in the calculator interface
         @param self: Instance of the class
         """
-        settings_image = Image.open(os.path.join("Pictures", "help_button.png"))
+        settings_image = Image.open(pictures['help'])
         settings_image = settings_image.resize((50, 50), Image.Resampling.LANCZOS)
 
         # Create a CTkImage from the resized image

@@ -1,6 +1,0 @@
-#!/bin/bash
-set -e
-
-# Remove symlinks for the application binaries
-rm -f /usr/local/bin/kalkulajda
-rm -f /usr/local/bin/kalkulajda_stddev
