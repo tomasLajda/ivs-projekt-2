@@ -25,6 +25,11 @@ HOVER_COLOR = "#898989"
 HOVER_OPERATOR = "#FF8409"
 
 pictures = {
+    "logo": "/usr/share/Kalkulajda/Pictures/real_logo.png",
+    "help": "/usr/share/Kalkulajda/Pictures/help_button.png",
+}
+
+pictures_test = {
     "logo": "Pictures/real_logo.png",
     "help": "Pictures/help_button.png",
 }
