@@ -10,7 +10,7 @@ DIR = ../../xcsirim00_xgajduv00_xlajdat00_xvalapm00
 # Start the program
 all: setup
 
-pack: install doc
+pack:
 	@echo "Packing the project..."
 	mkdir -p $(DIR)/doc $(DIR)/repo $(DIR)/install
 	cp -r doc $(DIR)
