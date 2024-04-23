@@ -23,23 +23,9 @@ SMALL = "Arial 15"
 HOVER_COLOR = "#898989"
 HOVER_OPERATOR = "#FF8409"
 
-help_pictures = {
-    "Clear": '/usr/share/Kalkulajda/Pictures/Clear.ico',
-    "Del": '/usr/share/Kalkulajda/Pictures/Del.ico',
-    "Exponentiation": '/usr/share/Kalkulajda/Pictures/^.ico',
-    "Root": '/usr/share/Kalkulajda/Pictures/Root.ico',
-    "Factorial": '/usr/share/Kalkulajda/Pictures/Fact.ico',
-    "Absolute value": '/usr/share/Kalkulajda/Pictures/Abs.ico',
-    "Modulo": '/usr/share/Kalkulajda/Pictures/Mod.ico',
-    "Addition": '/usr/share/Kalkulajda/Pictures/add.ico',
-    "Subtraction": '/usr/share/Kalkulajda/Pictures/sub.ico',
-    "Multiplication": '/usr/share/Kalkulajda/Pictures/mul.ico',
-    "Division": '/usr/share/Kalkulajda/Pictures/div.ico',
-    "Equals": '/usr/share/Kalkulajda/Pictures/equals.ico',
-    "Decimal": '/usr/share/Kalkulajda/Pictures/decimal.ico'
-}
+PRODUCTION = True;
 
-help_pictures_test = {
+help_pictures = {
     "Clear": r'Pictures/Clear.ico',
     "Del": r'Pictures/Del.ico',
     "Exponentiation": r'Pictures/^.ico',
@@ -54,6 +40,26 @@ help_pictures_test = {
     "Equals": r'Pictures/equals.ico',
     "Decimal": r'Pictures/decimal.ico'
 }
+
+if PRODUCTION:
+    help_pictures = {
+        "Clear": '/usr/share/Kalkulajda/Pictures/Clear.ico',
+        "Del": '/usr/share/Kalkulajda/Pictures/Del.ico',
+        "Exponentiation": '/usr/share/Kalkulajda/Pictures/^.ico',
+        "Root": '/usr/share/Kalkulajda/Pictures/Root.ico',
+        "Factorial": '/usr/share/Kalkulajda/Pictures/Fact.ico',
+        "Absolute value": '/usr/share/Kalkulajda/Pictures/Abs.ico',
+        "Modulo": '/usr/share/Kalkulajda/Pictures/Mod.ico',
+        "Addition": '/usr/share/Kalkulajda/Pictures/add.ico',
+        "Subtraction": '/usr/share/Kalkulajda/Pictures/sub.ico',
+        "Multiplication": '/usr/share/Kalkulajda/Pictures/mul.ico',
+        "Division": '/usr/share/Kalkulajda/Pictures/div.ico',
+        "Equals": '/usr/share/Kalkulajda/Pictures/equals.ico',
+        "Decimal": '/usr/share/Kalkulajda/Pictures/decimal.ico'
+    }
+    
+
+
 
 
 class ToplevelWindow(CTkToplevel):

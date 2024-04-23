@@ -24,16 +24,18 @@ SMALL = "Arial 15"
 HOVER_COLOR = "#898989"
 HOVER_OPERATOR = "#FF8409"
 
+PRODUCTION = True;
 pictures = {
-    "logo": "/usr/share/Kalkulajda/Pictures/real_logo.png",
-    "help": "/usr/share/Kalkulajda/Pictures/help_button.png",
+    "logo": r"Pictures/real_logo.png",
+    "help": r"Pictures/help_button.png",
 }
 
-pictures_test = {
-    "logo": "Pictures/real_logo.png",
-    "help": "Pictures/help_button.png",
-}
-
+if PRODUCTION:
+    pictures = {
+        "logo": "/usr/share/Kalkulajda/Pictures/real_logo.png",
+        "help": "/usr/share/Kalkulajda/Pictures/help_button.png",
+    }
+    
 
 def adjust_button_size(width, height):
     """
