@@ -153,6 +153,7 @@ class App(CTk):
         self.totalLabel.configure(text=expression[:30])
 
     def update_current_label(self):
+        # TODO: MAKE THE LABEL TEXT SMALLER WHEN IT'S TOO LONG
         """
         @brief Updates the current expression label by truncating if necessary
         @param self: Instance of the class
@@ -164,11 +165,11 @@ class App(CTk):
         if 'Error' in self.currentExpression:
             if len(self.currentExpression) > 20:
                 self.currentExpression = self.currentExpression[:80]
-            self.currentLabel.configure(font=("Arial", 15))  # Smaller font size for error messages
+            self.currentLabel.configure(font=("Arial", 15), pady=55)  # Smaller font size for error messages
         else:
             if len(self.currentExpression) > 14:
                 self.currentExpression = self.currentExpression[:14]  # Limit the length to 14
-            self.currentLabel.configure(font=("Arial", 50))  # Larger font size for normal expressions
+            self.currentLabel.configure(font=("Arial", 50), pady=20)  # Larger font size for normal expressions
 
         # If currentExpression is empty or "0", display "0"
         if not self.currentExpression or self.currentExpression == "0":
@@ -241,7 +242,8 @@ class App(CTk):
         # If the current expression is an error message, only allow '-' to overwrite it
         if 'Error' in self.currentExpression:
             if operator == '-':
-                self.currentLabel.configure(font=("Arial", 50))  # Reset the font size when not displaying an error
+                # Reset the font size when not displaying an error
+                self.currentLabel.configure(font=("Arial", 50), pady=20)
                 self.currentExpression = operator
                 self.update_current_label()
                 return
@@ -311,7 +313,7 @@ class App(CTk):
         self.totalExpression = ""
         self.update_total_label()
         self.currentExpression = "Error: " + message
-        self.currentLabel.configure(font=("Arial", 15))  # Changed the font size to a smaller value
+        self.currentLabel.configure(font=("Arial", 15), pady=55)  # Changed the font size to a smaller value
         self.update_current_label()
 
     def create_operator_buttons(self):
@@ -453,12 +455,18 @@ class App(CTk):
         elif separator == '*':
             result += mathlib.mul(leftSide_float, rightSide_float)
         elif separator == '/':
-            if leftSide_float % rightSide_float == 0:
+            if rightSide_float == 0:
+                self.error("Cannot divide by zero")
+                return False
+            elif leftSide_float % rightSide_float == 0:
                 result = mathlib.div(leftSide_float, rightSide_float)
                 result = int(result)
             else:
                 result += mathlib.div(leftSide_float, rightSide_float)
         elif separator == '%':
+            if rightSide_float == 0:
+                self.error("Cannot perform modulo operation with zero")
+                return False
             result += mathlib.mod(leftSide_float, rightSide_float)
         else:
             return False
@@ -480,7 +488,6 @@ class App(CTk):
         return self.evaluated
 
     def parse_exponentiation(self):
-        # TODO: RESTRCIT RESULT TO 5 DECIMAL PLACES
         """
         @brief Parses the current expression for exponentiation operation
         @param self: Instance of the class
@@ -493,10 +500,17 @@ class App(CTk):
             if '.' in expCurrRight or int(expCurrRight) < 0:
                 self.error("Exponent must be a non-negative integer")
                 return None
+            if expCurrLeft == '0' and expCurrRight == '0':
+                self.error("0^0 is undefined")
+                return None
             if '.' not in expCurrLeft:
                 result = str(mathlib.pow(int(expCurrLeft), int(expCurrRight)))
             else:
                 result = str(mathlib.pow(float(expCurrLeft), int(expCurrRight)))
+
+            # If the result is longer than 14 characters, convert it to scientific notation with 5 decimal places
+            if len(result) > 14:
+                result = "{:.5e}".format(float(result))
         return result
 
     def parse_root(self):
@@ -544,8 +558,13 @@ class App(CTk):
             self.update_current_label()
             return True  # Return if root was performed
 
-        leftSide = self.totalExpression[:-1]
-        operator = self.totalExpression[-1]
+        # Check if totalExpression is not empty before accessing its last character
+        if self.totalExpression:
+            leftSide = self.totalExpression[:-1]
+            operator = self.totalExpression[-1]
+        else:
+            return False  # Return False if totalExpression is empty
+
         rightSide = self.currentExpression
 
         # Check and handle exponentiation in leftSide
@@ -554,6 +573,9 @@ class App(CTk):
             expRight = leftSide.split('^')[1]
             if '.' in expRight or int(expRight) < 0:
                 self.error("Exponent must be a non-negative integer")
+                return None
+            if expLeft == '0' and expRight == '0':
+                self.error("0^0 is undefined")
                 return None
             if '.' not in expLeft:
                 leftSide = str(mathlib.pow(int(expLeft), int(expRight)))
@@ -565,6 +587,9 @@ class App(CTk):
             expRight = rightSide.split('^')[1]
             if '.' in expRight or int(expRight) < 0:
                 self.error("Exponent must be a non-negative integer")
+                return None
+            if expLeft == '0' and expRight == '0':
+                self.error("0^0 is undefined")
                 return None
             if '.' not in expLeft:
                 rightSide = str(mathlib.pow(int(expLeft), int(expRight)))
@@ -620,12 +645,18 @@ class App(CTk):
         elif operator == '*':
             result = mathlib.mul(leftSide_float, rightSide_float)
         elif operator == '/':
+            if rightSide_float == 0:
+                self.error("Cannot divide by zero")
+                return None
             if leftSide_float % rightSide_float == 0:
                 result = mathlib.div(leftSide_float, rightSide_float)
                 result = int(result)
             else:
                 result = mathlib.div(leftSide_float, rightSide_float)
         elif operator == '%':
+            if rightSide_float == 0:
+                self.error("Cannot perform modulo operation by zero")
+                return None
             result = mathlib.mod(leftSide_float, rightSide_float)
         else:
             return False
@@ -774,7 +805,7 @@ class App(CTk):
         """
 
         if ('^' not in self.currentExpression and '√' not in self.currentExpression and self.currentExpression[-1] != '.'
-            and self.currentExpression[-1] != '-' and 'Error' not in self.currentExpression):
+           and self.currentExpression[-1] != '-' and 'Error' not in self.currentExpression):
             self.currentExpression += '^'
             self.update_current_label()
 
@@ -820,46 +851,49 @@ class App(CTk):
         self.buttonFrame.grid_columnconfigure(0, weight=1)
 
     def factorial(self):
-        # TODO: IF THERE IS NUMBER IN THE TOTAL EXPRESSION ALSO FOR ABS
         """
         @brief Computes the factorial of the current expression
         @param self: Instance of the class
         """
-        if not self.totalExpression:
-            # List of functions to parse
-            functions_to_parse = [self.parse_exponentiation, self.parse_root]
+        # Check if totalExpression is not empty
+        if self.totalExpression:
+            self.error("The total expression is not empty. Clear it first!")
+            return
 
-            for func in functions_to_parse:
-                result = func()
-                if result is not None:
-                    # Check if the result is a decimal or negative
-                    if '.' in result or int(result) < 0:
-                        self.error("Factorial is only defined for non-negative integers")
-                        return
-                    else:
-                        # If it's not, calculate the factorial of the result
-                        result = mathlib.fac(int(result))
-                    # If the result is an integer, convert it to an integer
-                    if result.is_integer():
-                        result = int(result)
-                    self.currentExpression = str(result)
-                    self.update_current_label()
+        # List of functions to parse
+        functions_to_parse = [self.parse_exponentiation, self.parse_root]
+
+        for func in functions_to_parse:
+            result = func()
+            if result is not None:
+                # Check if the result is a decimal or negative
+                if '.' in result or int(result) < 0:
+                    self.error("Factorial is only defined for non-negative integers")
                     return
-
-            # If the current expression is a decimal or negative
-            if '.' in self.currentExpression or int(self.currentExpression) < 0:
-                self.error("Factorial is only defined for non-negative integers")
+                else:
+                    # If it's not, calculate the factorial of the result
+                    result = mathlib.fac(int(result))
+                # If the result is an integer, convert it to an integer
+                if result.is_integer():
+                    result = int(result)
+                self.currentExpression = str(result)
+                self.update_current_label()
                 return
-            else:
-                result = mathlib.fac(int(self.currentExpression))
 
-            # If the length of the result is greater than 14
-            if len(str(result)) > 14:
-                result = "{:.5e}".format(result)
-            else:
-                result = int(result)
-            self.currentExpression = str(result)
-            self.update_current_label()
+        # If the current expression is a decimal or negative
+        if '.' in self.currentExpression or int(self.currentExpression) < 0:
+            self.error("Factorial is only defined for non-negative integers")
+            return
+        else:
+            result = mathlib.fac(int(self.currentExpression))
+
+        # If the length of the result is greater than 14
+        if len(str(result)) > 14:
+            result = "{:.5e}".format(result)
+        else:
+            result = int(result)
+        self.currentExpression = str(result)
+        self.update_current_label()
 
     def create_factorial_button(self):
         """
@@ -881,6 +915,11 @@ class App(CTk):
         @brief Computes the absolute value of the current expression
         @param self: Instance of the class
         """
+        # Check if totalExpression is not empty
+        if self.totalExpression:
+            self.error("The total expression is not empty. Clear it first!")
+            return
+
         if not self.totalExpression:
             functions_to_parse = [self.parse_exponentiation, self.parse_root]
             # Loop through the functions to parse
